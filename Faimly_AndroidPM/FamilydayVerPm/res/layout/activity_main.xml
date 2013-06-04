@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:background="#FFFFFF">
+    
+    <Button
+         android:background="@drawable/logo_green"
+   		 android:layout_width="140dp"
+       	 android:layout_height="100dp"
+       	 android:layout_margin="10dp"
+       	 android:id="@+id/main_logo"
+        />
+	 <Button
+         android:background="@drawable/w_qing"
+   		 android:layout_width="100dp"
+       	 android:layout_height="100dp"
+       	 android:layout_margin="10dp"
+       	 android:layout_alignParentRight="true"
+       	 android:id="@+id/main_weather_type"
+        />
+	 <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/main_weather_type"
+        android:layout_alignRight="@id/main_weather_type"
+        android:layout_below="@id/main_weather_type"
+        android:textSize="20sp"
+        android:textColor="#666666"
+        android:gravity="center_horizontal"
+        android:text="" 
+        android:id="@+id/main_weather_temp"/>
+	 
+	 <ListView
+	     android:paddingTop="10dp"
+	     android:paddingBottom="10dp"
+	     android:background="#E8E8E8"
+	     android:id="@+id/main_listview"
+	     android:layout_marginTop="30dp"
+	     android:layout_below="@id/main_logo"
+	     android:layout_width="fill_parent"
+	     android:layout_height="fill_parent"
+	     android:divider="@null"
+	     android:dividerHeight="10dp"
+	     android:cacheColorHint="#00000000"
+   		 android:fadingEdge="none"
+   		 android:listSelector="#00000000"
+	     />
+	
+</RelativeLayout>

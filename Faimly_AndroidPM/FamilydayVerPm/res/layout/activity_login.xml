@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF">
+	
+    <RelativeLayout
+        android:id="@+id/login_logo"
+        android:background="#FFFFFF"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
+        <Button
+             android:id="@+id/login_logo_view_circle"
+             android:background="@null"
+       		 android:layout_width="wrap_content"
+        	 android:layout_height="wrap_content"
+        	 android:layout_centerInParent="true"
+        	 
+            />
+        <Button
+             android:background="@drawable/logo_green"
+       		 android:layout_width="wrap_content"
+        	 android:layout_height="wrap_content"
+        	 android:layout_above="@id/login_logo_view_circle"
+        	 android:layout_centerHorizontal="true"
+            />
+        <Button
+             android:background="@drawable/ver_pm_r21_c8"
+       		 android:layout_width="wrap_content"
+        	 android:layout_height="wrap_content"
+        	  android:layout_below="@id/login_logo_view_circle"
+        	 android:layout_centerHorizontal="true"
+        	 android:layout_marginTop="10dp"
+        	 android:id="@+id/login_logo_view_roll"
+            />
+        </RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:textSize="16sp"
+        android:textColor="#A4A4A4"
+        android:padding="20dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/app_developer" />
+
+</RelativeLayout>

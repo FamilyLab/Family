@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:background="#C92525"
+    >
+     <TextView
+        android:id="@+id/pullview_item_name"
+    	android:layout_width="wrap_content"
+     	android:layout_height="55dp"
+     	android:textSize="23sp"
+     	android:textStyle="bold"
+     	android:layout_centerInParent="true"
+     	android:textColor="#FFFFFF"
+     	android:layout_marginRight="5dp"
+     	android:gravity="center"
+        />
+     <Button 
+	    android:layout_width="fill_parent"
+	    android:layout_height="20dp"
+	    android:background="@drawable/publish_push_2"
+	    android:id="@+id/pullview_item_arrow"
+	    android:focusable="false"
+	    />
+</RelativeLayout>

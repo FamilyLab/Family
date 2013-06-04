@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ze.familydayverpm"
+    android:versionCode="2"
+    android:versionName="1.1" >
+	<supports-screens android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:resizeable="true"
+        android:anyDensity="true"/>
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="16" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/icon_pm"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        android:name=".FamilyDayVerPMApplication" 
+        >
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="cf02453a589295912c734edc696198b7"/> 
+        <meta-data android:value="51604b2b56240b1ec30484c6" android:name="UMENG_APPKEY"></meta-data>
+        <activity
+            android:name="com.ze.familydayverpm.LoginActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"
+           >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".BaiduMapActivity"
+        android:screenOrientation="portrait"
+        android:configChanges="orientation|keyboardHidden"
+         android:theme="@android:style/Theme.Black.NoTitleBar">
+		</activity>
+		   <activity
+            android:name="com.ze.familydayverpm.GaodeMapActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+        <activity
+            android:name="com.ze.familydayverpm.MainActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+        <activity
+            android:name="com.ze.familydayverpm.PicActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+        <activity
+            android:name="com.ze.familydayverpm.BlogActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+         <activity
+            android:name="com.ze.familydayverpm.ActivityActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+         <activity
+            android:name="com.ze.familydayverpm.SignInActivitiy"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+          <activity
+            android:name="com.ze.familydayverpm.RegisterActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+          <activity
+            android:name="com.ze.familydayverpm.HeadNameActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+           <activity
+            android:name="com.ze.familydayverpm.AddMemberActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+           <activity
+            android:name="com.ze.familydayverpm.DialogActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+           <activity
+            android:name="com.ze.familydayverpm.DialogDetailActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+           <activity
+            android:name="com.ze.familydayverpm.SpaceActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+           <activity
+            android:name="com.ze.familydayverpm.FamilyActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+            <activity
+            android:name="com.ze.familydayverpm.SettingActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+             <activity
+            android:name="com.ze.familydayverpm.PublishActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+             <activity
+            android:name="com.ze.familydayverpm.MyFamilyMemberActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+              <activity
+            android:name="com.ze.familydayverpm.UserInfoActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+            <activity
+            android:name="com.ze.familydayverpm.NeedConfirmActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+             <activity
+            android:name="com.ze.familydayverpm.SpaceDetailActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+              <activity
+            android:name="com.ze.familydayverpm.BigPicActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+               <activity
+            android:name="com.ze.familydayverpm.TaskActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+               <activity
+            android:name="com.ze.familydayverpm.VideoActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+                 <activity
+            android:name="com.ze.familydayverpm.SearchUserActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+                  <activity
+            android:name="com.ze.familydayverpm.FindPwActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+                          <activity
+            android:name="com.ze.familydayverpm.GuidActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+                             <activity
+            android:name="com.ze.familydayverpm.AboutActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+            
+			               <!-- Required -->
+			<service
+			android:name="cn.jpush.android.service.PushService"
+			android:enabled="true"
+			android:exported="false" >
+			<intent-filter>
+			<action android:name="cn.jpush.android.intent.REGISTER" />
+			<action android:name="cn.jpush.android.intent.REPORT" />
+			<action android:name="cn.jpush.android.intent.PushService"/>
+			</intent-filter>
+			</service>
+			<!-- Required -->
+			<receiver
+			android:name="cn.jpush.android.service.PushReceiver"
+			android:enabled="true" >
+			<intent-filter>
+			<action
+			android:name="android.intent.action.BOOT_COMPLETED" />
+			<action android:name="android.intent.action.USER_PRESENT"
+			/>
+			<action
+			android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+			</intent-filter>
+			<intent-filter>
+			<action android:name="android.intent.action.PACKAGE_ADDED"
+			/>
+			<action
+			android:name="android.intent.action.PACKAGE_REMOVED" />
+			<data android:scheme="package" />
+			</intent-filter>
+			</receiver>  
+			
+		<receiver
+    android:name="JpushReceiver"
+    android:enabled="true">
+    <intent-filter>
+        <action android:name="cn.jpush.android.intent.REGISTRATION" />
+        <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
+        <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
+        <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
+        
+        <category android:name="com.ze.familydayverpm" />
+    </intent-filter>
+</receiver>
+			
+			
+						<!-- Required SDK:RICH PUSH-->
+			<activity
+			android:name="cn.jpush.android.ui.PushActivity"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar"
+			android:configChanges="orientation|keyboardHidden" >
+			<intent-filter>
+			<action android:name="cn.jpush.android.ui.PushActivity" />
+			<category android:name="android.intent.category.DEFAULT"
+			/>
+			<category android:name="com.ze.familydayverpm" />
+			</intent-filter>
+			</activity>
+			<!-- Required SDK:RICH PUSH-->
+			<service
+			android:name="cn.jpush.android.service.DownloadService"
+			android:enabled="true"
+			android:exported="false" >
+			</service>
+			<!-- Required SDK-->
+			<receiver android:name="cn.jpush.android.service.AlarmReceiver" />
+			<!-- Required. For publish channel feature -->
+			<meta-data android:name="JPUSH_CHANNEL"
+			android:value="developer-default"/>
+			
+			<!-- Required. AppKey copied from Portal -->
+			<meta-data android:name="JPUSH_APPKEY" android:value="c2be5669ae5a3e9af8915569"/>
+			
+
+    </application>
+    <uses-feature
+	  android:glEsVersion="0x00020000"
+	  android:required="true"/>
+		    <!-- Required -->
+		<permission android:name="com.ze.familydayverpm.permission.JPUSH_MESSAGE"
+		android:protectionLevel="signature" />
+		<!-- Required -->
+		<uses-permission android:name="com.ze.familydayverpm.permission.JPUSH_MESSAGE"
+		/>
+		<uses-permission
+			android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+		<uses-permission
+			android:name="android.permission.RECEIVE_USER_PRESENT" />
+		<uses-permission android:name="android.permission.WAKE_LOCK" />
+		<uses-permission
+			android:name="android.permission.READ_EXTERNAL_STORAGE" />
+		<uses-permission android:name="android.permission.VIBRATE" />
+		<uses-permission
+android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+				<!-- Optional. Required for location feature -->
+		<uses-permission
+		android:name="android.permission.ACCESS_COARSE_LOCATION" />
+		<uses-permission
+		android:name="android.permission.ACCESS_COARSE_UPDATES" />
+		<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"
+		/>
+		<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"
+		/>
+		<uses-permission
+		android:name="android.permission.ACCESS_FINE_LOCATION" />
+		<uses-permission
+		android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+		<uses-permission
+		android:name="android.permission.CHANGE_NETWORK_STATE" />
+		
+		
+		
+		
+		
+     <permission
+          android:name="com.ze.familydayverpm.permission.MAPS_RECEIVE"
+          android:protectionLevel="signature"/>
+        <uses-permission android:name="com.ze.familydayverpm.permission.MAPS_RECEIVE"/>
+        <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission android:name="android.permission.INTERNET"/>
+ <uses-permission android:name='android.permission.WRITE_EXTERNAL_STORAGE'/>
+ <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></uses-permission>
+ <uses-permission android:name="android.permission.SEND_SMS"></uses-permission>
+     <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+     <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+<uses-permission android:name="android.permission.READ_LOGS"></uses-permission>
+<uses-permission android:name="android.permission.CALL_PHONE"/>
+</manifest>

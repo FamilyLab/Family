@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+     android:paddingLeft="10dp"
+	 android:paddingRight="10dp"
+    >
+    <ImageView 
+        	android:id="@+id/dialog_detail_other_head"
+        	android:layout_width="60dp"
+        	android:layout_height="60dp"
+        	android:background="#e0e0e0"
+        	/>
+     <ImageView 
+        	android:id="@+id/dialog_detail_other_head_vip"
+        	android:layout_width="15dp"
+        	android:layout_height="15dp"
+        	android:layout_alignRight="@id/dialog_detail_other_head"
+        	android:layout_alignBottom="@id/dialog_detail_other_head"
+        	/>
+     <RelativeLayout 
+         	android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginLeft="10dp"
+		    android:layout_toRightOf="@id/dialog_detail_other_head"
+		    android:background="@drawable/dialog_detail_other"
+		    android:paddingTop="5dp"
+		    android:paddingBottom="5dp"
+		    android:paddingLeft="10dp"
+		    android:paddingRight="10dp"
+        >
+	 <TextView
+        android:id="@+id/dialog_detail_other_say"
+    	android:layout_width="wrap_content"
+     	android:layout_height="wrap_content"
+     	android:textSize="23sp"
+     	android:paddingLeft="5dp"
+     	android:paddingRight="8dp"
+     	android:paddingTop="5dp"
+     	android:paddingBottom="5dp"
+     	android:textColor="#88927A"
+     	android:background="@null"
+        />
+	 <TextView
+        android:id="@+id/dialog_detail_other_time"
+    	android:layout_width="wrap_content"
+     	android:layout_height="wrap_content"
+     	android:layout_below="@id/dialog_detail_other_say"
+     	android:textSize="18sp"
+     	android:gravity="left|bottom"
+     	android:textColor="#A8B19D"
+     	android:paddingLeft="5dp"
+     	android:paddingBottom="5dp"
+        />
+	 
+</RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@drawable/news_notice_item"
+  android:paddingBottom="10dp"
+  android:paddingLeft="5dp"
+  android:paddingTop="8dp"
+  android:paddingRight="10dp">
+    	<ImageView 
+ 			android:layout_width="60dp"
+ 			android:layout_height="60dp"
+ 			android:id="@+id/task_item_icon"
+ 			android:scaleType="fitCenter"
+    			/>
+    	<TextView 
+    		android:layout_toRightOf="@id/task_item_icon"
+    		android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:textColor="#000000"
+    		android:singleLine="true"
+    		android:textSize="25sp"
+    		android:layout_marginLeft="10dp"
+    		android:id="@+id/task_item_title"
+    		/>
+    	<TextView 
+    		android:layout_toRightOf="@id/task_item_icon"
+    		android:layout_below="@id/task_item_title"
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:layout_marginLeft="10dp"
+    		android:textSize="22sp"
+    		android:id="@+id/task_item_context"
+    		/>
+    	<TextView 
+    		android:layout_below="@id/task_item_icon"
+    		android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:textSize="18sp"
+    		android:id="@+id/task_item_finish"
+    		/>
+</RelativeLayout>

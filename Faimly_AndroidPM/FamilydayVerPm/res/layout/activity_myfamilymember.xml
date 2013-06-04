@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:background="#FFFFFF">
+     <RelativeLayout
+         android:layout_width="fill_parent"
+         android:layout_height="80dp"
+         android:background="@null"
+         android:id="@+id/myfamilymember_top"
+         android:layout_marginBottom="10dp"
+         >
+         <Button
+             android:layout_width="fill_parent"
+             android:layout_height="35dp"
+             android:background="#145D32"
+             android:layout_alignParentBottom="true"
+             />
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="35dp"
+             android:text="@string/myfamily_label"
+             android:textSize="28sp"
+             android:background="#FFFFFF"
+             android:layout_marginLeft="10dp"
+             android:textColor="#000000"
+             android:paddingLeft="10dp"
+             android:paddingRight="10dp"
+             android:textStyle="bold"
+             android:layout_alignParentBottom="true"
+             />
+           <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="40dp"
+             android:text="共 人"
+             android:textSize="24sp"
+             android:layout_alignParentRight="true"
+             android:textColor="#636363"
+             android:gravity="center"
+             android:background="#00FFFFFF"
+             android:paddingRight="10dp"
+             android:paddingTop="2dp"
+             android:id="@+id/myfamilymember_count"
+             />
+            <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="40dp"
+             android:text=""
+             android:id="@+id/myfamilymember_selfname"
+             android:textSize="25sp"
+             android:layout_marginLeft="10dp"
+             android:textColor="#9ED54A"
+             android:gravity="center"
+             android:background="#00FFFFFF"
+             android:paddingRight="10dp"
+             android:paddingTop="2dp"
+              android:textStyle="bold"
+             />
+         </RelativeLayout>
+         
+      <RelativeLayout
+	         android:layout_width="fill_parent"
+	         android:layout_height="60dp"
+	         android:background="#E0E0E0"
+	         android:id="@+id/myfamilymember_bottom"
+	         android:layout_alignParentBottom="true"
+	         android:paddingLeft="10dp"
+	         android:paddingRight="10dp"
+	         android:gravity="center_vertical"
+         > 
+        
+        	<ImageButton 
+                  android:id="@+id/myfamilymember_back"
+                  android:layout_width="100dp"
+             	  android:layout_height="fill_parent"
+             	  android:gravity="center"
+             	  android:src="@drawable/back"
+             	  android:background="@null"
+             	  android:layout_centerInParent="true"
+                 />
+              
+         
+         </RelativeLayout>
+          <ListView 
+    	     android:layout_below="@id/myfamilymember_top"
+    	     android:layout_above="@id/myfamilymember_bottom"
+    	     android:layout_width="fill_parent"
+    	     android:layout_height="wrap_content"
+    	     android:id="@+id/myfamilymember_listview"
+    	     android:minHeight="50dp"
+    	     android:background="#FFFFFF"
+    	     android:divider="@null"
+    	     android:dividerHeight="6dp"
+    	     ></ListView>
+
+</RelativeLayout>

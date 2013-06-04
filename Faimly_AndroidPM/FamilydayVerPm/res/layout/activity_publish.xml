@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:background="#FFFFFF">
+    <Button
+        android:id="@+id/publish_topLabel"
+        android:layout_width="100dp"
+        android:layout_height="75dp"
+        android:background="#C92525"
+        android:text="@string/pulish_pic_txt"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold"
+        android:drawableBottom="@drawable/line"
+        
+        />
+        <Button 
+	    android:layout_width="100dp"
+	    android:layout_height="20dp"
+	    android:background="@drawable/publish_push"
+	    android:id="@+id/publish_topLabelarrow"
+	    android:layout_alignBottom="@id/publish_topLabel"
+	    android:layout_alignLeft="@id/publish_topLabel"
+	    />
+       <Button
+        android:layout_width="49dp"
+        android:layout_height="25dp"
+        android:background="@drawable/logo_small_red"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="14dp"
+        />
+       <Button
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:background="@drawable/line_red"
+        android:layout_toRightOf="@id/publish_topLabel"
+        android:layout_marginLeft="5dp"
+        android:layout_alignBottom="@id/publish_topLabel"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="10dp"
+        />
+       
+       <RelativeLayout
+             android:layout_width="fill_parent"
+             android:layout_height="50dp"
+             android:layout_alignParentBottom="true"
+             android:background="@drawable/edit_back"
+             android:id="@+id/publish_bottom"
+             >
+             <Button 
+                 android:id="@+id/publish_bottom_center"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_centerHorizontal="true"
+                 android:visibility="invisible"
+                 />
+             <ImageButton 
+                  android:id="@+id/publish_back"
+                  android:layout_width="100dp"
+             	  android:layout_height="fill_parent"
+             	  android:gravity="center"
+             	  android:src="@drawable/back"
+             	  android:background="@null"
+             	  android:layout_toLeftOf="@id/publish_bottom_center"
+                 />
+             <ImageButton 
+                  android:id="@+id/publish_send"
+                  android:layout_width="100dp"
+             	  android:layout_height="fill_parent"
+             	  android:gravity="center"
+             	  android:src="@drawable/confirm"
+             	  android:background="@null"
+             	  android:layout_toRightOf="@id/publish_bottom_center"
+                 />
+             </RelativeLayout>
+      <ScrollView 
+          android:layout_below="@id/publish_topLabel"
+          android:layout_above="@id/publish_bottom"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          >
+       <RelativeLayout 
+           android:id="@+id/publish_body_base"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:padding="10dp"
+           >
+           <Gallery 
+               android:id="@+id/publish_img_layout"
+               android:layout_width="fill_parent"
+        		android:layout_height="120dp"
+        		android:gravity="center"
+        		android:orientation="horizontal"
+        		android:fadingEdge="none"
+               />
+          
+             <LinearLayout
+
+android:focusable="true"
+
+android:focusableInTouchMode="true"
+
+android:layout_width="0px"
+
+android:layout_height="0px"/>  
+       	<EditText
+       	    android:layout_marginTop="10dp"
+       	    android:layout_width="fill_parent"
+       	    android:layout_height="130dp"
+       	    android:textColor="#7E7E7E"
+       	    android:textSize="26sp"
+       	    android:textStyle="bold"
+       	    android:paddingTop="10dp"
+       	    android:paddingLeft="10dp"
+       	    android:textColorHint="#e0e0e0"
+       	    android:layout_below="@id/publish_img_layout"
+       	    android:hint="@string/pulish_text_hint"
+       	    android:id="@+id/publish_text"
+       	    android:gravity="top"
+       	    android:background="@drawable/input_block"
+       	    />
+       <TextView
+       	    android:layout_marginTop="0dp"
+       	    android:layout_width="fill_parent"
+       	    android:layout_height="wrap_content"
+       	    android:textColor="#e0e0e0"
+       	    android:textSize="24sp"
+       	    android:textStyle="bold"
+       	    android:paddingTop="10dp"
+       	    android:paddingLeft="10dp"
+       	    android:layout_below="@id/publish_text"
+       	    android:text="@string/pulish_take_to"
+       	    android:id="@+id/publish_take_label"
+       	    android:gravity="top"
+       	    />
+       <Button 
+           android:layout_marginTop="3dp"
+       	    android:layout_width="fill_parent"
+       	    android:layout_height="60dp"
+       	    android:textColor="#FFFFFF"
+       	    android:textSize="24sp"
+       	    android:textStyle="bold"
+       	    android:layout_below="@id/publish_take_label"
+       	    android:text=""
+       	    android:id="@+id/publish_photoset"
+       	    android:gravity="center"
+       	    android:background="#999999"
+       	    android:drawableLeft="@drawable/publish_pic_label"
+       	    android:drawableRight="@drawable/arrow_2"
+       	    android:paddingRight="10dp"
+           />
+          </RelativeLayout>
+        
+          </ScrollView>
+        
+            、
+</RelativeLayout>

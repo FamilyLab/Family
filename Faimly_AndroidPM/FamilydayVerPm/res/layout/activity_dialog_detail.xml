@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:minHeight="200dp"
+    android:background="#FFFFFF">
+     <RelativeLayout
+         android:layout_width="fill_parent"
+         android:layout_height="80dp"
+         android:background="@null"
+         android:id="@+id/dialog_detail_top"
+         android:layout_marginBottom="10dp"
+         >
+         <Button
+             android:layout_width="fill_parent"
+             android:layout_height="35dp"
+             android:background="#145D32"
+             android:layout_alignParentBottom="true"
+             />
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="35dp"
+             android:text="对话记录"
+             android:textSize="28sp"
+             android:background="#FFFFFF"
+             android:layout_marginLeft="10dp"
+             android:textColor="#000000"
+             android:paddingLeft="10dp"
+             android:paddingRight="10dp"
+             android:textStyle="bold"
+             android:layout_alignParentBottom="true"
+             />
+           
+            <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="40dp"
+             android:text="罗纳尔多"
+             android:textSize="25sp"
+             android:layout_marginLeft="10dp"
+             android:textColor="#9ED54A"
+             android:gravity="center"
+             android:background="#00FFFFFF"
+             android:paddingRight="10dp"
+             android:paddingTop="2dp"
+              android:textStyle="bold"
+              android:id="@+id/dialog_detail_object"
+             />
+         </RelativeLayout>
+         <RelativeLayout
+	         android:layout_width="fill_parent"
+	         android:layout_height="wrap_content"
+	         android:background="#E0E0E0"
+	         android:id="@+id/dialog_detail_bottom"
+	         android:layout_alignParentBottom="true"
+	         android:paddingLeft="2dp"
+	         android:paddingRight="2dp"
+	         android:minHeight="60dp"
+	         android:gravity="center_vertical"
+	         
+         > 
+         <ImageButton 
+             android:background="@null"
+             android:src="@drawable/back"
+             android:layout_width="35dp"
+             android:layout_height="60dp"
+             android:id="@+id/dialog_detail_back"
+             />
+        <!--   <ImageButton 
+             android:background="@null"
+             android:src="@drawable/face"
+             android:layout_width="35dp"
+             android:layout_height="60dp"
+             android:id="@+id/dialog_detail_face"
+             android:layout_toRightOf="@id/dialog_detail_back"
+             />
+             -->
+          <Button 
+             android:background="#7E7E7E"
+             android:src="@drawable/face"
+             android:layout_width="60dp"
+             android:layout_height="40dp"
+             android:id="@+id/dialog_detail_send"
+             android:layout_alignParentRight="true"
+             android:text="发送"
+             android:textSize="16sp"
+             android:textColor="#FFFFFF"
+             android:layout_centerVertical="true"
+             />
+           <LinearLayout
+
+android:focusable="true"
+
+android:focusableInTouchMode="true"
+
+android:layout_width="0px"
+
+android:layout_height="0px"/>
+          <EditText 
+              android:background="@drawable/input_2"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/dialog_detail_etSay"
+             android:layout_toRightOf="@id/dialog_detail_back"
+             android:layout_toLeftOf="@id/dialog_detail_send"
+             android:layout_centerVertical="true"
+             android:hint="@string/dialog_send_hint"
+             android:textSize="20sp"
+             android:layout_marginLeft="5dp"
+             android:layout_marginRight="5dp"
+             android:paddingLeft="3dp"
+             android:paddingRight="3dp"
+              />
+          
+         </RelativeLayout>
+          <ListView 
+    	     android:layout_below="@id/dialog_detail_top"
+    	     android:layout_above="@id/dialog_detail_bottom"
+    	     android:layout_width="fill_parent"
+    	     android:layout_height="wrap_content"
+    	     android:id="@+id/dialog_detail_listview"
+    	     android:divider="@null"
+    	     android:cacheColorHint="@android:color/transparent"
+    		 android:fadingEdge="none"
+    		 android:listSelector="#00000000"
+    	     android:dividerHeight="10dp"
+    	     android:layout_marginBottom="10dp"
+    	     ></ListView>
+
+</RelativeLayout>
