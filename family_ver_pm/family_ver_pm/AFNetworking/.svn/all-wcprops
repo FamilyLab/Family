@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking
+END
+AFHTTPClient.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFHTTPClient.m
+END
+AFNetworking.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFNetworking.h
+END
+AFXMLRequestOperation.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFXMLRequestOperation.h
+END
+AFNetworkActivityIndicatorManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFNetworkActivityIndicatorManager.h
+END
+UIImageView+AFNetworking.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/UIImageView+AFNetworking.h
+END
+AFXMLRequestOperation.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFXMLRequestOperation.m
+END
+AFURLConnectionOperation.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFURLConnectionOperation.h
+END
+AFNetworkActivityIndicatorManager.m
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFNetworkActivityIndicatorManager.m
+END
+AFJSONRequestOperation.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFJSONRequestOperation.h
+END
+UIImageView+AFNetworking.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/UIImageView+AFNetworking.m
+END
+AFJSONUtilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFJSONUtilities.h
+END
+AFJSONRequestOperation.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFJSONRequestOperation.m
+END
+AFURLConnectionOperation.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFURLConnectionOperation.m
+END
+AFHTTPRequestOperation.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFHTTPRequestOperation.h
+END
+AFPropertyListRequestOperation.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFPropertyListRequestOperation.h
+END
+AFJSONUtilities.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFJSONUtilities.m
+END
+AFImageRequestOperation.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFImageRequestOperation.h
+END
+AFHTTPRequestOperation.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFHTTPRequestOperation.m
+END
+AFHTTPClient.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFHTTPClient.h
+END
+AFPropertyListRequestOperation.m
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFPropertyListRequestOperation.m
+END
+AFImageRequestOperation.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/family4pm/!svn/ver/92/1/family_ver_pm/family_ver_pm/AFNetworking/AFImageRequestOperation.m
+END

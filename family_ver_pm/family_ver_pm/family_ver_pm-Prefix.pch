@@ -1,0 +1,19 @@
+//
+// Prefix header for all source files of the 'family_ver_pm' target in the 'family_ver_pm' project
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_3_0
+#warning "This project uses features only available in iOS SDK 3.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+
+    #import "Defines.h"
+    #import "DictionaryKeyNames.h"
+    #import "ConciseKit.h"
+    #import "SBToolKit.h"
+#endif
