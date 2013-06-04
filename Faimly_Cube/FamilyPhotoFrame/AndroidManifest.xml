@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ze.familyday.familyphotoframe"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="14" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+         android:name=".FamilyDayVerPMApplication" 
+          >
+        <activity
+            android:name="com.ze.familyday.familyphotoframe.MainActivity"
+            android:label="@string/app_name" 
+             android:launchMode="singleTask"
+            android:clearTaskOnLaunch="true"
+            android:stateNotNeeded="true"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustResize"  
+             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.HOME"/>
+                <category android:name="android.intent.category.DEFAULT" />  
+        <category android:name="android.intent.category.MONKEY" />  
+          <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".PhotoFrameActivity"
+        android:screenOrientation="landscape"
+        android:configChanges="orientation|keyboardHidden"
+         android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+		</activity>
+		 <activity android:name=".WifiLoginActivity"
+        android:screenOrientation="landscape"
+        android:configChanges="orientation|keyboardHidden"
+         android:theme="@style/myDialogTheme">
+		</activity>
+		<receiver
+    android:name="JpushReceiver"
+    android:enabled="true">
+    <intent-filter>
+        <action android:name="cn.jpush.android.intent.REGISTRATION" />
+        <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
+        <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
+        <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
+        
+        <category android:name="com.ze.familyday.familyphotoframe" />
+    </intent-filter>
+</receiver>
+                       <!-- Required -->
+			<service
+			android:name="cn.jpush.android.service.PushService"
+			android:enabled="true"
+			android:exported="false" >
+			<intent-filter>
+			<action android:name="cn.jpush.android.intent.REGISTER" />
+			<action android:name="cn.jpush.android.intent.REPORT" />
+			<action android:name="cn.jpush.android.intent.PushService"/>
+			</intent-filter>
+			</service>
+			<!-- Required -->
+			<receiver
+			android:name="cn.jpush.android.service.PushReceiver"
+			android:enabled="true" >
+			<intent-filter>
+			<action
+			android:name="android.intent.action.BOOT_COMPLETED" />
+			<action android:name="android.intent.action.USER_PRESENT"
+			/>
+			<action
+			android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+			</intent-filter>
+			<intent-filter>
+			<action android:name="android.intent.action.PACKAGE_ADDED"
+			/>
+			<action
+			android:name="android.intent.action.PACKAGE_REMOVED" />
+			<data android:scheme="package" />
+			</intent-filter>
+			</receiver>  
+			
+		<receiver
+    android:name="JpushReceiver"
+    android:enabled="true">
+    <intent-filter>
+        <action android:name="cn.jpush.android.intent.REGISTRATION" />
+        <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
+        <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
+        <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
+        
+        <category android:name="com.ze.familydayverpm" />
+    </intent-filter>
+</receiver>
+			
+			
+						<!-- Required SDK:RICH PUSH-->
+			<activity
+			android:name="cn.jpush.android.ui.PushActivity"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar"
+			android:configChanges="orientation|keyboardHidden" >
+			<intent-filter>
+			<action android:name="cn.jpush.android.ui.PushActivity" />
+			<category android:name="android.intent.category.DEFAULT"
+			/>
+			<category android:name="com.ze.familyday.familyphotoframe" />
+			</intent-filter>
+			</activity>
+			<!-- Required SDK:RICH PUSH-->
+			<service
+			android:name="cn.jpush.android.service.DownloadService"
+			android:enabled="true"
+			android:exported="false" >
+			</service>
+			<!-- Required SDK-->
+			<receiver android:name="cn.jpush.android.service.AlarmReceiver" />
+			<!-- Required. For publish channel feature -->
+			<meta-data android:name="JPUSH_CHANNEL"
+			android:value="developer-default"/>
+			
+			<!-- Required. AppKey copied from Portal -->
+			<meta-data android:name="JPUSH_APPKEY" android:value="e848314b38e1e6c5a9de044f"/>
+    </application>
+    
+    
+    
+	<!-- Required -->
+			<permission android:name="com.ze.familyday.familyphotoframe.permission.JPUSH_MESSAGE"
+			android:protectionLevel="signature" />
+			<!-- Required -->
+			<uses-permission android:name="com.ze.familyday.familyphotoframe.permission.JPUSH_MESSAGE"
+			/>
+			<uses-permission
+			android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+			<uses-permission
+			android:name="android.permission.RECEIVE_USER_PRESENT" />
+			<uses-permission android:name="android.permission.INTERNET" />
+			<uses-permission android:name="android.permission.WAKE_LOCK" />
+			<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+			<uses-permission
+			android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+			<uses-permission
+			android:name="android.permission.READ_EXTERNAL_STORAGE" />
+			<uses-permission android:name="android.permission.VIBRATE" />
+			<uses-permission
+			android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+			<uses-permission
+			android:name="android.permission.ACCESS_NETWORK_STATE" />
+			<!-- Optional. Required for location feature -->
+			<uses-permission
+			android:name="android.permission.ACCESS_COARSE_LOCATION" />
+			<uses-permission
+			android:name="android.permission.ACCESS_COARSE_UPDATES" />
+			<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"
+			/>
+			<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"
+			/>
+			<uses-permission
+			android:name="android.permission.ACCESS_FINE_LOCATION" />
+			<uses-permission
+			android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+			<uses-permission
+			android:name="android.permission.CHANGE_NETWORK_STATE" />
+</manifest>

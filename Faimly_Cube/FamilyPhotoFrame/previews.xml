@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<previews>
+
+    <preview
+        name="3.2in HVGA slider (ADP1)"
+        activity="com.ze.familydayverpm.SpaceDetailActivity"
+        config="layout-sw600dp-w1024dp-h600dp-large-long-land-notnight-mdpi-finger-keyssoft-nokeys-navhidden-nonav-1024x600-v17"
+        device="7in WSVGA (Tablet)"
+        devicestate="Landscape"
+        target="Android 4.2.2"
+        theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+    </preview>
+
+</previews>
