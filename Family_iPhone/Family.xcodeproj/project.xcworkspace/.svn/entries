@@ -1,0 +1,49 @@
+10
+
+dir
+0
+https://github.com/FamilyLab/Family.git/trunk/Family.xcodeproj/project.xcworkspace
+https://github.com/FamilyLab/Family.git
+add
+
+
+
+
+
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+f0c20aac-5bdc-3616-eb80-ce57b7db7bff
+
+contents.xcworkspacedata
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+xcuserdata
+dir
+
+
+
+add
+
