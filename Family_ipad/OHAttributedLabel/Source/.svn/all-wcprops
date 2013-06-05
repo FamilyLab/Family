@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/iphone/!svn/ver/67/Family/Family_ipad/OHAttributedLabel/Source
+END
+OHParagraphStyle.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/iphone/!svn/ver/67/Family/Family_ipad/OHAttributedLabel/Source/OHParagraphStyle.h
+END
+OHAttributedLabel.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/iphone/!svn/ver/67/Family/Family_ipad/OHAttributedLabel/Source/OHAttributedLabel.h
+END
+NSTextCheckingResult+ExtendedURL.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/iphone/!svn/ver/67/Family/Family_ipad/OHAttributedLabel/Source/NSTextCheckingResult+ExtendedURL.h
+END
+NSAttributedString+Attributes.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/iphone/!svn/ver/67/Family/Family_ipad/OHAttributedLabel/Source/NSAttributedString+Attributes.h
+END
+OHParagraphStyle.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/iphone/!svn/ver/67/Family/Family_ipad/OHAttributedLabel/Source/OHParagraphStyle.m
+END
+OHAttributedLabel.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/iphone/!svn/ver/67/Family/Family_ipad/OHAttributedLabel/Source/OHAttributedLabel.m
+END
+NSTextCheckingResult+ExtendedURL.m
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/iphone/!svn/ver/67/Family/Family_ipad/OHAttributedLabel/Source/NSTextCheckingResult+ExtendedURL.m
+END
+NSAttributedString+Attributes.m
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/iphone/!svn/ver/67/Family/Family_ipad/OHAttributedLabel/Source/NSAttributedString+Attributes.m
+END
