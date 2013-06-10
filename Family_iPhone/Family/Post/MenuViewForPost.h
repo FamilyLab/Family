@@ -10,4 +10,7 @@
 
 @interface MenuViewForPost : UIView
 
+@property (nonatomic, strong) IBOutlet UIButton *albumBtn;
+@property (nonatomic, strong) IBOutlet UIImageView *arrowImgView;
+
 @end

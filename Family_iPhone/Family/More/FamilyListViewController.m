@@ -13,9 +13,10 @@
 #import "SVProgressHUD.h"
 //#import "UIButton+WebCache.h"
 #import "AddFriendsViewController.h"
-#import "PostViewController.h"
+//#import "PostViewController.h"
 #import "FamilyCardViewController.h"
 #import "PlistManager.h"
+#import "PostSthViewController.h"
 
 @interface FamilyListViewController ()
 
@@ -104,8 +105,8 @@
         case 0:
         {
             if (_canSelect) {
-                PostViewController *con = (PostViewController*)preController;
-                
+//                PostViewController *con = (PostViewController*)preController;
+                PostSthViewController *con = (PostSthViewController*)preController;
 //                [con.togetherArray removeAllObjects];
 //                [con.togetherArray addObjectsFromArray:dataArray];
                 
@@ -115,7 +116,8 @@
                 [con.familyListArray removeAllObjects];
                 [con.familyListArray addObjectsFromArray:dataArray];
                 
-                [con setAvatarForTogether];
+                [con setNameForTogether];
+//                [con setAvatarForTogether];
             }
             if ([self.navigationController.viewControllers count] <= 1 ) {//推送过来时的
                 [self.navigationController dismissModalViewControllerAnimated:YES];
@@ -131,14 +133,16 @@
                 con.topViewType = notLoginOrSignIn;
                 [self.navigationController pushViewController:con animated:YES];
             } else {//OK按钮
-                PostViewController *con = (PostViewController*)preController;
+                PostSthViewController *con = (PostSthViewController*)preController;
+//                PostViewController *con = (PostViewController*)preController;
                 [con.withFriendsArray removeAllObjects];
                 [con.withFriendsArray addObjectsFromArray:_selectedArray];
                 
                 [con.familyListArray removeAllObjects];
                 [con.familyListArray addObjectsFromArray:dataArray];
                 
-                [con setAvatarForTogether];
+                [con setNameForTogether];
+//                [con setAvatarForTogether];
                 [self.navigationController popViewControllerAnimated:YES];
             }
             break;
@@ -476,6 +480,7 @@
             [aDict setObject:[NSNumber numberWithInt:indexPath.row] forKey:@"index"];
             [aDict setObject:[[dataArray objectAtIndex:indexPath.row] objectForKey:UID] forKey:UID];
             [aDict setObject:[[dataArray objectAtIndex:indexPath.row] objectForKey:AVATAR] forKey:AVATAR];
+            [aDict setObject:[[dataArray objectAtIndex:indexPath.row] objectForKey:NAME] forKey:NAME];
             [_selectedArray addObject:aDict];
         } else {
             for (int i = 0; i < [_selectedArray count]; i++) {
@@ -499,12 +504,16 @@
         [self tableView:tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
     } else if (conType == myFamilyListType) {
         if (self.isWantToPostPM) {//发表页面的发送对话
-            PostViewController *con = (PostViewController*)preController;
-            [con.upPostView.pmNameBtn setTitle:[[dataArray objectAtIndex:indexPath.row] objectForKey:NAME] forState:UIControlStateNormal];
+            PostSthViewController *con = (PostSthViewController*)preController;
+            [con.postSthView.pmNameBtn setTitle:[[dataArray objectAtIndex:indexPath.row] objectForKey:NAME] forState:UIControlStateNormal];
             con.postPMUserId = [[dataArray objectAtIndex:indexPath.row] objectForKey:UID];
-            [con.upPostView layoutSubviews];
-//            [con.upPostView setNeedsDisplay];
+            [con.postSthView layoutSubviews];
             [self.navigationController popViewControllerAnimated:YES];
+//            PostViewController *con = (PostViewController*)preController;
+//            [con.upPostView.pmNameBtn setTitle:[[dataArray objectAtIndex:indexPath.row] objectForKey:NAME] forState:UIControlStateNormal];
+//            con.postPMUserId = [[dataArray objectAtIndex:indexPath.row] objectForKey:UID];
+//            [con.upPostView layoutSubviews];
+//            [self.navigationController popViewControllerAnimated:YES];
         } else {//进入用户名片
             FamilyCardViewController *con = [[FamilyCardViewController alloc] initWithNibName:@"FamilyCardViewController" bundle:nil];
             con.isMyFamily = YES;

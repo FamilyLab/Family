@@ -14,7 +14,6 @@
 #import "WantToSayCell.h"
 #import "JTListView.h"
 #import "MyViewCell.h"
-//#import "MyAnnotation.h"
 #import "SinaWeibo.h"
 #import "SinaWeiboRequest.h"
 #import "WXApi.h"
@@ -100,7 +99,6 @@ typedef enum {
 @property (nonatomic, copy) NSString *blogDescriStr;
 //@property (nonatomic, assign) NSDictionary *detailIdDict;
 
-@property (nonatomic, assign) BOOL canGotoMapAroundCon;
 
 @property (nonatomic, assign) PostType thePostType;
 

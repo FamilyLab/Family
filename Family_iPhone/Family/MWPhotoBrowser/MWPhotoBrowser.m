@@ -12,7 +12,8 @@
 #import "MBProgressHUD.h"
 #import "SDImageCache.h"
 #import "SVProgressHUD.h"
-#import "PostViewController.h"
+//#import "PostViewController.h"
+#import "PostSthViewController.h"
 
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
@@ -948,8 +949,14 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
         [SVProgressHUD showErrorWithStatus:@"视频不能转载T_T"];
         return;
     }
+    if ([[_dataDict objectForKey:UID] isEqualToString:MY_UID]) {
+        [SVProgressHUD showErrorWithStatus:@"不能转载自己的东西T_T"];
+        return;
+    }
     if (_dataDict && _idType) {
-        PostViewController *con = [[PostViewController alloc] initWithNibName:@"PostViewController" bundle:nil];
+        PostSthViewController *con = [[PostSthViewController alloc] initWithNibName:@"PostSthViewController" bundle:nil];
+        con.shouldAddDefaultImage = YES;
+//        PostViewController *con = [[PostViewController alloc] initWithNibName:@"PostViewController" bundle:nil];
         con.dataDict = _dataDict;
         con.idType = _idType;
         [self.navigationController pushViewController:con animated:YES];
@@ -1035,9 +1042,16 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 	}
 }
 
-- (BOOL)areControlsHidden { return (_toolbar.alpha == 0); /* [UIApplication sharedApplication].isStatusBarHidden; */ }
-- (void)hideControls { [self setControlsHidden:YES animated:YES permanent:NO]; }
-- (void)toggleControls { [self setControlsHidden:![self areControlsHidden] animated:YES permanent:NO]; }
+- (BOOL)areControlsHidden {
+    return (_toolbar.alpha == 0); /* [UIApplication sharedApplication].isStatusBarHidden; */
+}
+- (void)hideControls {
+    [self setControlsHidden:YES animated:YES permanent:NO];
+}
+- (void)toggleControls {
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+//    [self setControlsHidden:![self areControlsHidden] animated:YES permanent:NO];
+}
 
 #pragma mark - Properties
 

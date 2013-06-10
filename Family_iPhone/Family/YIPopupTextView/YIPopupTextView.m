@@ -11,7 +11,8 @@
 #define IS_ARC              (__has_feature(objc_arc))
 #define IS_IPAD             (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
-#define TEXTVIEW_INSETS     (IS_IPAD ? UIEdgeInsetsMake(30, 30, 30, 30) : UIEdgeInsetsMake(15, 15, 15, 15))
+//#define TEXTVIEW_INSETS     (IS_IPAD ? UIEdgeInsetsMake(30, 30, 30, 30) : UIEdgeInsetsMake(15, 15, 15, 15))
+#define TEXTVIEW_INSETS     (IS_IPAD ? UIEdgeInsetsMake(30, 30, 30, 30) : UIEdgeInsetsMake(10, 10, 10, 10))
 #define TEXT_SIZE           (IS_IPAD ? 32 : 16)
 #define COUNT_SIZE          (IS_IPAD ? 32 : 16)
 #define COUNT_MARGIN        (IS_IPAD ? 20 : 10)
@@ -159,7 +160,7 @@ typedef enum {
     UIView*     _popupView;
     UILabel*    _countLabel;
     UIButton*   _closeButton;
-    UIButton*   _acceptButton;
+//    UIButton*   _acceptButton;
 
     
     BOOL        _shouldAnimate;
@@ -184,12 +185,13 @@ typedef enum {
         _shouldAnimate = YES;
         _maxCount = maxCount;
         
-        _backgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
-        _backgroundView.backgroundColor = [UIColor clearColor];
+        CGSize screedFrame = [[UIScreen mainScreen] applicationFrame].size;
+        _backgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screedFrame.width, screedFrame.height)];
+        _backgroundView.backgroundColor = [UIColor clearColor];// [UIColor blackColor];
         _backgroundView.alpha = 0;
         _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
-        _popupView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 240)];
+        _popupView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screedFrame.width, 240)];
         _popupView.autoresizingMask = UIViewAutoresizingFlexibleWidth; // height will be set at KeyboardWillShow
         [_backgroundView addSubview:_popupView];
 #if !IS_ARC
@@ -198,12 +200,12 @@ typedef enum {
         
         self.placeholder = placeHolder;
         self.frame = UIEdgeInsetsInsetRect(_popupView.frame, TEXTVIEW_INSETS);
-        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.font = [UIFont systemFontOfSize:TEXT_SIZE];
         self.keyboardAppearance = UIKeyboardAppearanceAlert;
         self.autocorrectionType = UITextAutocorrectionTypeNo;
         self.autocapitalizationType = UITextAutocapitalizationTypeNone;
-        self.layer.cornerRadius = 10;
+        self.layer.cornerRadius = 2;
         self.backgroundColor = [UIColor whiteColor];
         [_popupView addSubview:self];
 #if !IS_ARC
@@ -256,7 +258,7 @@ typedef enum {
             }
             
             _closeButton.frame = CGRectMake(buttonX, TEXTVIEW_INSETS.top-buttonRisingRatio*CLOSE_IMAGE_WIDTH, CLOSE_IMAGE_WIDTH, CLOSE_IMAGE_WIDTH);
-            _closeButton.showsTouchWhenHighlighted = YES;
+//            _closeButton.showsTouchWhenHighlighted = YES;
             [_closeButton addTarget:self action:@selector(handleCloseButton:) forControlEvents:UIControlEventTouchUpInside];
             _closeButton.autoresizingMask = autoresizing;
             [_popupView addSubview:_closeButton];
@@ -286,7 +288,7 @@ typedef enum {
             UIViewAutoresizing autoresizing = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
             
             _acceptButton.frame = CGRectMake(buttonX, TEXTVIEW_INSETS.top-buttonRisingRatio*CLOSE_IMAGE_WIDTH, CLOSE_IMAGE_WIDTH, CLOSE_IMAGE_WIDTH);
-            _acceptButton.showsTouchWhenHighlighted = YES;
+//            _acceptButton.showsTouchWhenHighlighted = YES;
             [_acceptButton addTarget:self action:@selector(handleAcceptButton:) forControlEvents:UIControlEventTouchUpInside];
             _acceptButton.autoresizingMask = autoresizing;
             [_popupView addSubview:_acceptButton];
@@ -407,9 +409,6 @@ typedef enum {
     if ([self.delegate respondsToSelector:@selector(popupTextView:willDismissWithText:cancelled:)]) {
         [self.delegate popupTextView:self willDismissWithText:self.text cancelled:cancelled];
     }
-    else if ([self.delegate respondsToSelector:@selector(popupTextView:willDismissWithText:)]) {
-        [self.delegate popupTextView:self willDismissWithText:self.text];
-    }
     
     [UIView animateWithDuration:ANIMATION_DURATION animations:^{
         
@@ -421,9 +420,6 @@ typedef enum {
             if ([self.delegate respondsToSelector:@selector(popupTextView:didDismissWithText:cancelled:)]) {
                 [self.delegate popupTextView:self didDismissWithText:self.text cancelled:cancelled];
             }
-            else if ([self.delegate respondsToSelector:@selector(popupTextView:didDismissWithText:)]) {
-                [self.delegate popupTextView:self didDismissWithText:self.text];
-            }
             
             [_backgroundView removeFromSuperview];
             _backgroundView = nil;
@@ -431,6 +427,22 @@ typedef enum {
         }
         
     }];
+}
+
+- (void)setAcceptBtnFrame:(CGRect)btnFrame andNormalImageWithStr:(NSString*)normalImgStr andHighlightImageWithStr:(NSString*)highlightImgStr {
+    _acceptButton.frame = btnFrame;
+    [_acceptButton setImage:[UIImage imageNamed:normalImgStr] forState:UIControlStateNormal];
+    if (highlightImgStr) {
+        [_acceptButton setImage:[UIImage imageNamed:highlightImgStr] forState:UIControlStateHighlighted];
+    }
+}
+
+- (void)setCloseBtnFrame:(CGRect)btnFrame andNormalImageWithStr:(NSString*)normalImgStr andHighlightImageWithStr:(NSString*)highlightImgStr {
+    _closeButton.frame = btnFrame;
+    [_closeButton setImage:[UIImage imageNamed:normalImgStr] forState:UIControlStateNormal];
+    if (highlightImgStr) {
+        [_closeButton setImage:[UIImage imageNamed:highlightImgStr] forState:UIControlStateHighlighted];
+    }
 }
 
 #pragma mark -

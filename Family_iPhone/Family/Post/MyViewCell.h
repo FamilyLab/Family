@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SelectedButton.h"
 
 @interface MyViewCell : UIView
 
 @property (nonatomic, strong) UIButton *button;
 //@property (nonatomic, strong) UIButton *delBtn;   
 
+@property (nonatomic, strong) SelectedButton *selcetBtn;
 @end

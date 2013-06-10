@@ -11,7 +11,8 @@
 #import "MapArroundAnnoView.h"
 #import "SVProgressHUD.h"
 #import "MyHttpClient.h"
-#import "PostViewController.h"
+//#import "PostViewController.h"
+#import "PostSthViewController.h"
 
 #define BASE_RADIUS .5 // = 1 mile
 #define MINIMUM_LATITUDE_DELTA 0.20
@@ -293,9 +294,11 @@
 #pragma mark Table view delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    PostViewController *con = (PostViewController*)preController;
+    PostSthViewController *con = (PostSthViewController*)preController;
+//    PostViewController *con = (PostViewController*)preController;
     con.addressStr = [[dataArray objectAtIndex:indexPath.row] objectForKey:NAME];
-    con.downPostView.myLocationLbl.text = [[dataArray objectAtIndex:indexPath.row] objectForKey:NAME];
+    [con.postSthView.locationBtn setTitle:[[dataArray objectAtIndex:indexPath.row] objectForKey:NAME] forState:UIControlStateNormal];
+//    con.downPostView.myLocationLbl.text = [[dataArray objectAtIndex:indexPath.row] objectForKey:NAME];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

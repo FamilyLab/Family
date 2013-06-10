@@ -11,10 +11,12 @@
 #import "LoadingView.h"
 #import "AGImagePickerController+Helper.h"
 
-@class CameraOverlayViewController;
-@class PostViewController;
+//@class CameraOverlayViewController;
+//@class PostViewController;
+@class PostSthViewController;
+@class CameraPickerController;
 
-@interface MyTabBarController : UITabBarController <BottomViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface MyTabBarController : UITabBarController <BottomViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) BottomView *tabBarView;
 
@@ -30,14 +32,21 @@
 @property (nonatomic, assign) int dialogNum;
 @property (nonatomic, assign) int noticeNum;
 
-@property (nonatomic, strong) CameraOverlayViewController *cameraViewController;
-@property (nonatomic, strong) UIImagePickerController *customPicker;
+//@property (nonatomic, strong) CameraOverlayViewController *overlayViewCon;
+@property (nonatomic, strong) CameraPickerController *customPicker;
 
-@property (nonatomic, strong) PostViewController *postViewCon;
+//@property (nonatomic, strong) PostViewController *postViewCon;
+@property (nonatomic, strong) PostSthViewController *postSthViewCon;
 
-@property (nonatomic, assign) AGImagePickerController *agImgPickerCon;
-@property (nonatomic, assign) UIView *cameraBottomView;
+@property (nonatomic, strong) AGImagePickerController *agImgPickerCon;
+//@property (nonatomic, assign) UIView *cameraBottomView;
+
+@property (nonatomic, assign) BOOL shouldPresentAConToOpenCamera;
+
 
 - (void)selecteFirstIndexForLogout;
+- (void)showCustomCamera:(NSNotification*)noti;
+//- (void)hidePostMenu;
+- (void)hideCameraBottomBar;
 
 @end

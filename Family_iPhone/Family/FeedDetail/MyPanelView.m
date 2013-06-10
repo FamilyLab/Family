@@ -511,6 +511,7 @@
     [self.pullTable reloadData];
 }
 
+#warning webview
 //让webview响应touch事件
 - (BOOL)webView:(UIWebView*)webView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType {
     NSString *requestString = [[request URL] absoluteString];

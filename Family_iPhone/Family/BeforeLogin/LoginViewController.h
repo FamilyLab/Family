@@ -22,6 +22,8 @@
 @property (nonatomic, strong) IBOutlet UIButton *cookieBtn;
 @property (nonatomic, strong) IBOutlet UIImageView *symbolImgView;
 
+@property (nonatomic, assign) BOOL shouldGoToJoinTopic;
+
 //- (IBAction)loginBtnPressed:(id)sender;
 
 @end

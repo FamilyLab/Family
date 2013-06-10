@@ -28,6 +28,8 @@ typedef enum {
 
 @property (nonatomic, copy) NSString *userId;
 
+@property (nonatomic, copy) NSString *avatarStr;
+
 @property (nonatomic, assign) BOOL canSelect;
 //@property (nonatomic, strong) NSMutableArray *togetherArray;
 @property (nonatomic, strong) NSMutableArray *selectedArray;

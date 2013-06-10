@@ -9,11 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "TableController.h"
 #import "FeedCell.h"
-#import "LoadingView.h"
+//#import "LoadingView.h"
 #import "BottomView.h"
+#import "YIPopupTextView.h"
 
-@interface FeedViewController :TableController <UIActionSheetDelegate, BottomViewDelegate> {
+@interface FeedViewController :TableController <UIActionSheetDelegate, BottomViewDelegate, YIPopupTextViewDelegate> {
     BOOL canRefreshCountNum;
+    
+    BOOL isFirstShowTopic;
 }
 
 @property (nonatomic, assign) BOOL isForMyLoveFeed;
@@ -21,5 +24,7 @@
 //@property (nonatomic, strong) IBOutlet UIButton *tmpBtn;
 //@property(nonatomic, retain) NSMutableArray *otherTypeArray;
 @property (nonatomic, strong) NSMutableArray *loveArray;
+
+- (void)loveThisWithIndex:(int)indexRow andCell:(FeedCell*)cell;
 
 @end

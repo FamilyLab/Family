@@ -22,7 +22,7 @@
 @synthesize albumView;
 //@synthesize bigImgView, bigImgLbl;
 @synthesize firstComment, secondComment;
-@synthesize lineImgView;
+//@synthesize lineImgView;
 //@synthesize firstImgView, secondImgView, thirdImgView, imgsNumLbl, describeLbl;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -56,47 +56,56 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.lineImgView.frame = (CGRect){.origin.x = 0, .origin.y = self.frame.size.height - 1, .size = lineImgView.frame.size};
+//    self.lineImgView.frame = (CGRect){.origin.x = 0, .origin.y = self.frame.size.height - 1, .size = lineImgView.frame.size};
     if (cellType == otherNoImgType || cellType == otherHasImgType) {
         return;
     }
-
-    [albumView layoutSubviews];
-    [headView layoutSubviews];
     
+//FUCK_NUM_0、FUCK_NUM_1、FUCK_NUM_2（FUCK_NUM_1和FUCK_NUM_2的值一样）都改为0，再将评论的背景图片_commentBgImgView改为：@"feed_comment_bg_v12.png"(@"feed_comment_bg_short_v12.png"的为短的)，就可以让评论的那背景框宽度为300。
+//#define FUCK_NUM_0  48
+    if (self.commentBgImgView) {
+        _commentBgImgView.image = [UIImage imageNamed:@"feed_comment_bg_short_v12.png"];//改这里
+    }
+    
+    [headView layoutSubviews];
+    [_typeView layoutSubviews];
     albumView.frame = (CGRect){.origin.x = albumView.frame.origin.x, .origin.y = _typeView.frame.origin.y + _typeView.frame.size.height, .size = albumView.frame.size};
+    [albumView layoutSubviews];
     
     if (!_loverView.hidden) {
-        CGSize loverSize = [_loverView.contentLbl.text sizeWithFont:_loverView.contentLbl.font constrainedToSize:CGSizeMake(LOVE_MAX_WIDTH, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+        CGSize loverSize = [_loverView.contentLbl.text sizeWithFont:_loverView.contentLbl.font constrainedToSize:CGSizeMake(LOVE_MAX_WIDTH - FUCK_NUM_1, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
         loverSize.height += 10 * 2;
 //        loverSize.height = loverSize.height < LOVE_MIN_HEIGHT ? LOVE_MIN_HEIGHT : loverSize.height;
-        _loverView.frame = (CGRect){.origin = CGPointMake(0, 10), .size = loverSize};
+        _loverView.frame = (CGRect){.origin = CGPointMake(0, 10), .size.width = DEVICE_SIZE.width - FUCK_NUM_0, .size.height = loverSize.height};
+//        _loverView.frame = (CGRect){.origin = CGPointMake(0, 10), .size.width = loverSize.width, .size.height = loverSize.height};
         [_loverView layoutSubviews];
     }
     if (!firstComment.hidden) {
         CGFloat y = _loverView.hidden ? 10 : _loverView.frame.origin.y + _loverView.frame.size.height;
-        CGSize firstCommentSize = [firstComment.contentLbl.text sizeWithFont:firstComment.contentLbl.font constrainedToSize:CGSizeMake(COMMENT_MAX_WIDTH, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+        CGSize firstCommentSize = [firstComment.contentLbl.text sizeWithFont:firstComment.contentLbl.font constrainedToSize:CGSizeMake(COMMENT_MAX_WIDTH - FUCK_NUM_1, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
         firstCommentSize.height += 10 * 2;//firstCommentSize.height < COMMENT_MIN_HEIGHT ? COMMENT_MIN_HEIGHT : firstCommentSize.height + 10 * 2;
-        firstComment.frame = (CGRect){.origin.x = 0, .origin.y = y, .size.width = DEVICE_SIZE.width, .size.height = firstCommentSize.height};
+        firstComment.frame = (CGRect){.origin.x = 0, .origin.y = y, .size.width = DEVICE_SIZE.width - FUCK_NUM_0, .size.height = firstCommentSize.height};
         [firstComment layoutSubviews];
     }
     if (!secondComment.hidden) {
-        CGSize secondCommentSize = [secondComment.contentLbl.text sizeWithFont:secondComment.contentLbl.font constrainedToSize:CGSizeMake(COMMENT_MAX_WIDTH, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+        CGSize secondCommentSize = [secondComment.contentLbl.text sizeWithFont:secondComment.contentLbl.font constrainedToSize:CGSizeMake(COMMENT_MAX_WIDTH - FUCK_NUM_1, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
         secondCommentSize.height += 10 * 2;//secondCommentSize.height < COMMENT_MIN_HEIGHT ? COMMENT_MIN_HEIGHT : secondCommentSize.height + 10 * 2;
-        secondComment.frame = (CGRect){.origin.x = 0, .origin.y = firstComment.frame.origin.y + firstComment.frame.size.height, .size.width = DEVICE_SIZE.width, .size.height = secondCommentSize.height};
+        secondComment.frame = (CGRect){.origin.x = 0, .origin.y = firstComment.frame.origin.y + firstComment.frame.size.height, .size.width = DEVICE_SIZE.width - FUCK_NUM_0, .size.height = secondCommentSize.height};
         [secondComment layoutSubviews];
         
-        _totalComentNum.frame = (CGRect){.origin.x = _totalComentNum.frame.origin.x, .origin.y = secondComment.frame.origin.y + secondComment.frame.size.height - 2, .size = _totalComentNum.frame.size};
+        _totalComentNum.frame = (CGRect){.origin.x = 0, .origin.y = secondComment.frame.origin.y + secondComment.frame.size.height - 2, .size.width = secondComment.frame.size.width, .size.height = _totalComentNum.frame.size.height};
     }
     
     CGFloat loverH = _loverView.hidden ? 0 : _loverView.frame.size.height;
     CGFloat firstCommentH = firstComment.hidden ? 0 : firstComment.frame.size.height;
     CGFloat secondCommentH = secondComment.hidden ? 0 : secondComment.frame.size.height;
     CGFloat numH = _totalComentNum.hidden ? 0 : _totalComentNum.frame.size.height;
-    _forCommentView.frame = (CGRect){.origin.x = 0, .origin.y = albumView.frame.origin.y + albumView.frame.size.height, .size.width = DEVICE_SIZE.width, .size.height = loverH + firstCommentH + secondCommentH + numH + 10};
+    _forCommentView.frame = (CGRect){.origin.x = 0 + FUCK_NUM_0, .origin.y = albumView.frame.origin.y + albumView.frame.size.height, .size.width = DEVICE_SIZE.width - FUCK_NUM_0, .size.height = loverH + firstCommentH + secondCommentH + numH + 10};
+    [_forCommentView layoutSubviews];
     if (!_commentBgImgView.hidden) {
         _commentBgImgView.image = [_commentBgImgView.image stretchableImageWithLeftCapWidth:15 topCapHeight:15];
-        _commentBgImgView.frame = (CGRect){.origin.x = 10, .origin.y = 0, .size.width = DEVICE_SIZE.width - 10 * 2, .size.height = _forCommentView.frame.size.height};
+        _commentBgImgView.frame = (CGRect){.origin.x = 10, .origin.y = 0, .size.width = DEVICE_SIZE.width - 10 * 2 - FUCK_NUM_0, .size.height = _forCommentView.frame.size.height};
+//        _commentBgImgView.frame = (CGRect){.origin.x = 10, .origin.y = 0, .size.width = DEVICE_SIZE.width - 10 * 2, .size.height = _forCommentView.frame.size.height};
     }
     _cellBgImgView.image = [_cellBgImgView.image stretchableImageWithLeftCapWidth:20 topCapHeight:20];
     _cellBgImgView.frame = (CGRect){.origin = _cellBgImgView.frame.origin, .size.width = _cellBgImgView.frame.size.width, .size.height = albumView.frame.origin.y + albumView.frame.size.height - _cellBgImgView.frame.origin.y + 1};
@@ -105,6 +114,7 @@
 //    
 //    secondComment.frame = (CGRect){.origin.x = 0, .origin.y = albumView.frame.origin.y + albumView.frame.size.height + firstComment.frame.size.height, .size = CGSizeMake(DEVICE_SIZE.width, 55)};
 //    [secondComment layoutSubviews];
+    
 }
 
 //公共部分
@@ -157,7 +167,8 @@
 //    albumView.albumBtn.btnLbl.frame = (CGRect){.origin.x = 23, .origin.y = 0, .size = CGSizeMake(100, 40)};
     
     NSString *timeStr = [Common dateSinceNow:[aDict objectForKey:DATELINE]];
-    albumView.comeLbl.text = $str(@"%@   来自：%@", timeStr, emptystr([aDict objectForKey:COME]));
+    self.comeLbl.text = $str(@"%@   来自：%@", timeStr, emptystr([aDict objectForKey:COME]));
+//    albumView.comeLbl.text = $str(@"%@   来自：%@", timeStr, emptystr([aDict objectForKey:COME]));
     [albumView.likeitBtn setImage:[UIImage imageNamed:@"03a.png"] forState:UIControlStateNormal];//likeit_a.png
     [albumView.likeitBtn setImage:[UIImage imageNamed:@"03c.png"] forState:UIControlStateHighlighted];//likeit_b.png
     [albumView.likeitBtn setImage:[UIImage imageNamed:@"03c.png"] forState:UIControlStateSelected];//likeit_b.png

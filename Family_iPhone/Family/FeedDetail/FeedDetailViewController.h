@@ -72,4 +72,6 @@
 @property (nonatomic, strong) IBOutlet UIButton *goBackBtn;
 @property (nonatomic, strong) IBOutlet UIButton *goForwardBtn;
 
+- (void)uploadRequestToLove;
+
 @end

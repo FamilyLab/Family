@@ -8,7 +8,8 @@
 
 #import "TopicCell.h"
 #import "UIImageView+WebCache.h"
-#import "PostViewController.h"
+//#import "PostViewController.h"
+#import "PostSthViewController.h"
 #import "Common.h"
 
 @implementation TopicCell
@@ -54,9 +55,15 @@
         LoginViewController *con = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
         pushAConInView(self, con);
     } else {//去发表页面
-        PostViewController *con = [[PostViewController alloc] initWithNibName:@"PostViewController" bundle:nil];
-        con.topicId = _topicId;
-        pushAConInView(self, con);
+        if (self.topicId) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_CUSTOM_CAMERA object:_topicId];
+        }
+//        PostSthViewController *con = [[PostSthViewController alloc] initWithNibName:@"PostSthViewController" bundle:nil];
+//        con.shouldAddDefaultImage = YES;
+//        con.postSthType = postPhoto;
+////        PostViewController *con = [[PostViewController alloc] initWithNibName:@"PostViewController" bundle:nil];
+//        con.topicId = _topicId;
+//        pushAConInView(self, con);
     }
 }
 

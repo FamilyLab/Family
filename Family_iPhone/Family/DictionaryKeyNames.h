@@ -64,6 +64,10 @@
 #define LOVE_MAX_WIDTH      250
 #define LOVE_MIN_HEIGHT     37
 
+//FUCK_NUM_0、FUCK_NUM_1、FUCK_NUM_2（FUCK_NUM_1和FUCK_NUM_2的值一样）都改为0，再将评论的背景图片_commentBgImgView改为：@"feed_comment_bg_v12.png"(@"feed_comment_bg_short_v12.png"的为短的)，就可以让评论的那背景框宽度为300。
+#define FUCK_NUM_0  48
+#define FUCK_NUM_1  33
+
 //判断是否为空字段并做处理
 #define emptystr(obj)  !obj ? @"" : (((NSNull *)(obj) == [NSNull null] ? @"" : (obj)))
 #define isEmptyStr(obj) [emptystr(obj) isEqualToString:@""] ? YES : NO
@@ -119,6 +123,8 @@
 #define PUSH_FOR_DIALOG_DETAIL          @"pushForDialogDetail"
 //#define PUSH_FOR_FEED_DETAIL            @"pushForFeedDetail"
 #define PRESENT_POST_VIEWCONTROLLER     @"presendtPostViewController"
+#define DISMISS_CUSTOM_CAMERA           @"dismissCustomCamera"
+#define SHOW_CUSTOM_CAMERA              @"showCustomCamera"
 
 #define REFRESH_COUNT_NUM   @"wo zhi shi yao shua xin tong ji jie kou a a a a a"//刷新统计接口
 //#define ADD_MSG_NUM         @"addMsgNum"
@@ -157,6 +163,7 @@
 #define DEVICE_BOUNDS [[UIScreen mainScreen] applicationFrame]
 #define DEVICE_SIZE [[UIScreen mainScreen] applicationFrame].size
 
+#define CURRENT_SYS_VERSION [[[UIDevice currentDevice] systemVersion] floatValue]
 //theme
 #define kKeyTheme       @"keyForTheme"
 #define DEFAULT_THEME   @"default"
@@ -179,11 +186,12 @@
 //#define NEED_Clear_Head_Cache   @"needClearHeadCache"  
 #define MY_SPACE_IMAGE_DATA     [[NSUserDefaults standardUserDefaults] objectForKey:SPACE_IMAGE]
 #define MY_WANT_SHOW_TODAY_TOPIC    [[NSUserDefaults standardUserDefaults] boolForKey:WANT_SHOW_TODAY_TOPIC]
-#define MY_IS_FIRST_SHOW        [[NSUserDefaults standardUserDefaults] objectForKey:IS_FIRST_SHOW]
+#define MY_NOT_FIRST_SHOW       [[NSUserDefaults standardUserDefaults] objectForKey:NOT_FIRST_SHOW]
 #define MY_HAS_BIND_SINA_WEIBO  [[NSUserDefaults standardUserDefaults] boolForKey:HAS_BIND_SINA_WEIBO]
 #define MY_HAS_BIND_QQ_WEIBO    [[NSUserDefaults standardUserDefaults] boolForKey:HAS_BIND_QQ_WEIBO]
 #define MY_HAS_BIND_WEIXIN      [[NSUserDefaults standardUserDefaults] boolForKey:HAS_BIND_WEIXIN]
 #define MY_SHARE_TO_SINA_WEIBO  [[NSUserDefaults standardUserDefaults] boolForKey:SHARE_TO_SINA_WEIBO]
+#define MY_LAST_TOPIC_ID        [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TOPIC_ID]
 
 //keychain
 #import "PDKeychainBindings.h"
@@ -195,9 +203,10 @@
 
 #define AVATAR_URL              @"avatarUrl"
 #define LAST_ZONE_NAME          @"lastPostInZoneName"
+#define LAST_TOPIC_ID           @"lastTopicId"
 
 #define WANT_SHOW_TODAY_TOPIC   @"wantToShowTodayTopicWhenLoadApp"
-#define IS_FIRST_SHOW           @"isFirstShow"
+#define NOT_FIRST_SHOW          @"notFirstShow"
 
 #define HAS_BIND_SINA_WEIBO     @"is_sina_bind"
 #define HAS_BIND_QQ_WEIBO       @"is_qq_bind"

@@ -7,6 +7,8 @@
 //
 
 #import "LoadingView.h"
+#import "TopicView.h"
+#import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define delayTimeToLoadingAnimation     0.5f
@@ -83,8 +85,15 @@
     NSUInteger loadingIndex = [[con.view subviews] indexOfObject:self];
     [con.view exchangeSubviewAtIndex:loadingIndex withSubviewAtIndex:loadingIndex-1];
     [UIView setAnimationDelegate:self];
+    [UIView setAnimationDidStopSelector:@selector(didStopAnimation)];
     [self removeFromSuperview];
     [UIView commitAnimations];
+}
+
+- (void)didStopAnimation {
+//    if (!MY_HAS_LOGIN && MY_NOT_FIRST_SHOW) {
+//        [[AppDelegate app] buildLoginConWithTopicView:nil];
+//    }
 }
 
 

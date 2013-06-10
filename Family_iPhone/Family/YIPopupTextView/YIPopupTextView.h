@@ -27,10 +27,6 @@ typedef NS_ENUM(NSInteger, YIPopupTextViewButtonStyle) {
 - (void)popupTextView:(YIPopupTextView*)textView willDismissWithText:(NSString*)text cancelled:(BOOL)cancelled;
 - (void)popupTextView:(YIPopupTextView*)textView didDismissWithText:(NSString*)text cancelled:(BOOL)cancelled;
 
-// DEPRECATED
-- (void)popupTextView:(YIPopupTextView*)textView willDismissWithText:(NSString*)text DEPRECATED_ATTRIBUTE;
-- (void)popupTextView:(YIPopupTextView*)textView didDismissWithText:(NSString*)text DEPRECATED_ATTRIBUTE;
-
 @end
 
 
@@ -39,6 +35,8 @@ typedef NS_ENUM(NSInteger, YIPopupTextViewButtonStyle) {
 @property (nonatomic, assign) id <YIPopupTextViewDelegate> delegate;
 
 @property (nonatomic, assign) BOOL caretShiftGestureEnabled;    // default = NO
+
+@property (nonatomic, assign) UIButton *acceptButton;
 
 - (id)initWithPlaceHolder:(NSString*)placeHolder
                  maxCount:(NSUInteger)maxCount;     // YIPopupTextViewButtonStyleRightCancel & tintsDoneButton=NO
@@ -50,6 +48,10 @@ typedef NS_ENUM(NSInteger, YIPopupTextViewButtonStyle) {
 
 - (void)showInView:(UIView*)view;
 - (void)dismiss;
+
+//By Aevit for custom button
+- (void)setAcceptBtnFrame:(CGRect)btnFrame andNormalImageWithStr:(NSString*)normalImgStr andHighlightImageWithStr:(NSString*)highlightImgStr;
+- (void)setCloseBtnFrame:(CGRect)btnFrame andNormalImageWithStr:(NSString*)normalImgStr andHighlightImageWithStr:(NSString*)highlightImgStr;
 
 @end
 

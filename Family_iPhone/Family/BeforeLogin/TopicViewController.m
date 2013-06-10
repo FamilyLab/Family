@@ -35,6 +35,7 @@
     // Do any additional setup after loading the view from its nib.
 //    _tableView.refreshView.hidden = YES;
     [self addTopView];
+    [self addBottomView];
     self.view.backgroundColor = bgColor();
     [self.view bringSubviewToFront:_loadingView];
     if (!MY_HAS_LOGIN || !MY_AUTO_LOGIN) {
@@ -46,6 +47,7 @@
 //            [_loadingView removeTheLoadingViewInCon:self];
 //        } afterDelay:1.2f];
     } else {//更多页面的
+        _tableView.frame = (CGRect){.origin = _tableView.frame.origin, .size.width = DEVICE_SIZE.width, .size.height = DEVICE_SIZE.height - 50 - 40};
         [_loadingView removeFromSuperview];
         self.loadingView = nil;
     }
@@ -66,7 +68,40 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:YES];
-    self._tableView.frame = CGRectMake(0, 50, DEVICE_SIZE.width, DEVICE_SIZE.height - 50);
+//    self._tableView.frame = CGRectMake(0, 50, DEVICE_SIZE.width, DEVICE_SIZE.height - 50);
+}
+
+#pragma mark - my method(s)
+- (void)addBottomView {
+    NSArray *normalImages = [[NSArray alloc] initWithObjects:@"login_back", @"join_topic", nil];
+    BottomView *tmpView = [[BottomView alloc] initWithFrame:CGRectMake(0, DEVICE_SIZE.height - 40, DEVICE_SIZE.width, 40)
+                                                       type:notAboutTheme
+                                                  buttonNum:[normalImages count]
+                                            andNormalImages:normalImages
+                                          andSelectedImages:nil
+                                         andBackgroundImage:@"login_bg"];
+    tmpView.delegate = self;
+    [self.view addSubview:tmpView];
+}
+
+- (void)userPressedTheBottomButton:(BottomView *)_view andButton:(UIButton *)_button {
+    int btnTag = _button.tag - kTagBottomButton;
+    switch (btnTag) {
+        case 0://后退
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+            break;
+        }
+        case 1:
+        {
+            if (self.topicId) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_CUSTOM_CAMERA object:self.topicId];
+            }
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 - (void)sendRequest:(id)sender {
@@ -97,6 +132,8 @@
 //        }];
         
         self.topicId = [[JSON objectForKey:WEB_DATA] objectForKey:TOPIC_ID];
+        [ConciseKit setUserDefaultsWithObject:_topicId forKey:LAST_TOPIC_ID];
+        
         self.topicDescribeStr = [[JSON objectForKey:WEB_DATA] objectForKey:SUBJECT];
         self.topicImgUrlStr = [[JSON objectForKey:WEB_DATA] objectForKey:PIC];
         self.joinType = [[[JSON objectForKey:WEB_DATA] objectForKey:JOIN_TYPE] objectAtIndex:0];

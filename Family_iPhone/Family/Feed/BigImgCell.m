@@ -50,14 +50,47 @@
         self.preContentView.hidden = NO;
         self.preContentView.rightLbl.text = [aDict objectForKey:OLD_SUBJECT];
     }
-//    bigImgView.userInteractionEnabled = YES;
-//    [bigImgView whenTapped:^{
-//        ShowBigImageController *con = [[ShowBigImageController alloc] initWithNibName:@"ShowBigImageController" bundle:nil];
-//        con.thumbImgStr = $str(@"%@%@", [[aDict objectForKey:FEED_IMAGE_1] delLastStrForYouPai], ypFeedBigImg);
-//        con.fullImgStr = [[aDict objectForKey:FEED_IMAGE_1] delLastStrForYouPai];
-//        presentAConInView(self, con);
-//    }];
+    
+    bigImgView.userInteractionEnabled = YES;
+    [bigImgView whenTapped:^{
+        if (!self.photosArray) {
+            self.photosArray = [[NSMutableArray alloc] init];
+        }
+        [self.photosArray removeAllObjects];
+        for (int i = 0; i < [self.picArray count]; i++) {
+            [self.photosArray addObject:[MWPhoto photoWithURL:[NSURL URLWithString:[[self.picArray objectAtIndex:i] delLastStrForYouPai]]]];
+        }
+        MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+        browser.indexRow = self.indexRow;
+        browser.cell = self;
+        browser.wantsFullScreenLayout = YES;
+        browser.displayActionButton = YES;
+        [browser setInitialPageIndex:0];
+        
+        browser.dataDict = (NSMutableDictionary*)aDict;
+        browser.idType = @"photoid";
+        
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:browser];
+        nav.navigationBarHidden = YES;
+        presentAConInView(self, nav);
+    }];
 }
+#pragma mark - MWPhotoBrowserDelegate
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    return self.photosArray.count;
+}
+
+- (MWPhoto *)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+    if (index < self.photosArray.count)
+        return [self.photosArray objectAtIndex:index];
+    return nil;
+}
+
+//- (MWCaptionView *)photoBrowser:(MWPhotoBrowser *)photoBrowser captionViewForPhotoAtIndex:(NSUInteger)index {
+//    MWPhoto *photo = [self.photosArray objectAtIndex:index];
+//    MWCaptionView *captionView = [[MWCaptionView alloc] initWithPhoto:photo];
+//    return captionView;
+//}
 
 
 /*

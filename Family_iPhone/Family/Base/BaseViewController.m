@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "SignInViewController.h"
 #import "MoreViewController.h"
+#import "MyTabBarController.h"
 
 @interface BaseViewController ()
 
@@ -71,6 +72,13 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:YES];
     [SVProgressHUD dismiss];
+    
+//    if ([[self.navigationController.viewControllers objectAtIndex:0] isKindOfClass:[MyTabBarController class]]) {
+//        MyTabBarController *tabBarCon = (MyTabBarController*)myTabBarController;
+//        if ([tabBarCon.viewControllers containsObject:self]) {
+//            [tabBarCon hidePostMenu];
+//        }
+//    }
 }
 
 - (void)dealloc {
@@ -169,6 +177,7 @@
         
         AppDelegate *appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
         [appDelegate uploadToken:MY_DEVICE_TOKEN];
+        [[AppDelegate app] loading:NO];//加载今日话题
         
         [[NSNotificationCenter defaultCenter] postNotificationName:SEND_REQUEST object:nil];
         [self.navigationController dismissModalViewControllerAnimated:YES];

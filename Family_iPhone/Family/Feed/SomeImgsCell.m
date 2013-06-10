@@ -75,7 +75,62 @@
         self.preContentView.hidden = NO;
         self.preContentView.rightLbl.text = [aDict objectForKey:OLD_MESSAGE];
     }
+    
+    firstImgView.userInteractionEnabled = YES;
+    [firstImgView whenTapped:^{
+        [self showBigImgWithIndex:0 andDict:aDict];
+    }];
+    
+    secondImgView.userInteractionEnabled = YES;
+    [secondImgView whenTapped:^{
+        [self showBigImgWithIndex:1 andDict:aDict];
+    }];
+    
+    thirdImgView.userInteractionEnabled = YES;
+    [thirdImgView whenTapped:^{
+        [self showBigImgWithIndex:2 andDict:aDict];
+    }];
 }
+
+- (void)showBigImgWithIndex:(int)index andDict:(NSDictionary*)aDict {
+    if (!self.photosArray) {
+        self.photosArray = [[NSMutableArray alloc] init];
+    }
+    [self.photosArray removeAllObjects];
+    for (int i = 0; i < [self.picArray count]; i++) {
+        [self.photosArray addObject:[MWPhoto photoWithURL:[NSURL URLWithString:[[self.picArray objectAtIndex:i] delLastStrForYouPai]]]];
+    }
+    MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+    browser.indexRow = self.indexRow;
+    browser.cell = self;
+    browser.wantsFullScreenLayout = YES;
+    browser.displayActionButton = YES;
+    [browser setInitialPageIndex:index];
+    
+    browser.dataDict = (NSMutableDictionary*)aDict;
+    browser.idType = [aDict objectForKey:FEED_ID_TYPE];
+    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:browser];
+    nav.navigationBarHidden = YES;
+    presentAConInView(self, nav);
+}
+
+#pragma mark - MWPhotoBrowserDelegate
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    return self.photosArray.count;
+}
+
+- (MWPhoto *)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+    if (index < self.photosArray.count)
+        return [self.photosArray objectAtIndex:index];
+    return nil;
+}
+
+//- (MWCaptionView *)photoBrowser:(MWPhotoBrowser *)photoBrowser captionViewForPhotoAtIndex:(NSUInteger)index {
+//    MWPhoto *photo = [self.photosArray objectAtIndex:index];
+//    MWCaptionView *captionView = [[MWCaptionView alloc] initWithPhoto:photo];
+//    return captionView;
+//}
 
 /*
 // Only override drawRect: if you perform custom drawing.

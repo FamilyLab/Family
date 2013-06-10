@@ -7,6 +7,7 @@
 //
 
 #import "CameraPickerController.h"
+#import "MyTabBarController.h"
 
 @interface CameraPickerController ()
 
@@ -33,6 +34,23 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
+    float sysVer = [[[UIDevice currentDevice] systemVersion] floatValue];
+    if (sysVer < 5.0) {
+        UINavigationController *nav = (UINavigationController*)self.parentViewController;
+        MyTabBarController *tabBarCon = (MyTabBarController*)[nav.viewControllers objectAtIndex:0];
+        [tabBarCon hideCameraBottomBar];
+    } else {
+        UINavigationController *nav = (UINavigationController*)self.presentingViewController;
+        MyTabBarController *tabBarCon = (MyTabBarController*)[nav.viewControllers objectAtIndex:0];
+        [tabBarCon hideCameraBottomBar];
+    }
+//    if (_overlayViewCon.bottomBar) {
+//        _overlayViewCon.bottomBar.hidden = YES;
+//    }
 }
 
 @end

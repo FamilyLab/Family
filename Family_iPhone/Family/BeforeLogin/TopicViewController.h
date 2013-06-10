@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "TableController.h"
 #import "LoadingView.h"
+#import "BottomView.h"
 
-@interface TopicViewController : TableController
+@interface TopicViewController : TableController <BottomViewDelegate>
 
 @property (nonatomic, copy) NSString *topicId;
 @property (nonatomic, copy) NSString *joinType;

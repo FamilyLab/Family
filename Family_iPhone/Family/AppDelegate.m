@@ -26,6 +26,8 @@
 #import "MessageViewController.h"
 #import "FamilyListViewController.h"
 #import "MobClick.h"
+#import "TopicView.h"
+#import "LoadingView.h"
 
 @implementation AppDelegate
 @synthesize tabBarCon = _tabBarCon;
@@ -33,7 +35,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [MobClick startWithAppkey:UMENG_APP_KEY reportPolicy:SENDWIFIONLY channelId:nil];
+    [ConciseKit removeUserDafualtForKey:@"isFirstShow"];
+//    [ConciseKit removeUserDafualtForKey:LAST_TOPIC_ID];
+    _isFirstShow = YES;
+    _isLogout = NO;
+    [MobClick startWithAppkey:UMENG_APP_KEY reportPolicy:BATCH channelId:nil];
     [MobClick checkUpdate:@"有新版本啦" cancelButtonTitle:@"跳过" otherButtonTitles:@"去更新"];
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -64,13 +70,7 @@
 //    [[SDImageCache sharedImageCache] clearMemory];
 //    [[SDImageCache sharedImageCache] clearDisk];
     
-//    if (![ConciseKit userDefaultsObjectForKey:LAST_ZONE_NAME]) {
-//        [ConciseKit setUserDefaultsWithObject:@"默认空间" forKey:LAST_ZONE_NAME];
-//    }
-//    if (![ConciseKit userDefaultsObjectForKey:SPACE_IMAGE]) {
-//        [self setDefaultSpaceImage];
-//    }
-    if (MY_IS_FIRST_SHOW == nil) {
+    if (!MY_NOT_FIRST_SHOW) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:WANT_SHOW_TODAY_TOPIC];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:HAS_BIND_SINA_WEIBO];
@@ -93,14 +93,10 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
-//        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:NEED_Clear_Head_Cache];
-//        [[NSUserDefaults standardUserDefaults] synchronize];
-//    }
-    
     self.tabBarCon = [[MyTabBarController alloc] init];
     
-//    self.navCon = [[UINavigationController alloc] initWithRootViewController:_tabBarCon];
-    self.navCon = [[MLNavigationController alloc] initWithRootViewController:_tabBarCon];
+    self.navCon = [[UINavigationController alloc] initWithRootViewController:_tabBarCon];
+//    self.navCon = [[MLNavigationController alloc] initWithRootViewController:_tabBarCon];
     self.tabBarCon.navigationController.navigationBarHidden = YES;
     self.window.rootViewController = self.navCon;
     
@@ -131,6 +127,9 @@
     [WXApi registerApp:WeiXin_APP_ID];
     
     [self loading:MY_HAS_LOGIN];
+    if (!MY_HAS_LOGIN) {
+        [self buildLoginConWithTopicView:nil];
+    }
     
 #if TARGET_IPHONE_SIMULATOR
     [[DCIntrospect sharedIntrospector] start];
@@ -138,29 +137,85 @@
     return YES;
 }
 
-- (void)dismissCustomCameraPicker {
-    if (self.tabBarCon.customPicker) {
-        [self.tabBarCon.customPicker dismissModalViewControllerAnimated:YES];
-    }
-}
-
 + (AppDelegate*) app {
     return (AppDelegate*)[[UIApplication sharedApplication] delegate];
 }
 
 - (void)loading:(BOOL)_hasLogin {
-    if (!MY_IS_FIRST_SHOW) {
+    if (!MY_NOT_FIRST_SHOW) {//首次安装
+        LoginViewController *loginCon = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginCon];
+        nav.navigationBarHidden = YES;
+        [self.navCon presentModalViewController:nav animated:NO];
+        
         GuideViewController *guideCon = [[GuideViewController alloc] initWithNibName:@"GuideViewController" bundle:nil];
         UINavigationController *adNav = [[UINavigationController alloc] initWithRootViewController:guideCon];
         adNav.navigationBarHidden = YES;
-        [self.navCon presentModalViewController:adNav animated:NO];
-    } else if (MY_WANT_SHOW_TODAY_TOPIC || !MY_HAS_LOGIN) {
-        TopicViewController *con = [[TopicViewController alloc] initWithNibName:@"TopicViewController" bundle:nil];
-        con.isFromMoreCon = NO;
-        UINavigationController *adNav = [[UINavigationController alloc] initWithRootViewController:con];
-        adNav.navigationBarHidden = YES;
-        [self.navCon presentModalViewController:adNav animated:NO];
+        [nav presentModalViewController:adNav animated:NO];
+//        [self.navCon presentModalViewController:adNav animated:NO];
+    } else if (MY_WANT_SHOW_TODAY_TOPIC && MY_HAS_LOGIN) {
+        [self performBlock:^(id sender) {
+            [self sendRequestForTopic:nil];
+        } afterDelay:0.3f];
+//        if (!MY_HAS_LOGIN) {
+//            //            if (_isLogout) {
+//            //                [self buildLoginConWithTopicView:nil];
+//            //                _isLogout = NO;
+//            //            }
+//        } else {
+//        }
+        
+//        TopicViewController *con = [[TopicViewController alloc] initWithNibName:@"TopicViewController" bundle:nil];
+//        con.isFromMoreCon = NO;
+//        UINavigationController *adNav = [[UINavigationController alloc] initWithRootViewController:con];
+//        adNav.navigationBarHidden = YES;
+//        [self.navCon presentModalViewController:adNav animated:NO];
     }
+}
+
+- (void)buildLoginConWithTopicView:(TopicView*)aView {
+    if (!aView) {
+        aView = [[[NSBundle mainBundle] loadNibNamed:@"TopicView" owner:self options:nil] objectAtIndex:0];
+        aView.isFromMoreCon = NO;
+    }
+    LoginViewController *loginCon = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginCon];
+    nav.navigationBarHidden = YES;
+    [self.navCon presentModalViewController:nav animated:NO];
+    if (MY_HAS_LOGIN) {
+        [loginCon.view addSubview:aView];
+        [aView sendRequest:nil];
+    }
+    if (_isLogout) {
+        _isLogout = NO;
+    }
+}
+
+//今日话题
+- (void)sendRequestForTopic:(id)sender {
+    NSString *url = [NSString stringWithFormat:@"%@space.php?do=topic&page=%d&perpage=%d", BASE_URL, 1, 1];
+    TopicView *aView = [[[NSBundle mainBundle] loadNibNamed:@"TopicView" owner:self options:nil] objectAtIndex:0];
+    aView.isFromMoreCon = NO;
+    aView.hidden = YES;
+    [[MyHttpClient sharedInstance] commandWithPath:url onCompletion:^(NSDictionary *dict) {
+        if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
+//            [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
+            return ;
+        }
+        NSString *topicId = [[dict objectForKey:WEB_DATA] objectForKey:TOPIC_ID];
+        if (!MY_LAST_TOPIC_ID || ![MY_LAST_TOPIC_ID isEqualToString:topicId]) {
+            [ConciseKit setUserDefaultsWithObject:topicId forKey:LAST_TOPIC_ID];
+            [_tabBarCon.view addSubview:aView];
+            aView.topicId = topicId;
+            aView.topicTitleStr = [[dict objectForKey:WEB_DATA] objectForKey:SUBJECT];
+            aView.topicDescribeStr = [[dict objectForKey:WEB_DATA] objectForKey:MESSAGE];
+            aView.joinType = [[[dict objectForKey:WEB_DATA] objectForKey:JOIN_TYPE] objectAtIndex:0];
+            [aView fillData];
+        }
+        
+    } failure:^(NSError *error) {
+        NSLog(@"error%@",error);
+    }];
 }
 
 //sina weibo
@@ -189,6 +244,7 @@
     [ConciseKit removeUserDafualtForKey:AVATAR_URL];
     [ConciseKit setUserDefaultsWithObject:@"默认空间" forKey:LAST_ZONE_NAME];
     [ConciseKit removeUserDafualtForKey:VIP_STATUS];
+    [ConciseKit removeUserDafualtForKey:LAST_TOPIC_ID];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:WANT_SHOW_TODAY_TOPIC];
     [[NSUserDefaults standardUserDefaults] synchronize];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:AUTO_LOGIN];
@@ -210,8 +266,9 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:CLEAR_ALL_DATA object:nil];
     [ThemeManager sharedThemeManager].theme = DEFAULT_THEME;
     
-    
-    [self loading:NO];
+    _isLogout = YES;
+//    [self loading:NO];
+    [self buildLoginConWithTopicView:nil];
 }
 
 - (void)setDefaultSpaceImage {

@@ -78,10 +78,6 @@
 										<int key="IBUITag">1</int>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-										<object class="NSCustomResource" key="IBUIImage">
-											<string key="NSClassName">NSImage</string>
-											<string key="NSResourceName">ads_bg.png</string>
-										</object>
 									</object>
 									<object class="IBUILabel" id="961193475">
 										<reference key="NSNextResponder" ref="429133626"/>
@@ -202,6 +198,7 @@
 										<string key="NSFrame">{{221, 65}, {60, 25}}</string>
 										<reference key="NSSuperview" ref="429133626"/>
 										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -267,7 +264,7 @@
 				<string key="IBUIReuseIdentifier">topicCoverCellId</string>
 			</object>
 			<object class="IBUITableViewCell" id="636063498">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIView" id="128362613">
@@ -279,7 +276,6 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{15, 10}, {290, 200}}</string>
 								<reference key="NSSuperview" ref="128362613"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="469546067"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -290,7 +286,6 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{15, 163}, {290, 47}}</string>
 								<reference key="NSSuperview" ref="128362613"/>
-								<reference key="NSWindow"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">1</int>
@@ -324,7 +319,6 @@
 						</array>
 						<string key="NSFrameSize">{320, 219}</string>
 						<reference key="NSSuperview" ref="636063498"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1021798701"/>
 						<string key="NSReuseIdentifierKey">_NS:11</string>
 						<reference key="IBUIBackgroundColor" ref="422107600"/>
@@ -336,8 +330,6 @@
 					</object>
 				</array>
 				<string key="NSFrameSize">{320, 220}</string>
-				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="128362613"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -585,6 +577,24 @@
 						<string key="minorKey">./Classes/TopicCell.h</string>
 					</object>
 				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">UIView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">showAnimation:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">showAnimation:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">showAnimation:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/UIView.h</string>
+					</object>
+				</object>
 			</array>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
@@ -592,7 +602,6 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="ads_bg.png">{300, 100}</string>
 			<string key="join_a.png">{60, 25}</string>
 			<string key="light_gray_bg.png">{60, 25}</string>
 			<string key="pic_default.png">{100, 75}</string>

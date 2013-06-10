@@ -25,8 +25,11 @@
 #import "MyTabBarController.h"
 #import "DDAlertPrompt.h"
 #import "JMImageCache.h"
-#import "PostViewController.h"
+//#import "PostViewController.h"
+#import "PostSthViewController.h"
 #import "MPNotificationView.h"
+#import "YIPopupTextView.h"
+#import "TopicView.h"
 
 @interface FeedViewController ()
 
@@ -190,6 +193,16 @@
         }
         [self fillMultiType];
         [_tableView reloadData];
+        
+//        if (!_isForMyLoveFeed) {
+//            [self performBlock:^(id sender) {
+//                TopicView *aView = [[[NSBundle mainBundle] loadNibNamed:@"TopicView" owner:self options:nil] objectAtIndex:0];
+//                MyTabBarController *tabBarCon = (MyTabBarController*)myTabBarController;
+//                [tabBarCon.view addSubview:aView];
+//                [aView sendRequest:nil];
+//            } afterDelay:0.3f];
+//        }
+        
     } failure:^(NSError *error) {
         [SVProgressHUD showErrorWithStatus:@"网络不好T_T"];
         NSLog(@"error:%@", [error description]);
@@ -446,12 +459,14 @@
             contentStr = $str(@"%@，%@", contentStr, [_loveArray objectAtIndex:i]);
         }
     }
-    CGFloat loverH = [_loveArray count] == 0 ? 0 : [FeedCell heightForCellWithText:contentStr andOtherHeight:20 andLblMaxWidth:LOVE_MAX_WIDTH andFont:[UIFont systemFontOfSize:14.0f]];
+//FUCK_NUM_0、FUCK_NUM_1、FUCK_NUM_2（FUCK_NUM_1和FUCK_NUM_2的值一样）都改为0，再将评论的背景图片_commentBgImgView改为：@"feed_comment_bg_v12.png"(@"feed_comment_bg_short_v12.png"的为短的)，就可以让评论的那背景框宽度为300。
+//#define FUCK_NUM_2  33
+    CGFloat loverH = [_loveArray count] == 0 ? 0 : [FeedCell heightForCellWithText:contentStr andOtherHeight:20 andLblMaxWidth:LOVE_MAX_WIDTH - FUCK_NUM_1 andFont:[UIFont systemFontOfSize:14.0f]];
         
     CGFloat commentH = 0;
     for (int i = 0; i < [[aDict objectForKey:COMMENT] count]; i++) {
         contentStr = [[[aDict objectForKey:COMMENT] objectAtIndex:i] objectForKey:MESSAGE];
-        commentH += [FeedCell heightForCellWithText:contentStr andOtherHeight:20 andLblMaxWidth:COMMENT_MAX_WIDTH andFont:[UIFont systemFontOfSize:14.0f]];
+        commentH += [FeedCell heightForCellWithText:contentStr andOtherHeight:20 andLblMaxWidth:COMMENT_MAX_WIDTH - FUCK_NUM_1 andFont:[UIFont systemFontOfSize:14.0f]];
     }
     if (theCommentNum > 2) {
         commentH += 25;//25为下面的“共x条”评论的label高度
@@ -531,7 +546,7 @@
         NSArray *array = [[NSBundle mainBundle] loadNibNamed:@"FeedCell" owner:self options:nil];
 		cell = [array objectAtIndex:type];
     }
-    cell.selectionStyle = UITableViewCellSelectionStyleGray;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.cellType = type;
     NSString *idType = [[dataArray objectAtIndex:indexPath.row] objectForKey:FEED_ID_TYPE];
     if ([idType hasPrefix:@"re"]) {
@@ -563,7 +578,9 @@
             } else if ([[tmpDict objectForKey:FEED_ID_TYPE] rangeOfString:@"video"].length > 0) {
                 [SVProgressHUD showErrorWithStatus:@"视频不能转载T_T"];
             } else {
-                PostViewController *con = [[PostViewController alloc] initWithNibName:@"PostViewController" bundle:nil];
+                PostSthViewController *con = [[PostSthViewController alloc] initWithNibName:@"PostSthViewController" bundle:nil];
+                con.shouldAddDefaultImage = YES;
+//                PostViewController *con = [[PostViewController alloc] initWithNibName:@"PostViewController" bundle:nil];
                 con.dataDict = (NSMutableDictionary*)dict;
                 con.idType = [dict objectForKey:FEED_ID_TYPE];
                 UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:con];
@@ -572,82 +589,119 @@
             }
         }];
         //收藏
-        __block FeedCell *blockCell = cell;
+//        __block FeedCell *blockCell = cell;
         [cell.albumView.likeitBtn whenTapped:^{
-            NSMutableDictionary *currDict = [[NSMutableDictionary alloc] initWithDictionary:[dataArray objectAtIndex:indexPath.row]];
-            BOOL hasLoved = [[currDict objectForKey:MY_LOVE] boolValue];//1为我已收藏，0为我未收藏
-            
-            NSString *tips1 = hasLoved ? @"取消收藏中..." : @"收藏中...";
-            [MPNotificationView notifyWithText:tips1 detail:nil andDuration:0.5f];
-//            [SVProgressHUD showWithStatus:tips1];
-            NSString *url = $str(@"%@feedlove", POST_API);
-            NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:[currDict objectForKey:ID], ID, [currDict objectForKey:FEED_ID_TYPE], FEED_ID_TYPE, $str(@"%d", !hasLoved), TYPE, MY_M_AUTH, M_AUTH, nil];
-            [[MyHttpClient sharedInstance] commandWithPathAndParams:url params:para addData:^(id<AFMultipartFormData> formData) {
-            } onCompletion:^(NSDictionary *dict) {
-                if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
-                    [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
-                    return ;
-                }
-                NSString *tips2 = hasLoved ? @"取消收藏成功" : @"收藏成功";
-                [MPNotificationView notifyWithText:tips2 detail:nil andDuration:0.5f];
-//                [SVProgressHUD showSuccessWithStatus:tips2];
-                
-                //更新收藏状态
-                MyButton *btn = (MyButton*)cell.albumView.likeitBtn;
-                btn.selected = !btn.selected;
-                //我是否已经收藏
-                [currDict setObject:[NSNumber numberWithBool:btn.selected] forKey:MY_LOVE];
-                //收藏的名字数组、数目
-                NSMutableArray *loveUser = [[NSMutableArray alloc] initWithArray:[currDict objectForKey:LOVE_USER]];
-                if (btn.selected) {
-                    NSMutableDictionary *loveDict = [[NSMutableDictionary alloc] init];
-                    [loveDict setObject:MY_UID forKey:UID];
-                    [loveDict setObject:MY_NAME forKey:NAME];
-                    [loveDict setObject:MY_HEAD_AVATAR_URL forKey:AVATAR];
-                    [loveDict setObject:MY_VIP_STATUS forKey:VIP_STATUS];
-                    [loveUser insertObject:loveDict atIndex:0];
-                } else {
-                    for (int i = 0; i < [loveUser count]; i++) {
-                        if ([[[loveUser objectAtIndex:i] objectForKey:UID] isEqualToString:MY_UID]) {
-                            [loveUser removeObjectAtIndex:i];
-                        }
-                    }
-                }
-                [currDict setObject:loveUser forKey:LOVE_USER];
-                
-                int loveNum = [[currDict objectForKey:FEED_LOVE_NUM] intValue];
-                loveNum = btn.selected ? loveNum + 1 : loveNum - 1;
-                [currDict setObject:[NSString stringWithFormat:@"%d", loveNum] forKey:FEED_LOVE_NUM];
-                [dataArray replaceObjectAtIndex:indexPath.row withObject:currDict];
-                
-//                [blockCell.albumView.likeitBtn changeLblWithText:[NSString stringWithFormat:@"%d", loveNum] andColor:[UIColor whiteColor] andSize:12.0f theX:25];
-                [_tableView reloadData];
-            } failure:^(NSError *error) {
-                NSLog(@"error:%@", [error description]);
-                NSString *tips2 = hasLoved ? @"取消收藏失败T_T" : @"收藏失败T_T";
-                [MPNotificationView notifyWithText:tips2 detail:nil andDuration:0.5f];
-//                [SVProgressHUD showErrorWithStatus:@"网络不好T_T"];
-            }];
+            [self loveThisWithIndex:indexPath.row andCell:cell];
         }];
         //评论
         [cell.albumView.commentBtn whenTapped:^{
-            DDAlertPrompt *alertPrompt = [[DDAlertPrompt alloc] initWithTitle:@"发布评论" delegate:self cancelButtonTitle:@"取消" otherButtonTitle:nil];
-            if ([[[dataArray objectAtIndex:indexPath.row] objectForKey:FEED_ID_TYPE] isEqualToString:FEED_EVENT_ID]) {
-                alertPrompt.theTextView.text = @"参与了活动";
-            }
-            __block DDAlertPrompt *blockAlert = alertPrompt;
-            [alertPrompt addButtonWithTitle:@"确认" handler:^{
+            YIPopupTextView *popupTextView = [[YIPopupTextView alloc] initWithPlaceHolder:@"随便说点啥吧..." maxCount:0 buttonStyle:YIPopupTextViewButtonStyleLeftCancelRightDone
+                                                         tintsDoneButton:NO];
+            popupTextView.delegate = self;
+            popupTextView.caretShiftGestureEnabled = YES;   // default = NO
+            //popupTextView.editable = NO;                  // set editable=NO to show without keyboard
+            [popupTextView setAcceptBtnFrame:CGRectMake(10, 190, 150, 40) andNormalImageWithStr:@"pop_left.png" andHighlightImageWithStr:nil];
+            [popupTextView setCloseBtnFrame:CGRectMake(160, 190, 150, 40) andNormalImageWithStr:@"pop_right.png" andHighlightImageWithStr:nil];
+            [popupTextView showInView:self.view];
+            
+            UIImageView *lineImgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pop_line.png"]];
+            lineImgView.frame = CGRectMake(160, 190, 1, 40);
+            [popupTextView.superview addSubview:lineImgView];
+            [popupTextView.superview addSubview:lineImgView];
+            
+            UIImageView *alphaBgImgVIew = [[UIImageView alloc] initWithFrame:DEVICE_BOUNDS];
+            alphaBgImgVIew.backgroundColor = [UIColor blackColor];
+            alphaBgImgVIew.alpha = 0.6f;
+            [popupTextView.superview.superview insertSubview:alphaBgImgVIew atIndex:0];
+            
+            [popupTextView.acceptButton whenTapped:^{
+                if ([[[dataArray objectAtIndex:indexPath.row] objectForKey:FEED_ID_TYPE] isEqualToString:FEED_EVENT_ID]) {
+                    popupTextView.text = @"参与了活动";
+                } else {
+                    if (popupTextView.text.length == 0) {
+                        [SVProgressHUD showErrorWithStatus:@"评论内容太短T_T"];
+                        return ;
+                    }
+                }
                 NSMutableDictionary *currDict = [dataArray objectAtIndex:indexPath.row];
                 NSString *commentIdType = [currDict objectForKey:FEED_ID_TYPE];
                 commentIdType = [commentIdType stringByReplacingOccurrencesOfString:@"re" withString:@""];
-                NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:[currDict objectForKey:F_ID], ID, commentIdType, FEED_ID_TYPE, blockAlert.theTextView.text, MESSAGE, MY_M_AUTH, M_AUTH, nil];
-                [self uploadRequestToComment:para withMsg:blockAlert.theTextView.text andIndexRow:indexPath.row];
+                NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:[currDict objectForKey:F_ID], ID, commentIdType, FEED_ID_TYPE, popupTextView.text, MESSAGE, MY_M_AUTH, M_AUTH, nil];
+                [self uploadRequestToComment:para withMsg:popupTextView.text andIndexRow:indexPath.row];
+                [popupTextView dismiss];
             }];
-            [alertPrompt show];
         }];
     }
-    [cell initData:[dataArray objectAtIndex:indexPath.row]];//由具体的子类去实现
+    if (!cell.picArray) {
+        cell.picArray = [[NSMutableArray alloc] init];
+    }
+    [cell.picArray removeAllObjects];
+    NSDictionary *theDict = [dataArray objectAtIndex:indexPath.row];
+    for (int i = 0; i < 4; i++) {
+        NSString *currImgKey = $str(@"image_%d", i + 1);
+        if ([theDict objectForKey:currImgKey] && ![[theDict objectForKey:currImgKey] isEqualToString:@""]) {
+            [cell.picArray addObject:[theDict objectForKey:currImgKey]];
+        }
+    }
+    [cell initData:theDict];//由具体的子类去实现
     return cell;
+}
+
+- (void)loveThisWithIndex:(int)indexRow andCell:(FeedCell*)cell {
+    NSMutableDictionary *currDict = [[NSMutableDictionary alloc] initWithDictionary:[dataArray objectAtIndex:indexRow]];
+    BOOL hasLoved = [[currDict objectForKey:MY_LOVE] boolValue];//1为我已收藏，0为我未收藏
+    
+    NSString *tips1 = hasLoved ? @"取消收藏中..." : @"收藏中...";
+    [MPNotificationView notifyWithText:tips1 detail:nil andDuration:0.5f];
+    //            [SVProgressHUD showWithStatus:tips1];
+    NSString *url = $str(@"%@feedlove", POST_API);
+    NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:[currDict objectForKey:ID], ID, [currDict objectForKey:FEED_ID_TYPE], FEED_ID_TYPE, $str(@"%d", !hasLoved), TYPE, MY_M_AUTH, M_AUTH, nil];
+    [[MyHttpClient sharedInstance] commandWithPathAndParams:url params:para addData:^(id<AFMultipartFormData> formData) {
+    } onCompletion:^(NSDictionary *dict) {
+        if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
+            [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
+            return ;
+        }
+        NSString *tips2 = hasLoved ? @"取消收藏成功" : @"收藏成功";
+        [MPNotificationView notifyWithText:tips2 detail:nil andDuration:0.5f];
+        //                [SVProgressHUD showSuccessWithStatus:tips2];
+        
+        //更新收藏状态
+        MyButton *btn = (MyButton*)cell.albumView.likeitBtn;
+        btn.selected = !btn.selected;
+        //我是否已经收藏
+        [currDict setObject:[NSNumber numberWithBool:btn.selected] forKey:MY_LOVE];
+        //收藏的名字数组、数目
+        NSMutableArray *loveUser = [[NSMutableArray alloc] initWithArray:[currDict objectForKey:LOVE_USER]];
+        if (btn.selected) {
+            NSMutableDictionary *loveDict = [[NSMutableDictionary alloc] init];
+            [loveDict setObject:MY_UID forKey:UID];
+            [loveDict setObject:MY_NAME forKey:NAME];
+            [loveDict setObject:MY_HEAD_AVATAR_URL forKey:AVATAR];
+            [loveDict setObject:MY_VIP_STATUS forKey:VIP_STATUS];
+            [loveUser insertObject:loveDict atIndex:0];
+        } else {
+            for (int i = 0; i < [loveUser count]; i++) {
+                if ([[[loveUser objectAtIndex:i] objectForKey:UID] isEqualToString:MY_UID]) {
+                    [loveUser removeObjectAtIndex:i];
+                }
+            }
+        }
+        [currDict setObject:loveUser forKey:LOVE_USER];
+        
+        int loveNum = [[currDict objectForKey:FEED_LOVE_NUM] intValue];
+        loveNum = btn.selected ? loveNum + 1 : loveNum - 1;
+        [currDict setObject:[NSString stringWithFormat:@"%d", loveNum] forKey:FEED_LOVE_NUM];
+        [dataArray replaceObjectAtIndex:indexRow withObject:currDict];
+        
+        //                [blockCell.albumView.likeitBtn changeLblWithText:[NSString stringWithFormat:@"%d", loveNum] andColor:[UIColor whiteColor] andSize:12.0f theX:25];
+        [_tableView reloadData];
+    } failure:^(NSError *error) {
+        NSLog(@"error:%@", [error description]);
+        NSString *tips2 = hasLoved ? @"取消收藏失败T_T" : @"收藏失败T_T";
+        [MPNotificationView notifyWithText:tips2 detail:nil andDuration:0.5f];
+        //                [SVProgressHUD showErrorWithStatus:@"网络不好T_T"];
+    }];
 }
 
 #pragma mark - 上行接口

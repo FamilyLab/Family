@@ -7,8 +7,9 @@
 //
 
 #import "FeedCell.h"
+#import "MWPhotoBrowser.h"
 
-@interface ImgAndTextCell : FeedCell
+@interface ImgAndTextCell : FeedCell <MWPhotoBrowserDelegate>
 
 @property (nonatomic, strong) IBOutlet UIImageView *leftImgView;
 @property (nonatomic, strong) IBOutlet UILabel *titleLbl;

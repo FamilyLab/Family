@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import "CameraOverlayViewController.h"
+
 @interface CameraPickerController : UIImagePickerController
+
+@property (nonatomic, strong) CameraOverlayViewController *overlayViewCon;
 
 @end

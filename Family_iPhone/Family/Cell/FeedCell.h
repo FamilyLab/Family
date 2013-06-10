@@ -51,7 +51,7 @@ typedef enum {
 @property (nonatomic, strong) IBOutlet CommentView *secondComment;
 @property (nonatomic, strong) IBOutlet UILabel *totalComentNum;
 
-@property (nonatomic, strong) IBOutlet UIImageView *lineImgView;
+//@property (nonatomic, strong) IBOutlet UIImageView *lineImgView;
 
 @property (nonatomic, copy) NSString *authorUserId;
 @property (nonatomic, assign) int commentNum;
@@ -69,6 +69,9 @@ typedef enum {
 @property (nonatomic, strong) IBOutlet PreContentView *preContentView;
 @property (nonatomic, strong) IBOutlet UIImageView *cellBgImgView;
 @property (nonatomic, strong) IBOutlet UIView *typeView;
+
+@property (nonatomic, strong) NSMutableArray *photosArray;
+@property (nonatomic, strong) NSMutableArray *picArray;
 
 //SomeImgsCell
 //@property (nonatomic, strong) IBOutlet UIImageView *firstImgView;

@@ -12,6 +12,8 @@
 #import "MWPhotoProtocol.h"
 #import "MWCaptionView.h"
 
+#import "FeedCell.h"
+
 // Debug Logging
 #if 0 // Set to 1 to enable debug logging
 #define MWLog(x, ...) NSLog(x, ## __VA_ARGS__);
@@ -39,6 +41,8 @@
 
 @property (nonatomic, strong) NSMutableDictionary *dataDict;
 @property (nonatomic, copy) NSString *idType;
+@property (nonatomic, assign) int indexRow;
+@property (nonatomic, strong) FeedCell *cell;
 
 // Init
 - (id)initWithPhotos:(NSArray *)photosArray  __attribute__((deprecated)); // Depreciated

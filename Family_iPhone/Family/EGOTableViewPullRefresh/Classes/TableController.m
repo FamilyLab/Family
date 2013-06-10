@@ -7,6 +7,7 @@
 //
 
 #import "TableController.h"
+#import "MyTabBarController.h"
 @implementation TableController
 @synthesize dataArray, secondDataArray, currentPage, needRemoveObjects, _tableView;
 @synthesize isFirstTable, _secondTableView, secondCurrentPage, secondNeedRemoveObjects;
@@ -32,7 +33,7 @@
         secondCurrentPage = 1;
     }
     PullTableView *table = isFirstTable ? self._tableView : self._secondTableView;
-    [table setContentOffset:CGPointMake(0, -65) animated:YES];
+    [table setContentOffset:CGPointMake(0, -65) animated:NO];
     table.pullTableIsRefreshing = YES;
     [self sendRequest:table];
 }
@@ -202,6 +203,20 @@
         self._secondTableView.contentOffset = CGPointMake(0, 0);
     }
 }
+
+//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+//    if ([[self.navigationController.viewControllers objectAtIndex:0] isKindOfClass:[MyTabBarController class]]) {
+//        MyTabBarController *tabBarCon = (MyTabBarController*)myTabBarController;
+//        if ([tabBarCon.viewControllers containsObject:self]) {
+//            [tabBarCon hidePostMenu];
+//        }
+//    }
+//}
+
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    MyTabBarController *tabBarCon = (MyTabBarController*)myTabBarController;
+//    [tabBarCon hidePostMenu];
+//}
 
 
 //#pragma mark - touch事件

@@ -328,10 +328,10 @@
     }
     if (_dataDict) {//转发
         for (int i = 0; i < photoNumWithoutDefaultImage; i++) {
-            [_imagesArray addObject:[UIImage imageNamed:@"camera.png"]];
+            [_imagesArray addObject:[UIImage imageNamed:@"post_camera_a_v12.png"]];
         }
     } else {//非转发
-        [_imagesArray addObject:[UIImage imageNamed:@"camera.png"]];
+        [_imagesArray addObject:[UIImage imageNamed:@"post_camera_a_v12.png"]];
     }
     CGRect frameRect;
     if (postType == postPhoto) {
@@ -405,7 +405,7 @@
             
             [picker.ImagePickerMenu setHandler:^{//删除
                 self.eventImg = nil;
-                [upPostView.eventImgBtn setImage:[UIImage imageNamed:@"camera.png"] forState:UIControlStateNormal];
+                [upPostView.eventImgBtn setImage:[UIImage imageNamed:@"post_camera_a_v12.png"] forState:UIControlStateNormal];
             } forButtonAtIndex:picker.ImagePickerMenu.destructiveButtonIndex];
             [picker.ImagePickerMenu showInView:self.view];
         }];
@@ -839,11 +839,7 @@
     switch (_button.tag - kTagBottomButton) {
         case 0:
         {
-            if (self.thePostType == postPhoto) {
-                [[AppDelegate app] dismissCustomCameraPicker];
-            } else {
-                [self backBtnPressed:nil];
-            }
+            [self backBtnPressed:nil];
             break;
         }
         case 1://OK
@@ -1061,8 +1057,7 @@
 //	return draggablePinView;
 //}
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
@@ -1133,7 +1128,7 @@
         if (_dataDict) {
             btn.userInteractionEnabled = NO;
         }
-        [btn setImage:[UIImage imageNamed:@"camera.png"] forState:UIControlStateNormal];
+        [btn setImage:[UIImage imageNamed:@"post_camera_a_v12.png"] forState:UIControlStateNormal];
         __block UIButton *blockBtn = btn;
         [btn whenTapped:^{
             self.currBtn = blockBtn;
@@ -1149,7 +1144,7 @@
             [picker.ImagePickerMenu setHandler:^{//删除
                 [_imagesArray removeObjectAtIndex:blockBtn.tag - kTagBtnOfListViewCell];
                 if (photoNumWithoutDefaultImage == MAX_PHOTO_NUM) {
-                    [_imagesArray addObject:[UIImage imageNamed:@"camera.png"]];
+                    [_imagesArray addObject:[UIImage imageNamed:@"post_camera_a_v12.png"]];
                 }
                 photoNumWithoutDefaultImage--;
                 [_horizontalView reloadData];
@@ -1233,7 +1228,7 @@
                 [_imagesArray replaceObjectAtIndex:[_imagesArray count] - 1 withObject:image];
                 
                 if ([_imagesArray count] < MAX_PHOTO_NUM) {
-                    [_imagesArray addObject:[UIImage imageNamed:@"camera.png"]];
+                    [_imagesArray addObject:[UIImage imageNamed:@"post_camera_a_v12.png"]];
                     [_horizontalView reloadData];
                     [_horizontalView goForward:YES];
                 }
@@ -1705,7 +1700,7 @@
 - (void)fillPhotoData {
     [_horizontalView reloadData];
 //    upPostView.describeTextView.text = $str(@"\n%@", [_dataDict objectForKey:MESSAGE]);
-#warning tag字段里面没有数据时要做一下判断
+//#warning tag字段里面没有数据时要做一下判断
     self.tagName = emptystr([[_dataDict objectForKey:TAG] objectForKey:TAG_NAME]);
     [upPostView.describeTextView becomeFirstResponder];
     //将光标定位到首位置

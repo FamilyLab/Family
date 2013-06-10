@@ -8,8 +8,9 @@
 
 #import "FeedCell.h"
 #import "SDWebImageManagerDelegate.h"
+#import "MWPhotoBrowser.h"
 
-@interface LocationCell : FeedCell <SDWebImageManagerDelegate>
+@interface LocationCell : FeedCell <SDWebImageManagerDelegate, MWPhotoBrowserDelegate>
 
 @property (nonatomic, strong) IBOutlet UIImageView *leftImgView;
 @property (nonatomic, strong) IBOutlet UILabel *subjectLbl;

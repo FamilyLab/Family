@@ -13,7 +13,7 @@
 
 @property (nonatomic, strong) NSDictionary *dataDict;
 @property (nonatomic, strong) IBOutlet UIView *containerView;
-@property (nonatomic, strong) IBOutlet UILabel *comeLbl;
+//@property (nonatomic, strong) IBOutlet UILabel *comeLbl;
 @property (nonatomic, strong) IBOutlet MyButton *albumBtn;
 @property (nonatomic, strong) IBOutlet UIImageView *albumLeft;
 @property (nonatomic, strong) IBOutlet MyButton *repostBtn;

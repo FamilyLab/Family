@@ -9,6 +9,9 @@
 #import "MWZoomingScrollView.h"
 #import "MWPhotoBrowser.h"
 #import "MWPhoto.h"
+#import "FeedViewController.h"
+#import "FeedDetailViewController.h"
+#import "MyTabBarController.h"
 
 // Declare private methods of browser
 @interface MWPhotoBrowser ()
@@ -253,9 +256,23 @@
 }
 
 - (void)handleDoubleTap:(CGPoint)touchPoint {
-	
 	// Cancel any single tap handling
 	[NSObject cancelPreviousPerformRequestsWithTarget:_photoBrowser];
+    
+	if ([_photoBrowser.idType isEqualToString:FEED_PHOTO_ID] || [_photoBrowser.idType isEqualToString:FEED_BLOG_ID]) {
+        float sysVer = CURRENT_SYS_VERSION;
+        if (_photoBrowser.cell) {//动态列表
+            UINavigationController *nav = sysVer < 5.0 ? (UINavigationController*)_photoBrowser.parentViewController : (UINavigationController*)_photoBrowser.presentingViewController;
+            MyTabBarController *tabBarCon = (MyTabBarController*)[nav.viewControllers objectAtIndex:0];
+            FeedViewController *con = (FeedViewController*)[tabBarCon.viewControllers objectAtIndex:0];
+            [con loveThisWithIndex:_photoBrowser.indexRow andCell:_photoBrowser.cell];
+        } else {
+            UINavigationController *nav = sysVer < 5.0 ? (UINavigationController*)_photoBrowser.parentViewController : (UINavigationController*)_photoBrowser.presentingViewController;
+            FeedDetailViewController *con = (FeedDetailViewController*)nav.topViewController;
+            [con uploadRequestToLove];
+        }
+        return;
+    }
 	
 	// Zoom
 	if (self.zoomScale == self.maximumZoomScale) {

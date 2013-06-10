@@ -36,15 +36,19 @@
     } else if (_commentType == leftIsImage) {
         _frontBtn.frame = (CGRect){.origin.x = 20, .origin.y = 10, .size = _frontBtn.imageView.image.size};
     }
-    CGFloat maxWidth = _commentType == leftIsImage ? LOVE_MAX_WIDTH : COMMENT_MAX_WIDTH;
+    
+//FUCK_NUM_0、FUCK_NUM_1、FUCK_NUM_2（FUCK_NUM_1和FUCK_NUM_2的值一样）都改为0，再将评论的背景图片_commentBgImgView改为：@"feed_comment_bg_v12.png"(@"feed_comment_bg_short_v12.png"的为短的)，就可以让评论的那背景框宽度为300。
+//#define FUCK_NUM_1  33
+    
+    CGFloat maxWidth = _commentType == leftIsImage ? LOVE_MAX_WIDTH - FUCK_NUM_1 : COMMENT_MAX_WIDTH - FUCK_NUM_1;
 //    CGFloat minHeight = _commentType == leftIsImage ? LOVE_MIN_HEIGHT : COMMENT_MIN_HEIGHT;
     CGSize contentSize = [contentLbl.text sizeWithFont:contentLbl.font constrainedToSize:CGSizeMake(maxWidth, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
 //    contentSize.height = contentSize.height < minHeight ? minHeight : contentSize.height;
     CGFloat contentX = _commentType == leftIsImage ? 10 : 0;
     CGFloat contentY = _commentType == leftIsImage ? -2 : 0;
     contentLbl.frame = (CGRect){.origin.x = _frontBtn.frame.origin.x + _frontBtn.frame.size.width + 2 + contentX, .origin.y = _frontBtn.frame.origin.y + contentY, .size = contentSize};
-    
-    _lineImgView.frame = (CGRect){.origin.x = 11, .origin.y = self.frame.size.height - 2, .size = _lineImgView.frame.size};
+
+    _lineImgView.frame = (CGRect){.origin.x = 11, .origin.y = self.frame.size.height - 2, .size.width = self.frame.size.width - 10 * 2 - 2, .size.height = _lineImgView.frame.size.height};
 }
 
 //- (void)setWhichType:(CommentType)_type {

@@ -7,8 +7,9 @@
 //
 
 #import "FeedCell.h"
+#import "MWPhotoBrowser.h"
 
-@interface BigImgCell : FeedCell
+@interface BigImgCell : FeedCell <MWPhotoBrowserDelegate>
 
 @property (nonatomic, strong) IBOutlet UIImageView *bigImgView;
 @property (nonatomic, strong) IBOutlet UILabel *bigImgLbl;

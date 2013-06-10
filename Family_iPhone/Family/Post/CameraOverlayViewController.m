@@ -9,6 +9,8 @@
 #import "CameraOverlayViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "SelectedButton.h"
+#import "MyViewCell.h"
+#import "SVProgressHUD.h"
 
 #define SHOW_ALBUM_PIC_MAX_NUM  3
 
@@ -51,15 +53,30 @@
     [_okBtn setImage:[UIImage imageNamed:@"right_ok_enable.png"] forState:UIControlStateNormal];
     _okBtn.userInteractionEnabled = NO;
     
+    [self setupHorizontalView];
+    
+//    [self fuck];
+//    [self performBlock:^(id sender) {
+//        [NSThread detachNewThreadSelector:@selector(getAllPhotoImages) toTarget:self withObject:nil];
+//    } afterDelay:0.3f];
+    
     [self performBlock:^(id sender) {
         [self getAllPhotoImages];
-    } afterDelay:0.1f];
+    } afterDelay:0.2f];
     
 //    for (int i = 0; i < [_picArray count]; i++) {
 //        SelectedButton *btn = (SelectedButton*)[self.containerView viewWithTag:kTagAlbumImgBtn + i];
 //        [btn setImage:[_picArray objectAtIndex:i] forState:UIControlStateNormal];
 //    }
 }
+
+//- (void)fuck {
+//    if ([UIImagePickerController isCameraDeviceAvailable:[_pickerController cameraDevice]]) {
+//        [self getAllPhotoImages];
+//    } else {
+//        [self fuck];
+//    }
+//}
 
 - (void)didReceiveMemoryWarning
 {
@@ -98,7 +115,40 @@
     _okBtn.userInteractionEnabled = canSelect;
 }
 
++ (ALAssetsLibrary *)defaultAssetsLibrary {
+    static dispatch_once_t pred = 0;
+    static ALAssetsLibrary *library = nil;
+    dispatch_once(&pred, ^{
+        library = [[ALAssetsLibrary alloc] init];
+    });
+    return library;
+}
+
 - (void)getAllPhotoImages {
+//    return;
+    NSMutableArray *collector = [[NSMutableArray alloc] initWithCapacity:0];
+//    self.assetsArray = collector;
+//    return;
+    
+    ALAssetsLibrary *al = [CameraOverlayViewController defaultAssetsLibrary];
+    
+    [al enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
+                      usingBlock:^(ALAssetsGroup *group, BOOL *stop)
+     {
+         [group enumerateAssetsUsingBlock:^(ALAsset *asset, NSUInteger index, BOOL *stop)
+          {
+              if (asset && [[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]) {
+                  [collector addObject:asset];
+              }
+          }];
+         
+         self.assetsArray = collector;
+         [_jtListView reloadData];
+     }
+                    failureBlock:^(NSError *error) { NSLog(@"Boom!!!");}
+     ];
+    return;
+    
     //定义读取失败的block
     ALAssetsLibraryAccessFailureBlock failureblock = ^(NSError *myerror){
         NSLog(@"error occour =%@", [myerror localizedDescription]);
@@ -108,17 +158,23 @@
         if (result != NULL) {
             //首先判断，获得的资源是photo还是video
             if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]) {
-                if (_countNum < SHOW_ALBUM_PIC_MAX_NUM) {
-                    UIImage *fullImg = [UIImage imageWithCGImage:[result.defaultRepresentation fullScreenImage]];
-//                    int i = [_picArray count];
-                    SelectedButton *btn = (SelectedButton*)[self.containerView viewWithTag:kTagAlbumImgBtn + _countNum];
-                    _countNum++;
-                    [btn setImage:fullImg forState:UIControlStateNormal];
-//                    [_picArray addObject:btn.imageView.image];
-//                    UIImage *img=[UIImage imageWithCGImage:result.thumbnail];
-                } else
-                    return ;
+                [collector addObject:result];
+                
+//                if (_countNum < SHOW_ALBUM_PIC_MAX_NUM) {
+//                    UIImage *fullImg = [UIImage imageWithCGImage:[result.defaultRepresentation fullScreenImage]];
+//////                    int i = [_picArray count];
+////                    SelectedButton *btn = (SelectedButton*)[self.containerView viewWithTag:kTagAlbumImgBtn + _countNum];
+////                    _countNum++;
+////                    [btn setImage:fullImg forState:UIControlStateNormal];
+//////                    [_picArray addObject:btn.imageView.image];
+//////                    UIImage *img=[UIImage imageWithCGImage:result.thumbnail];
+//                } else
+//                    return ;
             }
+        } else {
+            
+            self.assetsArray = collector;
+            [_jtListView reloadData];
         }
     };
     //定义枚举groups的枚举block
@@ -129,31 +185,129 @@
         if (group != nil) {
             //对group做自己的处理
             
-            //继续枚举group下面的Asset
-            for (int i = 0; i < SHOW_ALBUM_PIC_MAX_NUM; i++) {
-                [group enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:[group numberOfAssets] - (i + 1)] options:0 usingBlock:groupEnumerAtion];//从最新拍的照片开始读取
-            }
+//            //继续枚举group下面的Asset
+//            for (int i = 0; i < [group numberOfAssets]; i++) {//SHOW_ALBUM_PIC_MAX_NUM
+//                [group enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:[group numberOfAssets] - (i + 1)] options:0 usingBlock:groupEnumerAtion];//从最新拍的照片开始读取
+//            }
+//            [group enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:[group numberOfAssets] - 1 - _hasLoadPicNum] options:0 usingBlock:groupEnumerAtion];//从最新拍的照片开始读取
 //            [group enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:[group numberOfAssets] - 1] options:0 usingBlock:groupEnumerAtion];//从最新拍的照片开始读取
 //            [group enumerateAssetsUsingBlock:groupEnumerAtion];//从以前拍的第一张照片开始读取
+            [group enumerateAssetsUsingBlock:groupEnumerAtion];
         }
     };
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    ALAssetsLibrary *library = [CameraOverlayViewController defaultAssetsLibrary];//[[ALAssetsLibrary alloc] init];
     [library enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
                            usingBlock:libraryGroupsEnumeration
                          failureBlock:failureblock];
+}
+
+
+#pragma mark JTListView Initialization
+- (void)setupHorizontalView {
+    if (self.jtListView) {
+        [self.jtListView removeFromSuperview];
+        self.jtListView = nil;
+    }
+    JTListView *list = [[JTListView alloc] initWithFrame:CGRectMake(85, 14, 230, 72) layout:JTListViewLayoutLeftToRight];
+//    list.scrollEnabled = [_imagesArray count] > MAX_PHOTO_NUM ? YES : NO;//只需要3张图片，所以不需要滑动
+	list.delegate = self;
+    list.dataSource = self;
+    [self.containerView insertSubview:list atIndex:2];
+//	[self.containerView addSubview:list];
+    [list reloadData];
+	self.jtListView = list;
+}
+
+#pragma mark - JTListViewDataSource
+- (NSUInteger)numberOfItemsInListView:(JTListView *)listView {
+    return [self.assetsArray count];
+}
+
+- (UIView *)listView:(JTListView *)listView viewForItemAtIndex:(NSUInteger)index {
+    MyViewCell *cell = (MyViewCell*)[listView dequeueReusableView];
+    if (!cell) {
+        cell = [[MyViewCell alloc] init];
+        SelectedButton *cellBtn = [SelectedButton buttonWithType:UIButtonTypeCustom];
+        cellBtn.frame = CGRectMake(3, 0, 72, 72);
+        [cell addSubview:cellBtn];
+        cell.selcetBtn = cellBtn;
+    }
+    
+    cell.selcetBtn.selectedImgView.hidden = YES;
+    for (int i = 0; i < [_picArray count]; i++) {
+        if ([[[_picArray objectAtIndex:i] objectForKey:INDEX_ROW] intValue] == index) {
+            cell.selcetBtn.selectedImgView.hidden = NO;
+//            cell.selcetBtn.selected = !cell.selcetBtn.selected;
+            break;
+        }
+    }
+    
+    ALAsset *asset = [self.assetsArray objectAtIndex:[_assetsArray count] - 1 - index];
+    [cell.selcetBtn setImage:[UIImage imageWithCGImage:[asset thumbnail]] forState:UIControlStateNormal];
+    [cell.selcetBtn whenTapped:^{
+//        cell.selcetBtn.selectedImgView.hidden = cell.selcetBtn.selected;
+//        cell.selcetBtn.selected = !cell.selcetBtn.selected;
+        if (cell.selcetBtn.selectedImgView.hidden) {
+            if ([_picArray count] == 3) {
+                [SVProgressHUD showErrorWithStatus:@"不能超过3张T_T"];
+                return;
+            }
+            NSMutableDictionary *aDict = [[NSMutableDictionary alloc] init];
+            [aDict setObject:[NSNumber numberWithInt:index] forKey:INDEX_ROW];
+            [aDict setObject:[_assetsArray objectAtIndex:[_assetsArray count] - 1 - index] forKey:IMAGE];
+            [_picArray addObject:aDict];
+        } else {
+            if (cell.selcetBtn.imageView.image) {
+                for (int i = 0; i < [_picArray count]; i++) {
+                    if ([[[_picArray objectAtIndex:i] objectForKey:INDEX_ROW] intValue] == index) {
+                        [_picArray removeObjectAtIndex:i];
+                        break;
+                    }
+                }
+            }
+        }
+        
+        BOOL canCameraBtnSelect = [_picArray count] > 0 ? NO : YES;
+        [self canCameraBtnSelect:canCameraBtnSelect];
+        
+        BOOL canOkBtnSelect = !canCameraBtnSelect;
+        [self canOkBtnSelect:canOkBtnSelect];
+
+        [_jtListView reloadData];
+    }];
+//    [cell.selcetBtn addTarget:self action:@selector(selectPicFromAlbumWithBtn:) forControlEvents:UIControlEventTouchUpInside];
+    return cell;
+}
+
+//- (void)selectPicFromAlbumWithBtn:(SelectedButton*)btn {
+//    if ([_picArray count] == 3) {
+//        [SVProgressHUD showErrorWithStatus:@"不能超过3张T_T"];
+//        return;
+//    }
+//    [_picArray addObject:btn.imageView.image];
+//    [self albumBtnPressed:btn];
+//}
+
+#pragma mark - JTListViewDelegate
+- (CGFloat)listView:(JTListView *)listView widthForItemAtIndex:(NSUInteger)index {
+    return 78;
+}
+
+- (CGFloat)listView:(JTListView *)listView heightForItemAtIndex:(NSUInteger)index {
+    return 78;
 }
 
 //查找拍完照片后右下角的“完成”按钮
 - (UIView*)findDoneBarButton:(UIView*)aView {
     Class cl = [aView class];
     NSString *desc = [cl description];
-#define DONE_BTN_X      200
-    if ([@"PLCropOverlayBottomBarButton" isEqualToString:desc] && aView.frame.origin.x > DONE_BTN_X)
+#define DONE_BTN_FRMAE_X      200
+    if ([@"PLCropOverlayBottomBarButton" isEqualToString:desc] && aView.frame.origin.x > DONE_BTN_FRMAE_X)
         return aView;
     for (NSUInteger i = 0; i < [aView.subviews count]; i++) {
         UIView *subView = [aView.subviews objectAtIndex:i];
         subView = [self findDoneBarButton:subView];
-        if (subView && subView.frame.origin.x > DONE_BTN_X )
+        if (subView && subView.frame.origin.x > DONE_BTN_FRMAE_X )
             return subView;
     }
     return nil;
@@ -163,7 +317,7 @@
 -(IBAction)takeThePic:(UIButton*)sender{
     [_pickerController takePicture];
     _hasTakePicture = YES;
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 3; i++) {
         UIView *obj = [self.containerView.subviews objectAtIndex:i];
         obj.hidden = YES;
     }
@@ -176,14 +330,17 @@
 
 //返回
 -(IBAction)backBtnPressed:(UIButton*)sender{
-    [_retakeBtn sendActionsForControlEvents:UIControlEventTouchUpInside];
     if (_hasTakePicture) {
-        for (int i = 0; i < 5; i++) {
+        _hasTakePicture = NO;
+        for (int i = 0; i < 3; i++) {
             UIView *obj = [self.containerView.subviews objectAtIndex:i];
             obj.hidden = NO;
         }
         [self canCameraBtnSelect:YES];
         [self canOkBtnSelect:NO];
+        [_retakeBtn sendActionsForControlEvents:UIControlEventTouchUpInside];
+    } else {
+        [_pickerController dismissModalViewControllerAnimated:YES];
     }
 }
 
@@ -191,6 +348,9 @@
 - (IBAction)okBtnPressed:(id)sender {
     if (_hasTakePicture) {
         [_doneBtn sendActionsForControlEvents:UIControlEventTouchUpInside];
+        _hasTakePicture = NO;
+        [self canCameraBtnSelect:YES];
+        [self canOkBtnSelect:NO];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:PRESENT_POST_VIEWCONTROLLER object:_picArray];
     }

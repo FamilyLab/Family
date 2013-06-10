@@ -15,7 +15,8 @@
 #import "MyAnnotation.h"
 #import "ZoneDetailViewController.h"
 #import "DDAlertPrompt.h"
-#import "PostViewController.h"
+//#import "PostViewController.h"
+#import "PostSthViewController.h"
 #import "PlistManager.h"
 #import "MPNotificationView.h"
 
@@ -679,8 +680,9 @@
     [self pointToCurrPanelView];
     if (_panelView.dataDict) {
 #warning 后退会出现空白页面
-        PostViewController *con = [[PostViewController alloc] initWithNibName:@"PostViewController" bundle:nil];
-        
+        PostSthViewController *con = [[PostSthViewController alloc] initWithNibName:@"PostSthViewController" bundle:nil];
+//        PostViewController *con = [[PostViewController alloc] initWithNibName:@"PostViewController" bundle:nil];
+        con.shouldAddDefaultImage = YES;
         con.dataDict = _panelView.dataDict;// [[PlistManager readPlist:PLIST_FEED_TOP_DATA] objectForKey:$str(@"%d", currItemIndex)];
         con.idType = [idDict objectForKey:FEED_ID_TYPE];
         
@@ -839,6 +841,9 @@
 //}
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if ([_idArray count] <= 0) {
+        return;
+    }
     NSUInteger currItemIndex = [_theListView indexForItemAtCenterOfBounds];
     
     if (currItemIndex == 0) {
@@ -851,6 +856,7 @@
         self.goForwardBtn.hidden = NO;
     
     UIButton *commentBtn = (UIButton*)[self.bottomView viewWithTag:kTagBottomButton + 3];
+    
     NSString *fourthBtnImageStr = [[[_idArray objectAtIndex:currItemIndex] objectForKey:FEED_ID_TYPE] isEqualToString:FEED_EVENT_ID] ? @"joinevent" : @"menu_comment";
     [commentBtn setImage:[UIImage imageNamed:fourthBtnImageStr] forState:UIControlStateNormal];
     

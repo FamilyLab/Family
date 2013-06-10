@@ -14,7 +14,8 @@
 #import "MyHttpClient.h"
 #import "SVProgressHUD.h"
 //#import "UIButton+WebCache.h"
-#import "PostViewController.h"
+//#import "PostViewController.h"
+#import "PostSthViewController.h"
 #import "AddFriendsViewController.h"
 #import "AddChildViewController.h"
 #import "MyTabBarController.h"
@@ -432,6 +433,7 @@
                                        andRightImgPoint:CGPointMake(225, 13)
                                                rightImg:@"cake.png"
                                                rightStr:[infoDict objectForKey:BIRTHDAY]];
+            [cell.simpleInfoView.headBtn setVipStatusWithStr:emptystr(MY_VIP_STATUS) isSmallHead:YES];
         } else if (indexPath.section == 1) {
             cell.memberArray = self.memberArray;
             [cell initFamilyMemberHeadBtn];
@@ -489,12 +491,14 @@
                 return ;
             }];
             [alert addButtonWithTitle:@"确定" handler:^{
-                PostViewController *con = [[PostViewController alloc] initWithNibName:@"PostViewController" bundle:nil];
+                PostSthViewController *con = [[PostSthViewController alloc] initWithNibName:@"PostSthViewController" bundle:nil];
+                con.shouldAddDefaultImage = YES;
+//                PostViewController *con = [[PostViewController alloc] initWithNibName:@"PostViewController" bundle:nil];
                 UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:con];
                 nav.navigationBarHidden = YES;
                 [self presentModalViewController:nav animated:YES];
-                [con.downPostView.albumBtn setTitle:[aDict objectForKey:TAG_NAME] forState:UIControlStateNormal];
-                [con.downPostView.albumBtn setTitle:[aDict objectForKey:TAG_NAME] forState:UIControlStateHighlighted];
+                [con.menuViewInBottom.albumBtn setTitle:[aDict objectForKey:TAG_NAME] forState:UIControlStateNormal];
+                [con.menuViewForKeyboard.albumBtn setTitle:[aDict objectForKey:TAG_NAME] forState:UIControlStateNormal];
             }];
             [alert show];
         } else {

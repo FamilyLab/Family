@@ -8,6 +8,7 @@
 
 #import "GuideViewController.h"
 #import "TopicViewController.h"
+#import "TopicView.h"
 
 #define kTagScrollViewInTips 10000
 
@@ -75,15 +76,35 @@
 }
 
 - (void)removeTips {
-    if (MY_IS_FIRST_SHOW) {//不是第一次展示了
+    if (MY_NOT_FIRST_SHOW) {//不是第一次展示了
         [self.navigationController popViewControllerAnimated:YES];
     } else if (MY_WANT_SHOW_TODAY_TOPIC) {//第一次展示
-        TopicViewController *con = [[TopicViewController alloc] initWithNibName:@"TopicViewController" bundle:nil];
-        con.isFromMoreCon = NO;
-        [self.navigationController pushViewController:con animated:YES];
+        
+        TopicView *aView = [[[NSBundle mainBundle] loadNibNamed:@"TopicView" owner:self options:nil] objectAtIndex:0];
+        aView.isFromMoreCon = NO;
+        
+        float sysVer = [[[UIDevice currentDevice] systemVersion] floatValue];
+        UIViewController *con = nil;
+        if (sysVer < 5.0) {
+            UINavigationController *nav = (UINavigationController*)self.navigationController.parentViewController;
+            con = [nav.viewControllers objectAtIndex:0];
+        } else {
+            UINavigationController *nav = (UINavigationController*)self.navigationController.presentingViewController;
+            con = [nav.viewControllers objectAtIndex:0];
+        }
+        [con.view addSubview:aView];
+        [aView sendRequest:nil];
+        
+        [ConciseKit setUserDefaultsWithObject:@"notFirstShow" forKey:NOT_FIRST_SHOW];
+        [self.navigationController dismissModalViewControllerAnimated:YES];
+        
+//        TopicViewController *con = [[TopicViewController alloc] initWithNibName:@"TopicViewController" bundle:nil];
+//        con.isFromMoreCon = NO;
+//        [self.navigationController pushViewController:con animated:YES];
     }
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:IS_FIRST_SHOW];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    //由于 今日话题 改版，不能在这里设置为NO了
+//    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:IS_FIRST_SHOW];
+//    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 //- (void)addBottomView {

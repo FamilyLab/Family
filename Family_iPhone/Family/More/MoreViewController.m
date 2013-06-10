@@ -20,7 +20,7 @@
 #import "SVProgressHUD.h"
 //#import "UIButton+WebCache.h"
 #import "MyTabBarController.h"
-#import "LoginViewController.h"
+//#import "LoginViewController.h"
 #import "DDAlertPrompt.h"
 #import "TopicViewController.h"
 #import "ChangePwViewController.h"
