@@ -32,6 +32,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *diaryNumLbl;
 @property (nonatomic, strong) IBOutlet UILabel *activityNumLbl;
 @property (nonatomic, strong) IBOutlet UILabel *videoNumLbl;
+@property (nonatomic, strong) IBOutlet UIImageView *lineImgView;
 
 - (void)initFamilyMemberHeadBtn;
 - (void)initData:(NSDictionary *)_aDict;

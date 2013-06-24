@@ -12,6 +12,7 @@
 //#import "LoadingView.h"
 #import "BottomView.h"
 #import "YIPopupTextView.h"
+#import "MyYIPopupTextView.h"
 
 @interface FeedViewController :TableController <UIActionSheetDelegate, BottomViewDelegate, YIPopupTextViewDelegate> {
     BOOL canRefreshCountNum;

@@ -249,7 +249,10 @@
         [SVProgressHUD showErrorWithStatus:@"已发过申请T_T"];
         return;
     }
-    DDAlertPrompt *alertPrompt = [[DDAlertPrompt alloc] initWithTitle:@"申请成为家人" delegate:self cancelButtonTitle:@"取消" otherButtonTitle:nil];
+    
+    MyYIPopupTextView *popTextView = [[MyYIPopupTextView alloc] initWithMaxCount:0 placeHolger:@"输入备注名称"];
+    
+    DDAlertPrompt *alertPrompt = [[DDAlertPrompt alloc] initWithTitle:@"备注名称" delegate:self cancelButtonTitle:@"取消" otherButtonTitle:nil];
 //    alertPrompt.DDAlertDelegate = self;
     __block DDAlertPrompt *blockAlert = alertPrompt;
     [alertPrompt addButtonWithTitle:@"确认" handler:^{
@@ -263,11 +266,11 @@
                 return ;
             }
             [SVProgressHUD showSuccessWithStatus:@"申请已发送"];
-            _cell.simpleInfoView.operatorBtn.selected = !_cell.simpleInfoView.operatorBtn.selected;
+            _cell.simpleInfoView.operatorBtn.selected = YES;
         } failure:^(NSError *error) {
             NSLog(@"error:%@", [error description]);
             [SVProgressHUD showErrorWithStatus:@"网络不好T_T"];
-            _cell.simpleInfoView.operatorBtn.selected = !_cell.simpleInfoView.operatorBtn.selected;
+            _cell.simpleInfoView.operatorBtn.selected = NO;
         }];
     }];
     [alertPrompt show];

@@ -31,4 +31,7 @@
 @property (nonatomic, assign) int lastRandomNum;
 
 @property (nonatomic, retain) KenBurnsView *kenView;
+
+@property (nonatomic, strong) IBOutlet UIButton *settingBtn;
+
 @end

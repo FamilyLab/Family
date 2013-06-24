@@ -52,12 +52,12 @@
 //    if (self.indexSection == 1 && self.indexRow == childCount) {//self.indexRow == childCount 为最后一行
         rightImgStr = @"addchild";
         self.rightImgView.frame = ADD_FRAME;
-    } else if (self.seciontType == settingSection) {
+    } else if (self.seciontType == settingSection) {//设置
 //    } else if (self.indexSection == 4) {
-        if (self.indexRow == 1) {
+        if (self.indexRow == 2) {
             rightImgStr = [[UIApplication sharedApplication] enabledRemoteNotificationTypes] == UIRemoteNotificationTypeNone ? @"on_a" : @"on_b";
             self.rightImgView.frame = PUSH_FRAME;
-        } else if (self.indexRow == 2) {
+        } else if (self.indexRow == 3) {
             rightImgStr = MY_WANT_SHOW_TODAY_TOPIC ? @"on_b" : @"on_a";
             self.rightImgView.frame = PUSH_FRAME;
         } else if (self.indexRow == 4) {

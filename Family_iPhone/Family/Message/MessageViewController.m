@@ -17,6 +17,7 @@
 #import "Common.h"
 #import "FamilyListViewController.h"
 #import "JSBadgeView.h"
+#import "PostSthViewController.h"
 
 @interface MessageViewController ()
 
@@ -48,9 +49,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:REFRESH_TALK_LIST_READ_STATE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTheNotification:) name:REFRESH_TALK_LIST_READ_STATE object:nil];
     
-    MyTabBarController *tabCon = (MyTabBarController*)myTabBarController;
-    [self setBadgeNumWithBtnTag:0 andBadgeNum:$str(@"%d", tabCon.dialogNum)];
-    [self setBadgeNumWithBtnTag:1 andBadgeNum:$str(@"%d", tabCon.noticeNum)];
+//    MyTabBarController *tabCon = (MyTabBarController*)myTabBarController;
+//    [self setBadgeNumWithBtnTag:0 andBadgeNum:$str(@"%d", tabCon.dialogNum)];
+//    [self setBadgeNumWithBtnTag:1 andBadgeNum:$str(@"%d", tabCon.noticeNum)];
 }
 
 - (void)didReceiveMemoryWarning
@@ -70,10 +71,28 @@
     [aView leftBg];
     [aView leftText:@"消息"];
     [aView rightLine];
-    [aView rightBtnTextArray:[[NSArray alloc] initWithObjects:@"对话", @"通知", nil]];
-    UIButton *firstBtn = (UIButton*)[aView viewWithTag:kTagBtnInTopBarView];
-    firstBtn.frame = (CGRect){.origin.x = firstBtn.frame.origin.x - 10, .origin.y = firstBtn.frame.origin.y, .size = firstBtn.frame.size};
-    aView.arrowImgView.frame = (CGRect){.origin.x = aView.arrowImgView.frame.origin.x - 10, .origin.y = aView.arrowImgView.frame.origin.y, .size = aView.arrowImgView.frame.size};
+    
+//    [aView rightBtnTextArray:[[NSArray alloc] initWithObjects:@"对话", @"通知", nil]];
+//    UIButton *firstBtn = (UIButton*)[aView viewWithTag:kTagBtnInTopBarView];
+//    firstBtn.frame = (CGRect){.origin.x = firstBtn.frame.origin.x - 10, .origin.y = firstBtn.frame.origin.y, .size = firstBtn.frame.size};
+//    aView.arrowImgView.frame = (CGRect){.origin.x = aView.arrowImgView.frame.origin.x - 10, .origin.y = aView.arrowImgView.frame.origin.y, .size = aView.arrowImgView.frame.size};
+    
+//    [aView rightBtnTextArray:[[NSArray alloc] initWithObjects:@"发起对话", nil]];
+    UIButton *firstBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    firstBtn.frame = CGRectMake(205, 0, 120, 50);
+    firstBtn.titleLabel.font = [UIFont boldSystemFontOfSize:18.0f];
+    [firstBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    [firstBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
+    [firstBtn setTitle:@"发起对话" forState:UIControlStateNormal];
+    [firstBtn setTitleColor:[Common theBtnColor] forState:UIControlStateNormal];
+    [firstBtn setTitleColor:[Common theLblColor] forState:UIControlStateHighlighted];
+//    [firstBtn setImage:[UIImage imageNamed:@"dark_arrow.png"] forState:UIControlStateNormal];
+    [firstBtn setImage:ThemeImage(@"goto_b") forState:UIControlStateNormal];
+    [firstBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 90, 0, 0)];
+    [firstBtn addTarget:self action:@selector(postPMBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
+    self.postPMBtn = firstBtn;
+    [aView addSubview:firstBtn];
+
     aView.delegate = self;
     self.topView = aView;
     [self.view addSubview:aView];
@@ -113,6 +132,14 @@
     }
 }
 
+- (void)postPMBtnPressed:(id)sender {
+    PostSthViewController *con = [[PostSthViewController alloc] initWithNibName:@"PostSthViewController" bundle:nil];
+    con.postSthType = postPrivateMsg;
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:con];
+    nav.navigationBarHidden = YES;
+    [self presentModalViewController:nav animated:YES];
+}
+
 //更改主题
 - (void)configureViews {
     for (id obj in [self.view subviews]) {
@@ -121,6 +148,8 @@
             [topView changeTheme];
         }
     }
+    [_postPMBtn setTitleColor:[Common theBtnColor] forState:UIControlStateNormal];
+    [_postPMBtn setTitleColor:[Common theLblColor] forState:UIControlStateHighlighted];
     [self._tableView reloadData];
     [self._secondTableView reloadData];
 }
@@ -472,10 +501,10 @@
         [table reloadData];
     }
     
-    MyTabBarController *tabCon = (MyTabBarController*)myTabBarController;
-    int badgeNum = self.isFirstTable ? --tabCon.dialogNum : --tabCon.noticeNum;
-    int btnNum = self.isFirstTable ? 0 : 1;
-    [self setBadgeNumWithBtnTag:btnNum andBadgeNum:$str(@"%d", badgeNum)];
+//    MyTabBarController *tabCon = (MyTabBarController*)myTabBarController;
+//    int badgeNum = self.isFirstTable ? --tabCon.dialogNum : --tabCon.noticeNum;
+//    int btnNum = self.isFirstTable ? 0 : 1;
+//    [self setBadgeNumWithBtnTag:btnNum andBadgeNum:$str(@"%d", badgeNum)];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:REFRESH_MESSAGE_NUM object:@"-1"];//消息数（对话或通知）减1
     if (!self.isFirstTable) {

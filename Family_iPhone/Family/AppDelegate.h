@@ -19,8 +19,8 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @property (strong, nonatomic) MyTabBarController *tabBarCon;
-//@property (strong, nonatomic) MLNavigationController *navCon;
-@property (strong, nonatomic) UINavigationController *navCon;
+@property (strong, nonatomic) MLNavigationController *navCon;
+//@property (strong, nonatomic) UINavigationController *navCon;
 @property (readonly, nonatomic) SinaWeibo *sinaweibo;
 
 @property (nonatomic, assign) BOOL isAppInBackground;
@@ -28,6 +28,8 @@
 @property (nonatomic, assign) BOOL isFirstShow;
 @property (nonatomic, assign) BOOL isLogout;
 
+
+@property (nonatomic, strong) NSDictionary *afterPostSthAndGetADict;
 @property (nonatomic, copy) NSString *sendToWeixinContent;
 
 + (AppDelegate*)app;

@@ -63,7 +63,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
-    if ((conType == askForMyFamilyListType && isFirstShow) || (conType == myFamilyListType && ![self.userId isEqualToString:MY_UID])) {
+    if ((conType == askForMyFamilyListType && isFirstShow) || (isFirstShow && conType == myFamilyListType && ![self.userId isEqualToString:MY_UID])) {
         [SVProgressHUD showWithStatus:@"加载中..."];
     }
 }
@@ -202,7 +202,7 @@
             [dataArray removeAllObjects];
             [_tableView reloadData];
             needRemoveObjects = NO;
-        } else if ([[dict objectForKey:WEB_DATA] count] <=0) {
+        } else if ([[dict objectForKey:WEB_DATA] count] <= 0) {
             [SVProgressHUD showSuccessWithStatus:@"没有更多内容了T_T"];
             currentPage--;
             return;
@@ -352,7 +352,11 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return (conType == askForMyFamilyListType || conType == myFamilyListType) ? YES : NO;
+    if (conType == askForMyFamilyListType || (conType == myFamilyListType && self.userId && [MY_UID isEqualToString:_userId])) {
+        return YES;
+    }
+        return NO;
+//    return (conType == askForMyFamilyListType || conType == myFamilyListType) ? YES : NO;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -6,7 +6,8 @@
 //  Copyright (c) 2013年 apple. All rights reserved.
 //
 
-#import "BaseViewController.h"
+//#import "BaseViewController.h"
+#import "TableController.h"
 #import "BottomView.h"
 #import "TopView.h"
 #import "CellHeader.h"
@@ -17,7 +18,7 @@
 #import <AddressBookUI/AddressBookUI.h>
 #import <MessageUI/MessageUI.h>
 
-@interface AddFriendsViewController : BaseViewController <BottomViewDelegate, UISearchBarDelegate, CommonCellDelegate, ABPeoplePickerNavigationControllerDelegate, MFMessageComposeViewControllerDelegate, UITextFieldDelegate>
+@interface AddFriendsViewController : TableController <BottomViewDelegate, UISearchBarDelegate, CommonCellDelegate, ABPeoplePickerNavigationControllerDelegate, MFMessageComposeViewControllerDelegate, UITextFieldDelegate>
 
 //@property (nonatomic, strong) IBOutlet MySearchBar *searchBar;
 @property (nonatomic, assign) TopViewType topViewType;

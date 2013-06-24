@@ -14,9 +14,10 @@
 #import "MWPhotoBrowser.h"
 #import "SinaWeibo.h"
 #import "SinaWeiboRequest.h"
+#import "BottomView.h"
 //#import "EMHint.h"
 
-@interface MoreViewController : TableController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, MWPhotoBrowserDelegate, SinaWeiboDelegate, SinaWeiboRequestDelegate> {
+@interface MoreViewController : TableController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, MWPhotoBrowserDelegate, SinaWeiboDelegate, SinaWeiboRequestDelegate, BottomViewDelegate> {
 //    EMHint *_hint;
 }
 

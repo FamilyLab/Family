@@ -24,7 +24,7 @@
 }
 
 - (void)layoutSubviews {
-    [super layoutSubviews];
+//    [super layoutSubviews];
     if (!self.preContentView.hidden) {
         [self.preContentView layoutSubviews];
     }
@@ -38,6 +38,8 @@
     self.comeLbl.frame = (CGRect){.origin.x = self.comeLbl.frame.origin.x, .origin.y = bigImgLbl.frame.origin.y + bigImgLbl.frame.size.height, .size = self.comeLbl.frame.size};
     self.typeView.frame = (CGRect){.origin = self.typeView.frame.origin, .size.width = self.typeView.frame.size.width, .size.height = bigImgLbl.frame.origin.y + bigImgLbl.frame.size.height + self.comeLbl.frame.size.height};
     bigImgView.frame = (CGRect){.origin = bigImgView.frame.origin, .size = CGSizeMake(280, 200)};
+    
+    [super layoutSubviews];
 }
 
 - (void)initData:(NSDictionary *)aDict {

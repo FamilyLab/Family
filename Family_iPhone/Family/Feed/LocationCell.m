@@ -44,7 +44,7 @@
 }
 
 - (void)layoutSubviews {
-    [super layoutSubviews];
+//    [super layoutSubviews];
     if (!_leftImgView.image) {//无图片
         _subjectLbl.frame = bSubjectFrame;
         _dateLbl.frame = bDateFrame;
@@ -68,6 +68,7 @@
     
     CGFloat typeViewH = _leftImgView.image ? 172 : self.comeLbl.frame.origin.y + self.comeLbl.frame.size.height;
     self.typeView.frame = (CGRect){.origin = self.typeView.frame.origin, .size.width = self.typeView.frame.size.width, .size.height = typeViewH};
+    [super layoutSubviews];
 }
 
 - (void)initData:(NSDictionary *)aDict {

@@ -66,6 +66,9 @@ typedef enum {
 @property (nonatomic, assign) int picNum;
 @property (nonatomic, assign) BOOL isLoadingFirstCell;
 
+@property (nonatomic, strong) IBOutlet UIButton *replyCommentBtn;
+@property (nonatomic, assign) NSDictionary *commentDict;
+
 + (CGFloat)heightForPhotoSubject:(NSString *)text andOtherHeight:(CGFloat)_miniHeight;
 
 + (CGFloat)heightForCellWithText:(NSString *)text andOtherHeight:(CGFloat)_miniHeight withNameX:(CGFloat)nameX withNameWidth:(CGFloat)nameWidth ;

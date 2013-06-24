@@ -30,7 +30,7 @@
 }
 
 - (void)layoutSubviews {
-    [super layoutSubviews];
+//    [super layoutSubviews];
     if (!self.preContentView.hidden) {
         [self.preContentView layoutSubviews];
     }
@@ -46,6 +46,8 @@
         self.preContentView.frame = (CGRect){.origin.x = self.preContentView.frame.origin.x, .origin.y = _describeLbl.frame.origin.y + _describeLbl.frame.size.height + 3, .size = self.preContentView.frame.size};
     }
     self.typeView.frame = (CGRect){.origin = self.typeView.frame.origin, .size.width = self.typeView.frame.size.width, .size.height = _describeLbl.frame.origin.y + _describeLbl.frame.size.height + preContentH + self.comeLbl.frame.size.height};
+    [super layoutSubviews];
+//    [super setNeedsDisplay];
 }
 
 - (void)initData:(NSDictionary *)aDict {

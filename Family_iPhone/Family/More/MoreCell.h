@@ -9,13 +9,22 @@
 #import <UIKit/UIKit.h>
 #import "MyHeadButton.h"
 
+//typedef enum {
+//    familySection     = 0,//家人
+//    childSection      = 1,//孩子资料
+////    creditSection     = 2,//积分
+//    watchSection      = 2,//查看
+//    settingSection    = 3,//设置
+//    aboutSection      = 4//关于
+//} MoreCellSection;
+
 typedef enum {
-    familySection     = 0,//家人
-    childSection      = 1,//孩子资料
-//    creditSection     = 2,//积分
-    watchSection      = 2,//查看
-    settingSection    = 3,//设置
-    aboutSection      = 4//关于
+    familySection     = -1,//家人
+    childSection      = 0,//孩子资料
+    //    creditSection     = 2,//积分
+    watchSection      = 1,//查看
+    settingSection    = 2,//设置
+    aboutSection      = 3//关于
 } MoreCellSection;
 
 @interface MoreCell : UITableViewCell

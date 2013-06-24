@@ -270,24 +270,24 @@
                 break;
             }
         }
-        if (!delBtn) {
-            UIButton *delBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            delBtn.frame = CGRectZero;
-            [delBtn setImage:[UIImage imageNamed:@"down_arrow.png"] forState:UIControlStateNormal];
-            [delBtn whenTapped:^{
-                UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:@"是否删除?"];
-                [as setDestructiveButtonWithTitle:@"删除" handler:^{
-                    NSString *deleteTypeStr = [self.idType stringByReplacingOccurrencesOfString:@"re" withString:@""];
-                    NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"delete", OP, self.feedId, deleteTypeStr, ONE, DELETE_SUBMIT, MY_M_AUTH, M_AUTH, nil];
-                    [self uploadRequestToDeleteWithPara:para];
-                }];
-                [as setCancelButtonWithTitle:@"取消" handler:^{
-                    ;
-                }];
-                [as showInView:self];
-            }];
-            [self.cellHeader addSubview:delBtn];
-        }
+//        if (!delBtn) {
+//            UIButton *delBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//            delBtn.frame = CGRectZero;
+//            [delBtn setImage:[UIImage imageNamed:@"down_arrow.png"] forState:UIControlStateNormal];
+//            [delBtn whenTapped:^{
+//                UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:@"是否删除?"];
+//                [as setDestructiveButtonWithTitle:@"删除" handler:^{
+//                    NSString *deleteTypeStr = [self.idType stringByReplacingOccurrencesOfString:@"re" withString:@""];
+//                    NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"delete", OP, self.feedId, deleteTypeStr, ONE, DELETE_SUBMIT, MY_M_AUTH, M_AUTH, nil];
+//                    [self uploadRequestToDeleteWithPara:para];
+//                }];
+//                [as setCancelButtonWithTitle:@"取消" handler:^{
+//                    ;
+//                }];
+//                [as showInView:self];
+//            }];
+//            [self.cellHeader addSubview:delBtn];
+//        }
     }
     return self.cellHeader;
 }
@@ -511,42 +511,26 @@
     [self.pullTable reloadData];
 }
 
-#warning webview
-//让webview响应touch事件
-- (BOOL)webView:(UIWebView*)webView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType {
-    NSString *requestString = [[request URL] absoluteString];
-    NSArray *components = [requestString componentsSeparatedByString:@":"];
-    if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"myweb"]) {
-        if([(NSString *)[components objectAtIndex:1] isEqualToString:@"touch"])
-        {
-            NSLog(@"%@",[components objectAtIndex:2]);
-        }
-        return NO;
-    }
-    return YES;
-}
+//#warning webview
+////让webview响应touch事件
+//- (BOOL)webView:(UIWebView*)webView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType {
+//    NSString *requestString = [[request URL] absoluteString];
+//    NSArray *components = [requestString componentsSeparatedByString:@":"];
+//    if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"myweb"]) {
+//        if([(NSString *)[components objectAtIndex:1] isEqualToString:@"touch"])
+//        {
+//            NSLog(@"%@",[components objectAtIndex:2]);
+//        }
+//        return NO;
+//    }
+//    return YES;
+//}
 
 #pragma mark - request
 - (void)sendRequest:(id)sender {
-    
     if (self.currentPage == 1) {
-//        self.pullTable.pullTableIsRefreshing = _isFromZone ? NO : YES;
-//        if (!_isRefreshDataFromNet && [[PlistManager readPlist:PLIST_FEED_TOP_DATA] objectForKey:$str(@"%d", _indexRow)]) {
-//            self.dataDict = [[PlistManager readPlist:PLIST_FEED_TOP_DATA] objectForKey:$str(@"%d", _indexRow)];
-//            [self fillDataForDetail];
-//            return;
-//        } else {
-//            [self sendRequestToDetail:sender];
-//        }
         [self sendRequestToDetail:sender];
     }
-//    if (!_isLoadMoreDataFromNet && [[PlistManager readPlist:PLIST_FEED_COMMENT] objectForKey:$str(@"%d", _indexRow)]) {
-//        [_dataArray addObjectsFromArray:[[[PlistManager readPlist:PLIST_FEED_COMMENT] objectForKey:$str(@"%d", _indexRow)] objectForKey:COMMENT]];
-//        [_pullTable reloadData];
-//        return;
-//    } else {
-//        [self sendRequestToComment:sender];
-//    }
     [self sendRequestToComment:sender];
 }
 
@@ -727,31 +711,31 @@
 //    return captionView;
 //}
 
-#pragma mark - 删除帖子的接口
-- (void)uploadRequestToDeleteWithPara:(NSMutableDictionary*)para {
-    NSString *tipsStr = @"删除中...";//isCommentCell ? @"发送评论中..." : @"参与活动中...";
-    [SVProgressHUD showWithStatus:tipsStr];
-    NSString *acStr = [self.idType stringByReplacingOccurrencesOfString:@"re" withString:@""];
-    acStr = [acStr stringByReplacingOccurrencesOfString:@"id" withString:@""];
-    NSString *url = $str(@"%@%@", POST_CP_API, acStr);
-    [[MyHttpClient sharedInstance] commandWithPathAndParams:url params:para addData:^(id<AFMultipartFormData> formData) {
-    } onCompletion:^(NSDictionary *dict) {
-        if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
-            popAConInView(self);
-            [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
-            return ;
-        }
-        [SVProgressHUD showSuccessWithStatus:@"删除成功"];
-        if (!_isFromZone) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:REFRESH_FEED_LIST_FOR_DELETE object:[NSNumber numberWithInt:_indexRowInFeedList]];
-            FeedDetailViewController *con = (FeedDetailViewController*)[Common viewControllerOfView:self];
-            [con.navigationController popViewControllerAnimated:YES];
-        }
-    } failure:^(NSError *error) {
-        NSLog(@"error:%@", [error description]);
-        [SVProgressHUD showErrorWithStatus:@"网络不好T_T"];
-    }];
-}
+//#pragma mark - 删除帖子的接口
+//- (void)uploadRequestToDeleteWithPara:(NSMutableDictionary*)para {
+//    NSString *tipsStr = @"删除中...";//isCommentCell ? @"发送评论中..." : @"参与活动中...";
+//    [SVProgressHUD showWithStatus:tipsStr];
+//    NSString *acStr = [self.idType stringByReplacingOccurrencesOfString:@"re" withString:@""];
+//    acStr = [acStr stringByReplacingOccurrencesOfString:@"id" withString:@""];
+//    NSString *url = $str(@"%@%@", POST_CP_API, acStr);
+//    [[MyHttpClient sharedInstance] commandWithPathAndParams:url params:para addData:^(id<AFMultipartFormData> formData) {
+//    } onCompletion:^(NSDictionary *dict) {
+//        if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
+//            popAConInView(self);
+//            [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
+//            return ;
+//        }
+//        [SVProgressHUD showSuccessWithStatus:@"删除成功"];
+//        if (!_isFromZone) {
+//            [[NSNotificationCenter defaultCenter] postNotificationName:REFRESH_FEED_LIST_FOR_DELETE object:[NSNumber numberWithInt:_indexRowInFeedList]];
+//            FeedDetailViewController *con = (FeedDetailViewController*)[Common viewControllerOfView:self];
+//            [con.navigationController popViewControllerAnimated:YES];
+//        }
+//    } failure:^(NSError *error) {
+//        NSLog(@"error:%@", [error description]);
+//        [SVProgressHUD showErrorWithStatus:@"网络不好T_T"];
+//    }];
+//}
 
 
 /*

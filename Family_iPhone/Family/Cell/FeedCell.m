@@ -122,6 +122,12 @@
     if (cellType == otherNoImgType || cellType == otherHasImgType) {
         return;
     }
+    _loverView.contentLbl.font = [UIFont boldSystemFontOfSize:14.0f];
+    firstComment.contentLbl.font = [UIFont boldSystemFontOfSize:14.0f];
+    secondComment.contentLbl.font = [UIFont boldSystemFontOfSize:14.0f];
+    _loverView.contentLbl.textColor = color(118, 118, 118, 1);
+    firstComment.contentLbl.textColor = color(118, 118, 118, 1);
+    secondComment.contentLbl.textColor = color(118, 118, 118, 1);
     //头部
 //    [headView.headBtn setImageWithURL:[NSURL URLWithString:[aDict objectForKey:AVATAR]] placeholderImage:[UIImage imageNamed:@"head_70.png"]];
     [headView.headBtn setImageForMyHeadButtonWithUrlStr:[aDict objectForKey:AVATAR] plcaholderImageStr:nil];
@@ -170,8 +176,8 @@
     self.comeLbl.text = $str(@"%@   来自：%@", timeStr, emptystr([aDict objectForKey:COME]));
 //    albumView.comeLbl.text = $str(@"%@   来自：%@", timeStr, emptystr([aDict objectForKey:COME]));
     [albumView.likeitBtn setImage:[UIImage imageNamed:@"03a.png"] forState:UIControlStateNormal];//likeit_a.png
-    [albumView.likeitBtn setImage:[UIImage imageNamed:@"03c.png"] forState:UIControlStateHighlighted];//likeit_b.png
-    [albumView.likeitBtn setImage:[UIImage imageNamed:@"03c.png"] forState:UIControlStateSelected];//likeit_b.png
+    [albumView.likeitBtn setImage:[UIImage imageNamed:@"03b.png"] forState:UIControlStateHighlighted];//likeit_b.png
+    [albumView.likeitBtn setImage:[UIImage imageNamed:@"03b.png"] forState:UIControlStateSelected];//likeit_b.png
     [albumView.repostBtn setImage:[UIImage imageNamed:@"12.png"] forState:UIControlStateHighlighted];
     [albumView.commentBtn setImage:[UIImage imageNamed:@"02b.png"] forState:UIControlStateHighlighted];
     [albumView.albumBtn setImage:[UIImage imageNamed:@"Albums'name-bg2.png"] forState:UIControlStateHighlighted];

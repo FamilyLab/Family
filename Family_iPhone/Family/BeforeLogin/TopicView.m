@@ -133,13 +133,12 @@
             return ;
         }
         self.topicId = [[dict objectForKey:WEB_DATA] objectForKey:TOPIC_ID];
+        self.topicTitleStr = [[dict objectForKey:WEB_DATA] objectForKey:SUBJECT];
+        self.topicDescribeStr = [[dict objectForKey:WEB_DATA] objectForKey:MESSAGE];
+        self.topicImgUrlStr = [[dict objectForKey:WEB_DATA] objectForKey:PIC];
+        self.joinType = [[[dict objectForKey:WEB_DATA] objectForKey:JOIN_TYPE] objectAtIndex:0];
         if (!MY_LAST_TOPIC_ID || ![MY_LAST_TOPIC_ID isEqualToString:_topicId]) {
             [ConciseKit setUserDefaultsWithObject:_topicId forKey:LAST_TOPIC_ID];
-            self.topicTitleStr = [[dict objectForKey:WEB_DATA] objectForKey:SUBJECT];
-            self.topicDescribeStr = [[dict objectForKey:WEB_DATA] objectForKey:MESSAGE];
-            self.topicImgUrlStr = [[dict objectForKey:WEB_DATA] objectForKey:PIC];
-            self.joinType = [[[dict objectForKey:WEB_DATA] objectForKey:JOIN_TYPE] objectAtIndex:0];
-            
             [self fillData];
         }
         

@@ -86,6 +86,7 @@
     [self.view addSubview:aView];
     
     self.menuViewInBottom.frame = (CGRect){.origin.x = 0, .origin. y = DEVICE_SIZE.height -  40, self.menuViewInBottom.frame.size};
+    [self.view bringSubviewToFront:self.menuViewInBottom];
     
     [_postSthView.locationBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
     [_postSthView.personsBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
@@ -996,6 +997,8 @@
         NSString *tipStr = _dataDict ? @"转载照片成功" : @"发布照片成功";
         [MPNotificationView notifyWithText:tipStr detail:nil andDuration:kNotifyForOpertingTime];
         //        [SVProgressHUD showSuccessWithStatus:tipStr];
+        [AppDelegate app].sendToWeixinContent = _postSthView.describeTextView.text;
+        [AppDelegate app].afterPostSthAndGetADict = dict;
         [self pushToFeedDetailWithDict:dict];
         //        [self performBlock:^(id sender) {
         //            [self.navigationController dismissModalViewControllerAnimated:YES];
@@ -1033,6 +1036,8 @@
             return ;
         }
         NSString *tipStr = _dataDict ? @"转载日志成功" : @"发布日志成功";
+        [AppDelegate app].sendToWeixinContent = _postSthView.describeTextView.text;
+        [AppDelegate app].afterPostSthAndGetADict = dict;
         [MPNotificationView notifyWithText:tipStr detail:nil andDuration:kNotifyForOpertingTime];
         //        [SVProgressHUD showSuccessWithStatus:tipStr];
         [self pushToFeedDetailWithDict:dict];
@@ -1116,6 +1121,8 @@
             return ;
         }
         NSString *tipStr = _dataDict ? @"转载活动成功" : @"发布活动成功";
+        [AppDelegate app].sendToWeixinContent = _postSthView.describeTextView.text;
+        [AppDelegate app].afterPostSthAndGetADict = dict;
         [MPNotificationView notifyWithText:tipStr detail:nil andDuration:kNotifyForSuccessOrFailTime];
         //        [SVProgressHUD showSuccessWithStatus:tipStr];
         [self pushToFeedDetailWithDict:dict];
@@ -1621,39 +1628,37 @@
 }
 
 - (void)sendContent {
-    if ([WXApi isWXAppInstalled] && [WXApi isWXAppSupportApi]) {
-        //文本＋图片
-        WXMediaMessage *message = [WXMediaMessage message];
-        message.title = @"Family社区";
-        
-        //        NSString *msgStr = expandView.postType == postActivity ? upPostView.firstTextField.text : upPostView.describeTextView.text;
-        message.description = [AppDelegate app].sendToWeixinContent;// msgStr;
-        
-        UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"iTunesArtwork" ofType:@"png"]];
-        image = [UIImage imageWithData:UIImageJPEGRepresentation(image, 0.4f)];//SDK协议中对缩略图的大小作了限制，大小不能超过32K
-        [message setThumbImage:image];
-        
-        WXAppExtendObject *ext = [WXAppExtendObject object];
-        //        ext.extInfo = @"<xml>test</xml>";
-        ext.url = @"https://itunes.apple.com/us/app/family/id538285014?ls=1&mt=8";//若未安装Family，则跳去appstore下载
-        
-#define BUFFER_SIZE 1024 * 100
-        Byte* pBuffer = (Byte *)malloc(BUFFER_SIZE);
-        memset(pBuffer, 0, BUFFER_SIZE);
-        NSData* data = [NSData dataWithBytes:pBuffer length:BUFFER_SIZE];
-        free(pBuffer);
-        
-        ext.fileData = data;
-        
-        message.mediaObject = ext;
-        
-        SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
-        req.bText = NO;
-        req.message = message;
-        req.scene = _scene;
-        
-        [WXApi sendReq:req];
+    //发送新闻
+    WXMediaMessage *message = [WXMediaMessage message];
+    message.title = MY_NAME;// @"Family社区";
+    NSString *someText = @"";
+    NSString *idType = [[[AppDelegate app].afterPostSthAndGetADict objectForKey:DATA] objectForKey:FEED_ID_TYPE];
+    if ([idType isEqualToString:@"photoid"]) {
+        someText = @"发布了新的图片";
+    } else if ([idType isEqualToString:@"blogid"]) {
+        someText = @"发布了新的日志";
+    } else if ([idType isEqualToString:@"eventid"]) {
+        someText = @"发布了新的活动";
     }
+    NSString *title = [emptystr([AppDelegate app].sendToWeixinContent) isEqualToString:@""] ? @"《无标题》" : [NSString stringWithFormat:@"《%@》", [AppDelegate app].sendToWeixinContent];
+    message.description = [NSString stringWithFormat:@"%@%@", someText, title];
+    
+    UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"iTunesArtwork" ofType:@"png"]];
+    image = [UIImage imageWithData:UIImageJPEGRepresentation(image, 0.4f)];//SDK协议中对缩略图的大小作了限制，大小不能超过32K
+    [message setThumbImage:image];
+    
+    WXWebpageObject *ext = [WXWebpageObject object];
+//    NSLog(@"dict:%@", [AppDelegate app].afterPostSthAndGetADict);
+    ext.webpageUrl = [NSString stringWithFormat:@"http://www.familyday.com.cn/wx/wx.php?do=detail&id=%@&uid=%@&idtype=%@&wxkey=orfjpjjq5v7t-wfzga0gECo6cIcU", [[[AppDelegate app].afterPostSthAndGetADict objectForKey:DATA] objectForKey:FEED_ID], MY_UID, idType];
+    
+    message.mediaObject = ext;
+    
+    SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+    req.bText = NO;
+    req.message = message;
+    req.scene = _scene;
+    
+    [WXApi sendReq:req];    
 }
 
 @end

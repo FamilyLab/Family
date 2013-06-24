@@ -15,6 +15,7 @@
 #import "CellHeader.h"
 #import "MySearchBar.h"
 #import "DDAlertPrompt.h"
+#import "MyYIPopupTextView.h"
 
 typedef enum {
     searchInOurWeb   = 0,//搜索本站用户
@@ -22,7 +23,7 @@ typedef enum {
 } SearchWhere;
 
 
-@interface InviteListViewController : TableController <BottomViewDelegate, CommonCellDelegate, UISearchBarDelegate> {
+@interface InviteListViewController : TableController <BottomViewDelegate, CommonCellDelegate, UISearchBarDelegate, YIPopupTextViewDelegate> {
     BOOL isFirstShow;
 }
 

@@ -64,6 +64,8 @@
     self.tipsLbl.textColor = _isMyFamily ? [Common theLblColor]: [UIColor lightGrayColor];
     
     if (_isMyFamily) {
+        self.arrorImgView.hidden = NO;
+        
         self.tipsLbl.frame = tipsLblFrame_A;
         self.containerView.frame = containerFrame_A;
         self.callBtn.frame = callBtnFrame_A;
@@ -79,6 +81,8 @@
         
         [self.changeNoteBtn addTarget:self action:@selector(changeNoteBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
     } else {
+        self.arrorImgView.hidden = YES;
+        
         [self.containerView removeFromSuperview];
         self.containerView = nil;
         self.tipsLbl.frame = tipsLblFrame_B;
@@ -87,6 +91,9 @@
         [self.postPMBtn removeFromSuperview];
         [self.containerView removeFromSuperview];
         self.callBtn.hidden = NO;
+    }
+    if ([MY_UID isEqualToString:_userId]) {
+        self.arrorImgView.hidden = YES;
     }
 }
 

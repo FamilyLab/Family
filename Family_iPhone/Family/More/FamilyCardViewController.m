@@ -101,7 +101,6 @@
                 [SVProgressHUD showErrorWithStatus:@"已发过申请T_T"];
                 return;
             }
-            _button.selected = !_button.selected;
             DDAlertPrompt *alertPrompt = [[DDAlertPrompt alloc] initWithTitle:@"申请成为家人" delegate:self cancelButtonTitle:@"取消" otherButtonTitle:nil];
             __block DDAlertPrompt *blockAlert = alertPrompt;
             [alertPrompt addButtonWithTitle:@"确认" handler:^{
@@ -114,11 +113,12 @@
                         [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
                         return ;
                     }
+                    _button.selected = YES;
                     [SVProgressHUD showSuccessWithStatus:@"申请已发送"];
                 } failure:^(NSError *error) {
                     NSLog(@"error:%@", [error description]);
                     [SVProgressHUD showErrorWithStatus:@"网络不好T_T"];
-                    _button.selected = !_button.selected;
+                    _button.selected = NO;
                 }];
             }];
             [alertPrompt show];

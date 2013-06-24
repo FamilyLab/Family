@@ -14,14 +14,20 @@
 #import "HPGrowingTextView.h"
 #import "JTListView.h"
 #import "MyPanelView.h"
+#import "SinaWeibo.h"
+#import "SinaWeiboRequest.h"
+#import "SinaWeiboRequest.h"
+#import "WXApi.h"
+#import "AppDelegate.h"
+#import "MyYIPopupTextView.h"
 
-@interface FeedDetailViewController : BaseViewController <BottomViewDelegate, UIWebViewDelegate, UIScrollViewDelegate, HPGrowingTextViewDelegate, UIGestureRecognizerDelegate, JTListViewDataSource, JTListViewDelegate> {
+@interface FeedDetailViewController : BaseViewController <BottomViewDelegate, UIWebViewDelegate, UIScrollViewDelegate, HPGrowingTextViewDelegate, UIGestureRecognizerDelegate, JTListViewDataSource, JTListViewDelegate, UIActionSheetDelegate, SinaWeiboDelegate, SinaWeiboRequestDelegate, WXApiDelegate, YIPopupTextViewDelegate> {
     CGFloat offsetYOfJoin;
     CGFloat offsetYOfComment;
     //    BOOL isCommentCell;
     BOOL isOperatViewBtnPressed;
     BOOL isFirstShownComment;
-    
+    enum WXScene _scene;
 }
 
 //@property (nonatomic, assign) FeedCellType detailType;
@@ -72,6 +78,10 @@
 @property (nonatomic, strong) IBOutlet UIButton *goBackBtn;
 @property (nonatomic, strong) IBOutlet UIButton *goForwardBtn;
 
+@property (nonatomic, copy) NSString *replyWhoseNameStr;
+//@property (nonatomic, copy) NSString *urlForRepost;
+
 - (void)uploadRequestToLove;
+- (void)showCommentInputView:(BOOL)isReplyAComment;
 
 @end

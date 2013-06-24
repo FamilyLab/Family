@@ -79,6 +79,22 @@
 }
 
 - (void)initData:(NSDictionary *)_aDict {
+    if (!_aDict) {
+        _latestPicImgView.image = [UIImage imageNamed:@"add_album_a_v13"];
+        _albumNameLbl.text = @"新建相册";
+        _photoNumLbl.hidden = YES;
+        _diaryNumLbl.hidden = YES;
+        _activityNumLbl.hidden = YES;
+        _videoNumLbl.hidden = YES;
+        _lineImgView.hidden = YES;
+        return;
+    }
+    _photoNumLbl.hidden = NO;
+    _diaryNumLbl.hidden = NO;
+    _activityNumLbl.hidden = NO;
+    _videoNumLbl.hidden = NO;
+    _lineImgView.hidden = NO;
+    
     self.dataDict = _aDict;
     if (![[dataDict objectForKey:LATEST_PIC] isEqual:[NSNull null]]) {
         NSString *urlStr = [dataDict objectForKey:LATEST_PIC];
@@ -89,10 +105,10 @@
         _latestPicImgView.image = [UIImage imageNamed:@"space_default_2.jpg"];
     }
     _albumNameLbl.text = [dataDict objectForKey:TAG_NAME];
-    _photoNumLbl.text = [dataDict objectForKey:PHOTO_NUM];
-    _diaryNumLbl.text = [dataDict objectForKey:BLOG_NUM];
-    _activityNumLbl.text = [dataDict objectForKey:EVENT_NUM];
-    _videoNumLbl.text = [dataDict objectForKey:VIDEO_NUM];
+    _photoNumLbl.text =  $str(@"照片: %@", [dataDict objectForKey:PHOTO_NUM]);
+    _diaryNumLbl.text =  $str(@"日记: %@", [dataDict objectForKey:BLOG_NUM]);
+    _activityNumLbl.text =  $str(@"活动: %@", [dataDict objectForKey:EVENT_NUM]);
+    _videoNumLbl.text =  $str(@"视频: %@", [dataDict objectForKey:VIDEO_NUM]);
 }
 
 - (IBAction)familyMemberBtnPressed:(UIButton*)sender {

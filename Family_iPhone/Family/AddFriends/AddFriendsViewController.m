@@ -47,13 +47,13 @@
     
     [containerView addSubview:_mySearchBar];
     
-    NSArray *lblTextArray = [[NSArray alloc] initWithObjects:@"电话本", @"新浪微博", @"腾讯微博", @"微信", nil];
-    NSArray *imgsArray = [[NSArray alloc] initWithObjects:@"invite_addressbook", @"invite_sina_weibo", @"invite_tencent_weibo", @"invite_weixin", nil];
-    for (int i=0; i<4; i++) {
-        MyButton *btn = (MyButton*)[self.view viewWithTag:kTagAddFriendsButton + i];
-        [btn changeLblWithText:[lblTextArray objectAtIndex:i] andColor:color(95, 95, 95, 1.0) andSize:14.0f theX:35];
-        [btn addALittleImageViewWithFrame:CGRectMake(14, 10, 18, 18) imgStr:[imgsArray objectAtIndex:i]];
-    }
+//    NSArray *lblTextArray = [[NSArray alloc] initWithObjects:@"电话本", @"新浪微博", @"腾讯微博", @"微信", nil];
+//    NSArray *imgsArray = [[NSArray alloc] initWithObjects:@"invite_addressbook", @"invite_sina_weibo", @"invite_tencent_weibo", @"invite_weixin", nil];
+//    for (int i=0; i<4; i++) {
+//        MyButton *btn = (MyButton*)[self.view viewWithTag:kTagAddFriendsButton + i];
+//        [btn changeLblWithText:[lblTextArray objectAtIndex:i] andColor:color(95, 95, 95, 1.0) andSize:14.0f theX:35];
+//        [btn addALittleImageViewWithFrame:CGRectMake(14, 10, 18, 18) imgStr:[imgsArray objectAtIndex:i]];
+//    }
     if (self.topViewType == loginOrSignIn) {
         [_phoneTextField becomeFirstResponder];
     }
@@ -276,7 +276,9 @@
     NSString *name = [emptystr(_nameTextField.text) isEqualToString:@""] ? @"xxx" : _nameTextField.text;
     NSString *phone = [emptystr(_phoneTextField.text) isEqualToString:@""] ? @"xxx" : _phoneTextField.text;
     NSString *pw = [emptystr(_passwordStr) isEqualToString:@""] ? @"***" : _passwordStr;
-    _smsLbl.text = $str(@"%@，我在www.familyday.com.cn帮你注册了，账号是%@，密码是%@，我们在这儿团聚吧！(%@)",name, phone, pw, MY_NAME);
+    _smsLbl.text = $str(@"%@，我在familyday.com.cn帮你注册了，账号:%@，密码:%@ 下载：www.familyday.com/app(%@)", name, phone, pw, MY_NAME);
+//    _smsLbl.text = $str(@"%@，我在www.familyday.com.cn帮你注册了，账号是%@，密码是%@，我们在这儿团聚吧！(%@)",name, phone, pw, MY_NAME);
+    
 }
 
 #pragma mark - 通讯录

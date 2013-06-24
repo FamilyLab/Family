@@ -20,6 +20,7 @@
 #import "AddChildViewController.h"
 #import "MyTabBarController.h"
 #import "UIImage+fixOrientation.h"
+#import "MoreViewController.h"
 
 #define ALL_DEFAULT_SAPCE_IMAGE_NUM 4
 
@@ -207,9 +208,26 @@
     topView.topViewType = notLoginOrSignIn;
     [topView leftBg];
     [topView leftText:@"空间"];
-    [topView rightLogo];
+//    [topView rightLogo];
     [topView rightLine];
     [topView dropShadowWithOffset:CGSizeZero radius:0 color:bgColor() opacity:0 shadowFrame:CGRectZero];//因为有cellHeader，所以这里不用阴影
+    
+    
+    UIButton *firstBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    firstBtn.frame = CGRectMake(205, 0, 120, 50);
+    firstBtn.titleLabel.font = [UIFont boldSystemFontOfSize:18.0f];
+    [firstBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    [firstBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 40, 0, 0)];
+    [firstBtn setTitle:@"设置" forState:UIControlStateNormal];
+    [firstBtn setTitleColor:[Common theBtnColor] forState:UIControlStateNormal];
+    [firstBtn setTitleColor:[Common theLblColor] forState:UIControlStateHighlighted];
+    [firstBtn setImage:ThemeImage(@"goto_b") forState:UIControlStateNormal];
+//    [firstBtn setImage:[UIImage imageNamed:@"dark_arrow.png"] forState:UIControlStateNormal];
+    [firstBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 90, 0, 0)];
+    [firstBtn addTarget:self action:@selector(moreBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
+    self.settingBtn = firstBtn;
+    [topView addSubview:firstBtn];
+    
     [self.view addSubview:topView];
 }
 
@@ -221,7 +239,14 @@
             [topView changeTheme];
         }
     }
+    [_settingBtn setTitleColor:[Common theBtnColor] forState:UIControlStateNormal];
+    [_settingBtn setTitleColor:[Common theLblColor] forState:UIControlStateHighlighted];
     [self._tableView reloadData];
+}
+
+- (void)moreBtnPressed:(id)sender {
+    MoreViewController *con = [[MoreViewController alloc] initWithNibName:@"MoreViewController" bundle:nil];
+    [self.navigationController pushViewController:con animated:YES];
 }
 
 - (void)sendRequest:(id)sender {
@@ -291,75 +316,81 @@
     if (_isOnlyShowMyZone) {
         return 1;
     } else
-        return 3;
+        return 1;
+//        return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (_isOnlyShowMyZone) {
         return [dataArray count];
     }
-    
-    if (section == 0) {
-        return 1;
-    } else if (section == 1) {
-        int membersNum = [memberArray count];
-        if (membersNum > 0) {
-            if (membersNum % NUM_PER_ROW == 0) {
-                return membersNum / NUM_PER_ROW;
-            } else {
-                return (membersNum / NUM_PER_ROW + 1) ;
-            }
-        } else {
-            return 1;
-        }
-    } else {
-        return [dataArray count];
-    }
+    return 1 + [dataArray count] + 1;//前面的1是封面，后面的1是增加新相册的按钮
+//    if (section == 0) {
+//        return 1;
+//    } else if (section == 1) {
+//        int membersNum = [memberArray count];
+//        if (membersNum > 0) {
+//            if (membersNum % NUM_PER_ROW == 0) {
+//                return membersNum / NUM_PER_ROW;
+//            } else {
+//                return (membersNum / NUM_PER_ROW + 1) ;
+//            }
+//        } else {
+//            return 1;
+//        }
+//    } else {
+//        return [dataArray count];
+//    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (_isOnlyShowMyZone) {
         return 120;
     }
-    
-    if (indexPath.section == 0) {
+    if (indexPath.row == 0) {
         return 380;
-    } else if (indexPath.section == 1) {
-        if ([memberArray count] > 0) {
-            return 50;
-        } else
-            return 125;
-    } else
-        return 120;
+    }
+    return 120;
+//    if (indexPath.section == 0) {
+//        return 380;
+//    } else if (indexPath.section == 1) {
+//        if ([memberArray count] > 0) {
+//            return 50;
+//        } else
+//            return 125;
+//    } else
+//        return 120;
 }
 
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (_isOnlyShowMyZone) {
-        return nil;
-    }
-    if (section == 0 && !_isOnlyShowMyZone) {
-        return nil;
-    }
-    CellHeader *headerView = [[[NSBundle mainBundle] loadNibNamed:@"CellHeader" owner:self options:nil] objectAtIndex:0];
-//    headerView.leftImgView = YES;
-    headerView.leftImgView.frame = CGRectMake(10, 10, 119, 40);
-    headerView.leftImgView.contentMode = UIViewContentModeBottom;
-    NSString *leftImgStr = section == 1 ? @"families" : section == 2 ? @"space" : @"";
+    return nil;
     
 //    if (_isOnlyShowMyZone) {
-//        leftImgStr = @"space";
-//        [headerView.rightBtn addTarget:self action:@selector(addZoneBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
-//    } else {
-        if (section == 1) {
-            [headerView.rightBtn addTarget:self action:@selector(addFamilyMemberBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
-        } else if (section == 2) {
-            [headerView.rightBtn addTarget:self action:@selector(addZoneBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
-        }
+//        return nil;
 //    }
-    headerView.leftImgView.image = ThemeImage(leftImgStr);
-    [headerView.rightBtn setImage:ThemeImage(@"space_add_more_a") forState:UIControlStateNormal];
-    [headerView.rightBtn setImage:ThemeImage(@"space_add_more_b") forState:UIControlStateHighlighted];
-    return headerView;
+//    if (section == 0 && !_isOnlyShowMyZone) {
+//        return nil;
+//    }
+//    CellHeader *headerView = [[[NSBundle mainBundle] loadNibNamed:@"CellHeader" owner:self options:nil] objectAtIndex:0];
+////    headerView.leftImgView = YES;
+//    headerView.leftImgView.frame = CGRectMake(10, 10, 119, 40);
+//    headerView.leftImgView.contentMode = UIViewContentModeBottom;
+//    NSString *leftImgStr = section == 1 ? @"families" : section == 2 ? @"space" : @"";
+//    
+////    if (_isOnlyShowMyZone) {
+////        leftImgStr = @"space";
+////        [headerView.rightBtn addTarget:self action:@selector(addZoneBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
+////    } else {
+//        if (section == 1) {
+//            [headerView.rightBtn addTarget:self action:@selector(addFamilyMemberBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
+//        } else if (section == 2) {
+//            [headerView.rightBtn addTarget:self action:@selector(addZoneBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
+//        }
+////    }
+//    headerView.leftImgView.image = ThemeImage(leftImgStr);
+//    [headerView.rightBtn setImage:ThemeImage(@"space_add_more_a") forState:UIControlStateNormal];
+//    [headerView.rightBtn setImage:ThemeImage(@"space_add_more_b") forState:UIControlStateHighlighted];
+//    return headerView;
 }
 
 - (void)addFamilyMemberBtnPressed:(id)sender {
@@ -375,50 +406,58 @@
     con.myHeadUrl = MY_HEAD_AVATAR_URL;
     con.myNameStr = MY_NAME;
     [self.navigationController pushViewController:con animated:YES];
-    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (_isOnlyShowMyZone) {
-        return 0;
-    }
+    return 0;
     
-    if (section == 0) {
-        return 0;
-    } else
-        return 50;
+//    if (_isOnlyShowMyZone) {
+//        return 0;
+//    }
+//    
+//    if (section == 0) {
+//        return 0;
+//    } else
+//        return 50;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ZoneCell *cell;
     static NSString *photoCellId = @"photoCellId";
-    static NSString *memberCellId = @"memberCellId";
+//    static NSString *memberCellId = @"memberCellId";
     static NSString *albumCellId = @"albumCellId";
     if (_isOnlyShowMyZone) {
         cell = [tableView dequeueReusableCellWithIdentifier:albumCellId];
     } else {
-        if (indexPath.section == 0) {
+        if (indexPath.row == 0) {
             cell = [tableView dequeueReusableCellWithIdentifier:photoCellId];
-        } else if (indexPath.section == 1) {
-            cell = [tableView dequeueReusableCellWithIdentifier:memberCellId];
         } else {
             cell = [tableView dequeueReusableCellWithIdentifier:albumCellId];
         }
+//        if (indexPath.section == 0) {
+//            cell = [tableView dequeueReusableCellWithIdentifier:photoCellId];
+//        } else if (indexPath.section == 1) {
+//            cell = [tableView dequeueReusableCellWithIdentifier:memberCellId];
+//        } else {
+//            cell = [tableView dequeueReusableCellWithIdentifier:albumCellId];
+//        }
     }
     if (cell == nil) {
         NSArray *array = [[NSBundle mainBundle] loadNibNamed:@"ZoneCell" owner:self options:nil];
         if (_isOnlyShowMyZone) {
             cell = [array objectAtIndex:2];
+        } else if (indexPath.row == 0) {
+            cell = [array objectAtIndex:0];
         } else
-            cell = [array objectAtIndex:indexPath.section];
+            cell = [array objectAtIndex:2];
+//            cell = [array objectAtIndex:indexPath.section];
     }
     cell.indexSection = indexPath.section;
     cell.indexRow = indexPath.row;
     if (!_isOnlyShowMyZone) {
-        if (indexPath.section == 0) {
+        if (indexPath.row == 0) {
+//        if (indexPath.section == 0) {
             UIImage *spaceImg = [Common getImgFromUserDefaultForKey:SPACE_IMAGE];
-//            CGRect rect = CGRectMake(0, 0, cell.photoImgView.frame.size.width, cell.photoImgView.frame.size.height);
-//            spaceImg = [UIImage imageWithCGImage:CGImageCreateWithImageInRect([spaceImg CGImage], rect) scale:1.0f orientation:UIImageOrientationUp];
             cell.photoImgView.image = spaceImg;
             
             NSString *infoStr = $str(@"%d个家人，%d个动态", [[infoDict objectForKey:FAMILY_MEMBERS] intValue], [[infoDict objectForKey:FAMILY_FEEDS] intValue]);
@@ -434,14 +473,16 @@
                                                rightImg:@"cake.png"
                                                rightStr:[infoDict objectForKey:BIRTHDAY]];
             [cell.simpleInfoView.headBtn setVipStatusWithStr:emptystr(MY_VIP_STATUS) isSmallHead:YES];
-        } else if (indexPath.section == 1) {
-            cell.memberArray = self.memberArray;
-            [cell initFamilyMemberHeadBtn];
+//        } else if (indexPath.section == 1) {
+//            cell.memberArray = self.memberArray;
+//            [cell initFamilyMemberHeadBtn];
+        } else if (indexPath.row == [dataArray count] + 1) {//增加相册的
+            [cell initData:nil];
         } else {
-            [cell initData:[dataArray objectAtIndex:indexPath.row]];
+            [cell initData:[dataArray objectAtIndex:indexPath.row - 1]];
         }
     } else
-        [cell initData:[dataArray objectAtIndex:indexPath.row]];
+        [cell initData:[dataArray objectAtIndex:indexPath.row]];//只显示空间列表
     
     return cell;
 }
@@ -453,7 +494,8 @@
     if (_isOnlyShowMyZone) {//只显示空间
         [self pushToZoneDetailConWithIndexRow:indexPath.row isMyZone:NO];
     } else {
-        if (indexPath.section == 0) {
+        if (indexPath.row == 0) {
+//        if (indexPath.section == 0) {
             MyImagePickerController *picker = [[MyImagePickerController alloc] initWithParent:self];
             picker.allowsEditing = NO;
             [picker showImagePickerMenu:@"更换封面" buttonTitle:@"打开相机" destructiveTitle:nil sender:self.view otherTitle:@"随机更换", nil];
@@ -474,10 +516,14 @@
             MyTabBarController *tabBarCon = (MyTabBarController*)self.parentViewController;
             [picker.ImagePickerMenu showFromTabBar:tabBarCon.tabBar];
             return;
-        }
-        if (indexPath.section == 2) {
+        } else if (indexPath.row == [dataArray count] + 1) {
+            [self addZoneBtnPressed:nil];
+        } else {
             [self pushToZoneDetailConWithIndexRow:indexPath.row isMyZone:YES];
         }
+//        if (indexPath.section == 2) {
+//            [self pushToZoneDetailConWithIndexRow:indexPath.row isMyZone:YES];
+//        }
     }
 }
 

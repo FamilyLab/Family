@@ -111,7 +111,7 @@
 }
 
 - (void)addBottomView {
-    _tableView.frame = (CGRect){.origin = _tableView.frame.origin, .size.width = _tableView.frame.size.width, .size.height = DEVICE_SIZE.height - 40};
+    _tableView.frame = (CGRect){.origin = CGPointMake(0, 50), .size.width = _tableView.frame.size.width, .size.height = DEVICE_SIZE.height - 50};
     NSArray *normalImages = [[NSArray alloc] initWithObjects:@"menu_back", nil];
     BottomView *aView = [[BottomView alloc] initWithFrame:CGRectMake(0, DEVICE_SIZE.height - 40, DEVICE_SIZE.width, 40)
                                                      type:notAboutTheme
@@ -424,14 +424,15 @@
             break;
     }
     NSDictionary *aDict = [dataArray objectAtIndex:indexPath.row];
+//    NSLog(@"msg:%@", emptystr([aDict objectForKey:MESSAGE]));
     if (type == bigImgType || type == someImgsType || type == onlyTextType) {
         NSString *keyStr = type == bigImgType ? OLD_SUBJECT : OLD_MESSAGE;
         CGFloat preContentH = [FeedCell heightForCellWithText:emptystr([aDict objectForKey:keyStr]) andOtherHeight:0 andLblMaxWidth:265 andFont:nil];
         noCommentHeight += preContentH;
-        if (type == someImgsType || type == onlyTextType) {
+//        if (type == someImgsType || type == onlyTextType) {
             CGFloat describeH = [FeedCell heightForCellWithText:emptystr([aDict objectForKey:MESSAGE])andOtherHeight:10 andLblMaxWidth:280 andFont:[UIFont systemFontOfSize:14.0f]];
             noCommentHeight += describeH;
-        }
+//        }
     } else if (type == imgAndTextType) {
         if ([[aDict objectForKey:FEED_ID_TYPE] isEqualToString:@"reblogid"]) {
             CGFloat describeH = [FeedCell heightForCellWithText:emptystr([aDict objectForKey:MESSAGE]) andOtherHeight:0 andLblMaxWidth:280 andFont:nil];
@@ -546,7 +547,7 @@
         NSArray *array = [[NSBundle mainBundle] loadNibNamed:@"FeedCell" owner:self options:nil];
 		cell = [array objectAtIndex:type];
     }
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.selectionStyle = UITableViewCellSelectionStyleGray;
     cell.cellType = type;
     NSString *idType = [[dataArray objectAtIndex:indexPath.row] objectForKey:FEED_ID_TYPE];
     if ([idType hasPrefix:@"re"]) {
@@ -595,25 +596,9 @@
         }];
         //评论
         [cell.albumView.commentBtn whenTapped:^{
-            YIPopupTextView *popupTextView = [[YIPopupTextView alloc] initWithPlaceHolder:@"随便说点啥吧..." maxCount:0 buttonStyle:YIPopupTextViewButtonStyleLeftCancelRightDone
-                                                         tintsDoneButton:NO];
+            MyYIPopupTextView *popupTextView = [[MyYIPopupTextView alloc] initWithMaxCount:0];
             popupTextView.delegate = self;
-            popupTextView.caretShiftGestureEnabled = YES;   // default = NO
-            //popupTextView.editable = NO;                  // set editable=NO to show without keyboard
-            [popupTextView setAcceptBtnFrame:CGRectMake(10, 190, 150, 40) andNormalImageWithStr:@"pop_left.png" andHighlightImageWithStr:nil];
-            [popupTextView setCloseBtnFrame:CGRectMake(160, 190, 150, 40) andNormalImageWithStr:@"pop_right.png" andHighlightImageWithStr:nil];
             [popupTextView showInView:self.view];
-            
-            UIImageView *lineImgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pop_line.png"]];
-            lineImgView.frame = CGRectMake(160, 190, 1, 40);
-            [popupTextView.superview addSubview:lineImgView];
-            [popupTextView.superview addSubview:lineImgView];
-            
-            UIImageView *alphaBgImgVIew = [[UIImageView alloc] initWithFrame:DEVICE_BOUNDS];
-            alphaBgImgVIew.backgroundColor = [UIColor blackColor];
-            alphaBgImgVIew.alpha = 0.6f;
-            [popupTextView.superview.superview insertSubview:alphaBgImgVIew atIndex:0];
-            
             [popupTextView.acceptButton whenTapped:^{
                 if ([[[dataArray objectAtIndex:indexPath.row] objectForKey:FEED_ID_TYPE] isEqualToString:FEED_EVENT_ID]) {
                     popupTextView.text = @"参与了活动";

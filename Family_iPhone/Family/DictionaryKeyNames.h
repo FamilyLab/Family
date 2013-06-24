@@ -148,10 +148,11 @@
 
 
 //function
-#define getTheFrame(tipsStr, object) NSLog(@"%@, x:%.2f y:%.2f w:%.2f h:%.2f class:%@", tipsStr, object.frame.origin.x, object.frame.origin.y, object.frame.size.width, object.frame.size.height, [object class])
+#define getTheFrame(tipsStr, object) NSLog(@"%@, x:%.2f y:%.2f w:%.2f h:%.2f class:%@", emptystr(tipsStr), object.frame.origin.x, object.frame.origin.y, object.frame.size.width, object.frame.size.height, [object class])
 //#define getTheFrame(object) NSLog(@"%@ x:%.2f y:%.2f w:%.2f h:%.2f", [object class], object.frame.origin.x, object.frame.origin.y, object.frame.size.width, object.frame.size.height)
 
 #define color(r, g, b, a) [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
+#define rgba(r, g, b, a) [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
 
 #define isRetina ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 960), [[UIScreen mainScreen] currentMode].size) : NO)
 

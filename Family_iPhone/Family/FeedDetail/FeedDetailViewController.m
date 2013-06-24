@@ -282,8 +282,14 @@
     if ([self currIdDict]) {
         NSString *commentIdType = [[self currIdDict] objectForKey:FEED_ID_TYPE];
         commentIdType = [commentIdType stringByReplacingOccurrencesOfString:@"re" withString:@""];
-        NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[self currIdDict] objectForKey:FEED_ID], ID, commentIdType, FEED_ID_TYPE, _growingTextView.text, MESSAGE, MY_M_AUTH, M_AUTH, nil];
-        [self uploadRequestToCommentOrJoinEvent:para withCommentText:_growingTextView.text];
+        
+        if (self.replyWhoseNameStr) {//回复某人评论的
+            self.replyWhoseNameStr = $str(@"回复%@: %@", self.replyWhoseNameStr, _growingTextView.text);
+        } else {
+            self.replyWhoseNameStr = _growingTextView.text;
+        }
+        NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[self currIdDict] objectForKey:FEED_ID], ID, commentIdType, FEED_ID_TYPE, self.replyWhoseNameStr, MESSAGE, MY_M_AUTH, M_AUTH, nil];
+        [self uploadRequestToCommentOrJoinEvent:para withCommentText:self.replyWhoseNameStr];
     }
 }
 
@@ -373,7 +379,7 @@
 
 - (void)addBottomView {
     NSString *fourthBtnImageStr = [emptystr([[self currIdDict] objectForKey:FEED_ID_TYPE]) isEqualToString:FEED_EVENT_ID] ? @"joinevent" : @"menu_comment";
-    NSArray *normalImages = [[NSArray alloc] initWithObjects:@"menu_back", @"menu_repost", @"feed_detail_love_a", fourthBtnImageStr, @"menu_face", nil];
+    NSArray *normalImages = [[NSArray alloc] initWithObjects:@"menu_back", @"menu_repost", @"feed_detail_love_a", fourthBtnImageStr, @"threedot_a", nil];//menu_face
     BottomView *aView = [[BottomView alloc] initWithFrame:CGRectMake(0, DEVICE_SIZE.height - kBottomViewHeight, DEVICE_SIZE.width, kBottomViewHeight)
                                                      type:notAboutTheme
                                                 buttonNum:[normalImages count]
@@ -391,9 +397,9 @@
 }
 
 - (void)userPressedTheBottomButton:(BottomView *)_view andButton:(UIButton *)_button {
-    if (_button.tag - kTagBottomButton != 4) {//非表态按钮
-        [self willShowFaceView:NO];
-    }
+//    if (_button.tag - kTagBottomButton != 4) {//非表态按钮
+//        [self willShowFaceView:NO];
+//    }
     switch (_button.tag - kTagBottomButton) {
         case 0://后退
         {
@@ -425,28 +431,35 @@
         }
         case 3://评论
         {
-            //            if (isCommentCell) {//发表评论
-            
-            self.theInputView.frame = (CGRect){.origin.x = 0, .origin.y = DEVICE_SIZE.height - self.theInputView.frame.size.height, .size = self.theInputView.frame.size};
-            if ([emptystr([[self currIdDict] objectForKey:FEED_ID_TYPE]) isEqualToString:FEED_EVENT_ID]) {
-                _growingTextView.text = @"参与了活动";
-            }
-            [_growingTextView becomeFirstResponder];
-            
-            //            } else {//参与活动
-            //                NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:_feedId, ID, FEED_EVENT_ID, FEED_ID_TYPE, [NSString stringWithFormat:@"%@ 参与了活动", [_dataDict objectForKey:NAME]], MESSAGE, IPHONE, FEED_COME, MY_M_AUTH, M_AUTH, nil];
-            //                [self uploadRequestToCommentOrJoinEvent:para withCommentText:nil];
-            //            }
+            [self showCommentInputView:NO];
             break;
         }
         case 4://表情
         {
-            [self willShowFaceView:!_button.selected];
+//            [self willShowFaceView:!_button.selected];
+            [self pointToCurrPanelView];
+            NSString *desctructiveStr = [MY_UID isEqualToString:_panelView.userId] ? @"删除" : nil;
+            UIActionSheet *ac = [[UIActionSheet alloc] initWithTitle:@"分享至..." delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:desctructiveStr otherButtonTitles:@"新浪微博", @"微信好友", @"微信朋友圈", nil];
+            [ac showInView:self.view];
             break;
         }
         default:
             break;
     }
+}
+
+- (void)showCommentInputView:(BOOL)isReplyAComment {
+    isReplyAComment = isReplyAComment ? isReplyAComment : NO;
+    self.theInputView.frame = (CGRect){.origin.x = 0, .origin.y = DEVICE_SIZE.height - self.theInputView.frame.size.height, .size = self.theInputView.frame.size};
+    if (!isReplyAComment && [emptystr([[self currIdDict] objectForKey:FEED_ID_TYPE]) isEqualToString:FEED_EVENT_ID]) {
+        _growingTextView.text = @"参与了活动";
+    }
+    if (isReplyAComment) {
+        _growingTextView.placeHolder = $str(@"回复%@:", self.replyWhoseNameStr);
+    } else {
+        _growingTextView.placeHolder = @"随便说点啥...";
+    }
+    [_growingTextView becomeFirstResponder];
 }
 
 - (void)willShowFaceView:(BOOL)willShow {
@@ -623,6 +636,7 @@
         //        if (isCommentCell) {
         
         _growingTextView.text = @"";
+        self.replyWhoseNameStr = nil;
         
         //更新动态列表的评论数据
         NSMutableDictionary *aDict = [[NSMutableDictionary alloc] init];
@@ -679,7 +693,7 @@
     }
     [self pointToCurrPanelView];
     if (_panelView.dataDict) {
-#warning 后退会出现空白页面
+//#warning 后退会出现空白页面
         PostSthViewController *con = [[PostSthViewController alloc] initWithNibName:@"PostSthViewController" bundle:nil];
 //        PostViewController *con = [[PostViewController alloc] initWithNibName:@"PostViewController" bundle:nil];
         con.shouldAddDefaultImage = YES;
@@ -723,6 +737,228 @@
     } else {
         return unknownDetailType;
     }
+}
+
+#pragma mark - ActionSheet
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == actionSheet.cancelButtonIndex) {
+        return;
+    }
+//    NSLog(@"destruct:%d", actionSheet.destructiveButtonIndex);
+    if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        //@"删除"
+        [self pointToCurrPanelView];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"确定删除?" message:@""];
+        [alert setCancelButtonWithTitle:@"取消" handler:^{
+            ;
+        }];
+        [alert addButtonWithTitle:@"删除" handler:^{
+            NSString *deleteTypeStr = [_panelView.idType stringByReplacingOccurrencesOfString:@"re" withString:@""];
+            NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"delete", OP, _panelView.feedId, deleteTypeStr, ONE, DELETE_SUBMIT, MY_M_AUTH, M_AUTH, nil];
+            [self uploadRequestToDeleteWithPara:para];
+        }];
+        [alert show];
+        return;
+    }
+    switch (buttonIndex - 1 - actionSheet.destructiveButtonIndex) {
+        case 0://新浪微博
+        {
+            SinaWeibo *sinaweibo = [self sinaweibo];
+            if (MY_HAS_BIND_SINA_WEIBO && sinaweibo.isAuthValid && !sinaweibo.isAuthorizeExpired) {
+                MyYIPopupTextView *popupTextView = [[MyYIPopupTextView alloc] initWithMaxCount:140];
+                popupTextView.delegate = self;
+                [popupTextView showInView:self.view];
+                [self pointToCurrPanelView];
+                NSString *idType = [_panelView.idType stringByReplacingOccurrencesOfString:@"id" withString:@""];
+                popupTextView.text = [NSString stringWithFormat:@"%@（来自@Family社区）", emptystr([_panelView.dataDict objectForKey:SUBJECT])];
+                [popupTextView.acceptButton whenTapped:^{
+                    [MPNotificationView notifyWithText:@"分享中..." detail:nil andDuration:0.5f];
+                    NSString *postText = [NSString stringWithFormat:@"%@ http://familyday.com.cn/space.php?do=%@&uid=%@&id=%@（来自@Family社区）", emptystr([_panelView.dataDict objectForKey:SUBJECT]), idType, _panelView.userId, _panelView.feedId];
+                    [self sendToSinaWeiboWithText:postText];
+                    [popupTextView dismiss];
+                }];
+            } else {
+                [self loginSinaWeibo];
+            }
+            break;
+        }
+        case 1: case 2://1:微信好友 //2:微信朋友圈
+        {
+            if ([WXApi isWXAppInstalled] && [WXApi isWXAppSupportApi]) {
+                _scene = buttonIndex == 1 ? WXSceneSession : WXSceneTimeline;
+                [self sendContent];
+            } else {
+                UIAlertView *alView = [[UIAlertView alloc] initWithTitle:@"" message:@"你的iPhone上还没有安装微信，无法使用此功能，使用微信可以方便的把你喜欢的作品分享给好友。"];
+                [alView setCancelButtonWithTitle:@"取消" handler:^{
+                    return ;
+                }];
+                [alView addButtonWithTitle:@"免费下载微信" handler:^{
+                    NSString *weiXinLink = @"itms-apps://itunes.apple.com/cn/app/wei-xin/id414478124?mt=8";
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:weiXinLink]];
+                }];
+                [alView show];
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+//删除帖子的接口
+#pragma mark - 删除帖子的接口
+- (void)uploadRequestToDeleteWithPara:(NSMutableDictionary*)para {
+    NSString *tipsStr = @"删除中...";//isCommentCell ? @"发送评论中..." : @"参与活动中...";
+    [SVProgressHUD showWithStatus:tipsStr];
+    [self pointToCurrPanelView];
+    NSString *acStr = [_panelView.idType stringByReplacingOccurrencesOfString:@"re" withString:@""];
+    acStr = [acStr stringByReplacingOccurrencesOfString:@"id" withString:@""];
+    NSString *url = $str(@"%@%@", POST_CP_API, acStr);
+    [[MyHttpClient sharedInstance] commandWithPathAndParams:url params:para addData:^(id<AFMultipartFormData> formData) {
+    } onCompletion:^(NSDictionary *dict) {
+        if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
+//            popAConInView(self);
+            [self.navigationController popViewControllerAnimated:YES];
+            [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
+            return ;
+        }
+        [SVProgressHUD showSuccessWithStatus:@"删除成功"];
+        if (!_isFromZone) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:REFRESH_FEED_LIST_FOR_DELETE object:[NSNumber numberWithInt:_panelView.indexRowInFeedList]];
+            [self.navigationController popViewControllerAnimated:YES];
+//            FeedDetailViewController *con = (FeedDetailViewController*)[Common viewControllerOfView:self];
+//            [con.navigationController popViewControllerAnimated:YES];
+        }
+    } failure:^(NSError *error) {
+        NSLog(@"error:%@", [error description]);
+        [SVProgressHUD showErrorWithStatus:@"网络不好T_T"];
+    }];
+}
+
+#pragma mark - sina weibo
+- (void)sendToSinaWeiboWithText:(NSString*)text {
+    SinaWeibo *sinaweibo = [self sinaweibo];
+    [sinaweibo requestWithURL:@"statuses/update.json"
+                       params:[NSMutableDictionary dictionaryWithObjectsAndKeys:text, @"status", nil]
+                   httpMethod:@"POST"
+                     delegate:self];
+}
+
+- (void)loginSinaWeibo {
+    SinaWeibo *sinaweibo = [self sinaweibo];
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:SINA_AUTH_DATA]) {
+        [sinaweibo logOut];
+    } else {
+        [sinaweibo logIn];
+    }
+}
+
+- (SinaWeibo *)sinaweibo
+{
+    [AppDelegate app].sinaweibo.delegate = self;
+    return [AppDelegate app].sinaweibo;
+}
+
+- (void)storeAuthData
+{
+    SinaWeibo *sinaweibo = [self sinaweibo];
+    
+    NSDictionary *authData = [NSDictionary dictionaryWithObjectsAndKeys:
+                              sinaweibo.accessToken, @"AccessTokenKey",
+                              sinaweibo.expirationDate, @"ExpirationDateKey",
+                              sinaweibo.userID, @"UserIDKey",
+                              sinaweibo.refreshToken, @"refresh_token", nil];
+    [[NSUserDefaults standardUserDefaults] setObject:authData forKey:SINA_AUTH_DATA];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)removeAuthData
+{
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:SINA_AUTH_DATA];
+}
+#pragma mark - SinaWeibo Delegate
+- (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
+{
+    //    NSLog(@"sinaweiboDidLogIn userID = %@ accesstoken = %@ expirationDate = %@ refresh_token = %@", sinaweibo.userID, sinaweibo.accessToken, sinaweibo.expirationDate,sinaweibo.refreshToken);
+    //    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HAS_BIND_SINA_WEIBO];
+    //    [[NSUserDefaults standardUserDefaults] synchronize];
+    [self uploadRequestToBindSinaWeibo];
+}
+
+- (void)sinaweiboDidLogOut:(SinaWeibo *)sinaweibo
+{
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:HAS_BIND_SINA_WEIBO];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:SINA_AUTH_DATA];
+    if (MY_HAS_LOGIN) {
+        [sinaweibo logIn];
+    }
+}
+
+- (void)sinaweiboLogInDidCancel:(SinaWeibo *)sinaweibo
+{
+    NSLog(@"sinaweiboLogInDidCancel");
+}
+
+- (void)sinaweibo:(SinaWeibo *)sinaweibo logInDidFailWithError:(NSError *)error
+{
+    NSLog(@"sinaweibo logInDidFailWithError %@", error);
+    
+}
+
+- (void)request:(SinaWeiboRequest *)request didFailWithError:(NSError *)error {
+    NSLog(@"sinaweibo didFailWithError:%@", error);
+    if ([request.url hasSuffix:@"statuses/update.json"]) {
+        [MPNotificationView notifyWithText:@"分享失败T_T" detail:nil andDuration:0.5f];
+    }
+}
+
+- (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)result {
+    if ([request.url hasSuffix:@"statuses/update.json"]) {
+        [MPNotificationView notifyWithText:@"分享成功" detail:nil andDuration:0.5f];
+    }
+    
+}
+
+- (void)sinaweibo:(SinaWeibo *)sinaweibo accessTokenInvalidOrExpired:(NSError *)error
+{
+    NSLog(@"sinaweiboAccessTokenInvalidOrExpired %@", error);
+    //    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:HAS_BIND_SINA_WEIBO];
+    //    [[NSUserDefaults standardUserDefaults] synchronize];
+    //    [self removeAuthData];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"新浪微博授权已过期，是否重新授权?"];
+    [alert addButtonWithTitle:@"重新授权" handler:^{
+        [sinaweibo logOut];
+    }];
+    [alert setCancelButtonWithTitle:@"取消" handler:^{
+        return ;
+    }];
+    [alert show];
+}
+
+#pragma mark - 微信
+- (void)sendContent {
+    //发送新闻
+    WXMediaMessage *message = [WXMediaMessage message];
+    message.title = @"Family社区";
+    [self pointToCurrPanelView];
+    message.description = emptystr([_panelView.dataDict objectForKey:SUBJECT]);
+    
+    UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"iTunesArtwork" ofType:@"png"]];
+    image = [UIImage imageWithData:UIImageJPEGRepresentation(image, 0.4f)];//SDK协议中对缩略图的大小作了限制，大小不能超过32K
+    [message setThumbImage:image];
+    
+    WXWebpageObject *ext = [WXWebpageObject object];
+    ext.webpageUrl = [NSString stringWithFormat:@"http://www.familyday.com.cn/wx/wx.php?do=detail&id=%@&uid=%@&idtype=%@&wxkey=orfjpjjq5v7t-wfzga0gECo6cIcU", _panelView.feedId, _panelView.userId, _panelView.idType];
+    
+    message.mediaObject = ext;
+    
+    SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+    req.bText = NO;
+    req.message = message;
+    req.scene = _scene;
+    
+    [WXApi sendReq:req];
 }
 
 #pragma mark - JTListViewDataSource

@@ -10,6 +10,7 @@
 #import "Common.h"
 #import "UIImageView+WebCache.h"
 #import "ShowMapViewController.h"
+#import "FeedDetailViewController.h"
 
 //#define kOperatorViewHeight 35
 
@@ -96,6 +97,8 @@
     if (self.simpleInfoView) {
         [self.simpleInfoView layoutSubviews];
     }
+    _replyCommentBtn.frame = (CGRect){.origin = _replyCommentBtn.frame.origin, .size.width = _replyCommentBtn.frame.size.width, .size.height = self.frame.size.height};
+    [self bringSubviewToFront:_replyCommentBtn];
 }
 
 - (void)initPhotoFirstCellData:(NSDictionary*)aDict {
@@ -225,10 +228,17 @@
 }
 
 - (void)initCommentData:(NSDictionary*)aDict {
+    self.commentDict = aDict;
+    [self.replyCommentBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+    [self.replyCommentBtn whenTapped:^{
+        [self replyCommentBtnPressed:self.replyCommentBtn];
+    }];
     if (!aDict) {
         self.simpleInfoView.hidden = YES;
         self.noCommentLbl.hidden = NO;
         self.noCommentLbl.text = _isLoadingFirstCell ? @"加载中..." : @"评论一下吧...";
+        self.replyCommentBtn.hidden = YES;
+//        [self.replyCommentBtn addTarget:self action:@selector(replyCommentBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
     } else {
         self.simpleInfoView.hidden = NO;
         self.noCommentLbl.hidden = YES;
@@ -242,6 +252,16 @@
                                    andRightImgPoint:CGPointMake(66, 34)
                                            rightImg:@"time.png"
                                            rightStr:[Common dateSinceNow:[aDict objectForKey:DATELINE]]];
+        self.replyCommentBtn.hidden = NO;
+//        [self.replyCommentBtn addTarget:self action:@selector(replyCommentBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
+    }
+}
+
+- (IBAction)replyCommentBtnPressed:(id)sender {
+    if (self.commentDict) {
+        FeedDetailViewController *con = (FeedDetailViewController*)[Common viewControllerOfView:self];
+        con.replyWhoseNameStr = [_commentDict objectForKey:COMMENT_AUTHOR_NAME];
+        [con showCommentInputView:YES];
     }
 }
 

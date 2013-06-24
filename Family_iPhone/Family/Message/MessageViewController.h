@@ -19,6 +19,8 @@
 @property (nonatomic, assign) BOOL isFromPushForPM;
 @property (nonatomic, assign) BOOL isFromPushForNotice;
 
+@property (nonatomic, strong) UIButton *postPMBtn;
+
 - (void)setBadgeNumWithBtnTag:(int)btnTag andBadgeNum:(NSString*)badgeNum;
 
 - (void)sendRequestToDialogue:(id)sender;

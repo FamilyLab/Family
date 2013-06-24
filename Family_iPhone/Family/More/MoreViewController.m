@@ -55,19 +55,22 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self addTopView];
+    [self addBottomView];
+    
 //    dataDict = [[NSMutableDictionary alloc] init];
     self._tableView.loadMoreView.hidden = YES;
     self._tableView.tableHeaderView = self.tableHeader;
     self._tableView.tableFooterView = self.tableFooter;
     
 //    SinaWeibo *sinaWiebo = [self sinaweibo];
-    if (MY_HAS_BIND_SINA_WEIBO) {
+    if (!MY_HAS_BIND_SINA_WEIBO) {
 //    if (!sinaWiebo.isAuthValid || sinaWiebo.isAuthorizeExpired) {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:SHARE_TO_SINA_WEIBO];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
-    _sectionTitleArray = [[NSArray alloc] initWithObjects:@"家人", @"孩子资料", @"查看", @"设置", @"关于", nil];
+//    _sectionTitleArray = [[NSArray alloc] initWithObjects:@"家人", @"孩子资料", @"查看", @"设置", @"关于", nil];
+    _sectionTitleArray = [[NSArray alloc] initWithObjects:@"孩子资料", @"查看", @"设置", @"关于", nil];
     //孩子资料后面暂时去掉“积分”，这里加上后，还需要改的地方有
     //1、_tipsArray（增加[NSArray arrayWithObjects:@"金币", @"VIP会员服务", nil],）
     //2、didSelectRowAtIndexPath里的creditSection
@@ -75,12 +78,11 @@
     //4、moreCell.m文件里的creditSection，总共4个地方
     
     //[NSArray arrayWithObjects:@"金币", @"有奖任务", @"VIP会员服务", nil],
+//    [NSArray arrayWithObjects:@"家人", @"家人申请", @"邀请家人", nil],
     _tipsArray = [[NSArray alloc] initWithObjects:
-                  [NSArray arrayWithObjects:@"家人", @"家人申请", @"邀请家人", nil],
                   [NSArray arrayWithObjects:@"我还有一个孩子", nil],
-                  
                   [NSArray arrayWithObjects:@"我的收藏", @"今日话题", nil],
-                  [NSArray arrayWithObjects:@"主题", @"消息推送", @"启动时显示今日话题", @"修改密码", @"同步至新浪微博", @"同步至微信", nil],
+                  [NSArray arrayWithObjects:@"主题", @"修改密码", @"消息推送", @"启动时显示今日话题", @"同步至新浪微博", @"同步至微信", nil],
                   [NSArray arrayWithObjects:@"关于我们", @"给我们打个分吧", nil],
                   nil];
     [_tableView reloadData];
@@ -106,9 +108,10 @@
     TopView *topView = [[TopView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_SIZE.width, 50)];
     topView.topViewType = notLoginOrSignIn;
     [topView leftBg];
-    [topView leftText:@"更多"];
+    [topView leftText:@"设置"];
     [topView rightLogo];
     [topView rightLine];
+    
     [self.view addSubview:topView];
 }
 
@@ -121,6 +124,32 @@
         }
     }
     [self._tableView reloadData];
+}
+
+- (void)addBottomView {
+    NSArray *normalImages = [[NSArray alloc] initWithObjects:@"login_back", nil];
+    BottomView *bottomView = [[BottomView alloc] initWithFrame:CGRectMake(0, DEVICE_SIZE.height - 40, DEVICE_SIZE.width, 40)
+                                                          type:notAboutTheme
+                                                     buttonNum:[normalImages count]
+                                               andNormalImages:normalImages
+                                             andSelectedImages:nil
+                                            andBackgroundImage:@"login_bg"];
+    bottomView.delegate = self;
+    [self.view addSubview:bottomView];
+    _tableView.frame = CGRectMake(0, 50, DEVICE_SIZE.width, DEVICE_SIZE.height);
+}
+
+- (void)userPressedTheBottomButton:(BottomView *)_view andButton:(UIButton *)_button {
+    int btnTag = _button.tag - kTagBottomButton;
+    switch (btnTag) {
+        case 0:
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 - (void)sendRequest:(id)sender {
@@ -191,7 +220,8 @@
 //    if (section == 2) {
 //        return childNum + 1;
 //    } else return 1;
-    if (section == 1) {
+//    if (section == 1) {
+    if (section == 0) {
         return [[dataDict objectForKey:BABY_LIST] count] + 1;
     } else
         return [[_tipsArray objectAtIndex:section] count];//3
@@ -327,24 +357,25 @@
             if (indexPath.row == 0) {//主题
                 ThemeViewController *con = [[ThemeViewController alloc] initWithNibName:@"ThemeViewController" bundle:nil];
                 [self.navigationController pushViewController:con animated:YES];
-            } else if (indexPath.row == 1) {//推送
+            } else if (indexPath.row == 1) {//修改密码
+                ChangePwViewController *con = [[ChangePwViewController alloc] initWithNibName:@"ChangePwViewController" bundle:nil];
+                con.aboutPwd = changePwd;
+                [self.navigationController pushViewController:con animated:YES];
+            } else if (indexPath.row == 2) {//推送
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"消息推送" message:@"如果要修改Family的新消息通知，请在iPhone的”设置“－”通知“功能中，找到应用程序“Family”进行更改"];
                 [alert setCancelButtonWithTitle:@"确认" handler:^{
                     return ;
                 }];
                 [alert show];
-            } else if (indexPath.row == 2) {//启动时显示今日话题
+            } else if (indexPath.row == 3) {//启动时显示今日话题
                 [[NSUserDefaults standardUserDefaults] setBool:!MY_WANT_SHOW_TODAY_TOPIC forKey:WANT_SHOW_TODAY_TOPIC];
                 [[NSUserDefaults standardUserDefaults] synchronize];
                 [_tableView reloadData];
-            } else if (indexPath.row == 3) {//修改密码
-                ChangePwViewController *con = [[ChangePwViewController alloc] initWithNibName:@"ChangePwViewController" bundle:nil];
-                con.aboutPwd = changePwd;
-                [self.navigationController pushViewController:con animated:YES];
             } else if (indexPath.row == 4) {//绑定新浪微博
                 if (MY_HAS_BIND_SINA_WEIBO) {
 //                if (sinaWiebo.isAuthValid && !sinaWiebo.isAuthorizeExpired) {
 //                if ((MY_HAS_BIND_SINA_WEIBO && [[NSUserDefaults standardUserDefaults] objectForKey:SINA_AUTH_DATA]) && sinaWiebo.isAuthValid && !sinaWiebo.isAuthorizeExpired) {
+//                    BOOL tmp = MY_HAS_BIND_SINA_WEIBO == YES ? NO : YES;
                     [[NSUserDefaults standardUserDefaults] setBool:!MY_SHARE_TO_SINA_WEIBO forKey:SHARE_TO_SINA_WEIBO];
                     [[NSUserDefaults standardUserDefaults] synchronize];
                     [_tableView reloadData];
@@ -420,8 +451,12 @@
 - (IBAction)headBtnPressed:(id)sender {
     MyImagePickerController *picker = [[MyImagePickerController alloc] initWithParent:self];
     [picker showImagePickerMenu:@"设置我的头像" buttonTitle:@"打开相机" sender:sender];
-    MyTabBarController *tabBarCon = (MyTabBarController*)self.parentViewController;
-    [picker.ImagePickerMenu showFromTabBar:tabBarCon.tabBar];
+    if (self.parentViewController && [self.parentViewController isKindOfClass:NSClassFromString(@"MyTabBarController")]) {
+        MyTabBarController *tabBarCon = (MyTabBarController*)self.parentViewController;
+        [picker.ImagePickerMenu showFromTabBar:tabBarCon.tabBar];
+    } else {
+        [picker.ImagePickerMenu showInView:self.view];
+    }
 }
 
 #pragma mark - imagePicker
@@ -497,7 +532,6 @@
 //生日
 - (IBAction)birthdayBtnPressed:(UIButton*)sender {
     sender.userInteractionEnabled = NO;
-    MyTabBarController *con = (MyTabBarController*)myTabBarController;
 //    [_hint presentModalMessage:@"" where:con.view];
     UIDatePicker *datePicker = [[UIDatePicker alloc] initWithFrame:CGRectZero];
         datePicker.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
@@ -560,8 +594,14 @@
     
     //add this picker to our view controller, initially hidden
 //    MyTabBarController *con = (MyTabBarController*)myTabBarController;
-    [con.view addSubview:datePicker];
-//    [self.view addSubview:datePicker];
+//    [con.view addSubview:datePicker];
+    
+    if ([self.navigationController.viewControllers objectAtIndex:1] && [[self.navigationController.viewControllers objectAtIndex:1] isKindOfClass:[self class]]) {
+        [self.view addSubview:datePicker];
+    } else {
+        MyTabBarController *con = (MyTabBarController*)myTabBarController;
+        [con.view addSubview:datePicker];
+    }
 }
 
 // return the picker frame based on its size, positioned at the bottom of the page

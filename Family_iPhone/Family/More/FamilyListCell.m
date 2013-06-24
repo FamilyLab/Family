@@ -42,7 +42,7 @@
         infoStr =[NSString stringWithFormat:@"%@个家人", [_aDict objectForKey:FAMILY_MEMBERS]];
     }
     if (![[_aDict objectForKey:FAMILY_FEEDS] isEqual:[NSNull null]]) {
-        infoStr = [NSString stringWithFormat:@" %@个动态", [_aDict objectForKey:FAMILY_FEEDS]];
+        infoStr = [NSString stringWithFormat:@"%@ %@个动态", infoStr, [_aDict objectForKey:FAMILY_FEEDS]];
     }
     self.simpleInfoView.isFamilyList = YES;
     self.simpleInfoView.userId = [_aDict objectForKey:UID];

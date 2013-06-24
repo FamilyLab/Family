@@ -70,7 +70,7 @@
 //    [[SDImageCache sharedImageCache] clearMemory];
 //    [[SDImageCache sharedImageCache] clearDisk];
     
-    if (!MY_NOT_FIRST_SHOW) {
+    if (!MY_NOT_FIRST_SHOW) {//第一次装好app
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:WANT_SHOW_TODAY_TOPIC];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:HAS_BIND_SINA_WEIBO];
@@ -95,8 +95,8 @@
     
     self.tabBarCon = [[MyTabBarController alloc] init];
     
-    self.navCon = [[UINavigationController alloc] initWithRootViewController:_tabBarCon];
-//    self.navCon = [[MLNavigationController alloc] initWithRootViewController:_tabBarCon];
+//    self.navCon = [[UINavigationController alloc] initWithRootViewController:_tabBarCon];
+    self.navCon = [[MLNavigationController alloc] initWithRootViewController:_tabBarCon];
     self.tabBarCon.navigationController.navigationBarHidden = YES;
     self.window.rootViewController = self.navCon;
     
@@ -208,6 +208,7 @@
             [_tabBarCon.view addSubview:aView];
             aView.topicId = topicId;
             aView.topicTitleStr = [[dict objectForKey:WEB_DATA] objectForKey:SUBJECT];
+            aView.topicImgUrlStr = [[dict objectForKey:WEB_DATA] objectForKey:PIC];
             aView.topicDescribeStr = [[dict objectForKey:WEB_DATA] objectForKey:MESSAGE];
             aView.joinType = [[[dict objectForKey:WEB_DATA] objectForKey:JOIN_TYPE] objectAtIndex:0];
             [aView fillData];

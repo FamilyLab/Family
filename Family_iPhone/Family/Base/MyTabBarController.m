@@ -39,7 +39,8 @@
         // Custom initialization
         _currIndex = 0;
         NSMutableArray *consArray = [[NSMutableArray alloc] init];
-        NSArray *conNamesArray = [[NSArray alloc] initWithObjects:@"FeedViewController", @"ZoneViewController", @"MessageViewController", @"MoreViewController", nil];
+//        NSArray *conNamesArray = [[NSArray alloc] initWithObjects:@"FeedViewController", @"ZoneViewController", @"MessageViewController", @"MoreViewController", nil];
+        NSArray *conNamesArray = [[NSArray alloc] initWithObjects:@"FeedViewController", @"FamilyViewController", @"MessageViewController", @"ZoneViewController", nil];
         for (int i=0; i<4; i++) {
             UIViewController *con = [(UIViewController*)[NSClassFromString([conNamesArray objectAtIndex:i]) alloc] initWithNibName:[conNamesArray objectAtIndex:i] bundle:nil];
             
@@ -148,8 +149,10 @@
 
 //改变主题
 - (void)changeImgForThemeChanged {
-    NSArray *normalImages = [[NSArray alloc] initWithObjects:@"menu_feed_a", @"menu_space_a", @"menu_new_a", @"menu_message_a", @"menu_more_a", nil];
-    NSArray *selectedImages = [[NSArray alloc] initWithObjects:@"menu_feed_b", @"menu_space_b", @"menu_new_b", @"menu_message_b", @"menu_more_b", nil];
+//    NSArray *normalImages = [[NSArray alloc] initWithObjects:@"menu_feed_a", @"menu_space_a", @"menu_new_a", @"menu_message_a", @"menu_more_a", nil];
+//    NSArray *selectedImages = [[NSArray alloc] initWithObjects:@"menu_feed_b", @"menu_space_b", @"menu_new_b", @"menu_message_b", @"menu_more_b", nil];
+    NSArray *normalImages = [[NSArray alloc] initWithObjects:@"tab_home_a", @"tab_family_a", @"menu_new_a", @"tab_conversation_a", @"tab_space_a", nil];
+    NSArray *selectedImages = [[NSArray alloc] initWithObjects:@"tab_home_b", @"tab_family_b", @"menu_new_b", @"tab_conversation_b", @"tab_space_b", nil];
     tabBarView.bgImgView.image = ThemeImage(@"menu_bg");
     for (int i=0; i< [normalImages count]; i++) {
         UIButton *btn = (UIButton*)[tabBarView viewWithTag:kTagBottomButton + i];
@@ -160,23 +163,10 @@
 }
 
 - (void)createCustomTabBar {
-    NSArray *normalImages = [[NSArray alloc] initWithObjects:@"menu_feed_a", @"menu_space_a", @"menu_new_a", @"menu_message_a", @"menu_more_a", nil];
-    NSArray *selectedImages = [[NSArray alloc] initWithObjects:@"menu_feed_b", @"menu_space_b", @"menu_new_b", @"menu_message_b", @"menu_more_b", nil];
-    
-//    //只当主题改变时，下面的5个按钮才随之变化图片
-//    for (id obj in [self.view subviews]) {
-//        if ([obj isKindOfClass:[BottomView class]]) {
-//            BottomView *bottomView = (BottomView*)obj;
-//            bottomView.bgImgView.image = ThemeImage(@"menu_bg");
-//            for (int i=0; i< [normalImages count]; i++) {
-//                UIButton *btn = (UIButton*)[bottomView viewWithTag:kTagBottomButton + i];
-//                [btn setImage:ThemeImage([normalImages objectAtIndex:i]) forState:UIControlStateNormal];
-//                [btn setImage:ThemeImage([selectedImages objectAtIndex:i]) forState:UIControlStateHighlighted];
-//                [btn setImage:ThemeImage([selectedImages objectAtIndex:i]) forState:UIControlStateSelected];
-//            }
-//            return;
-//        }
-//    }
+//    NSArray *normalImages = [[NSArray alloc] initWithObjects:@"menu_feed_a", @"menu_space_a", @"menu_new_a", @"menu_message_a", @"menu_more_a", nil];
+//    NSArray *selectedImages = [[NSArray alloc] initWithObjects:@"menu_feed_b", @"menu_space_b", @"menu_new_b", @"menu_message_b", @"menu_more_b", nil];
+    NSArray *normalImages = [[NSArray alloc] initWithObjects:@"tab_home_a", @"tab_family_a", @"menu_new_a", @"tab_conversation_a", @"tab_space_a", nil];
+    NSArray *selectedImages = [[NSArray alloc] initWithObjects:@"tab_home_b", @"tab_family_b", @"menu_new_b", @"tab_conversation_b", @"tab_space_b", nil];
     
     BottomView *bottomView = [[BottomView alloc] initWithFrame:CGRectMake(0, DEVICE_SIZE.height - 50, DEVICE_SIZE.width, 50)
                                                           type:tabBarType
@@ -218,19 +208,17 @@
         //消息按钮
         self.dialogNum = [[dataDict objectForKey:PM_COUNT] intValue];
         self.noticeNum = [[dataDict objectForKey:NOTICE_COUNT] intValue];
-        MessageViewController *con = (MessageViewController*)[self.viewControllers objectAtIndex:2];
-//        if (!con.noticeNum || con.noticeNum == 0) {
-//            con.noticeNum = self.noticeNum;
-//        }
-        [con setBadgeNumWithBtnTag:0 andBadgeNum:$str(@"%d", self.dialogNum)];//上面的对话数量
-        [con setBadgeNumWithBtnTag:1 andBadgeNum:$str(@"%d", self.noticeNum)];//上面的通知数量
+//        MessageViewController *con = (MessageViewController*)[self.viewControllers objectAtIndex:2];
+//        [con setBadgeNumWithBtnTag:0 andBadgeNum:$str(@"%d", self.dialogNum)];//上面的对话数量
+//        [con setBadgeNumWithBtnTag:1 andBadgeNum:$str(@"%d", self.noticeNum)];//上面的通知数量
         
         //下面的消息数量
-        NSString *msgNum = $str(@"%d", _dialogNum + _noticeNum);
+//        NSString *msgNum = $str(@"%d", _dialogNum + _noticeNum);
+        NSString *msgNum = $str(@"%d", _dialogNum);
         [self setBadgeNumWithBtnTag:3 andBadgeNum:msgNum];
         //更多里的家人申请数量
         NSString *applyNum = $str(@"%d", [[dataDict objectForKey:APPLY_COUNT] intValue]);
-        [self setBadgeNumWithBtnTag:4 andBadgeNum:applyNum];
+        [self setBadgeNumWithBtnTag:1 andBadgeNum:applyNum];
         
     } failure:^(NSError *error) {
         NSLog(@"error%@", error);
@@ -250,7 +238,7 @@
     if ([[noti object] isEqualToString:REFRESH_COUNT_NUM])
         [self sendRequestForCount:nil];//刷新统计接口
     else
-        [self setBadgeNumWithBtnTag:4 andBadgeNum:[noti object]];//设置值
+        [self setBadgeNumWithBtnTag:1 andBadgeNum:[noti object]];//设置值
 }
 
 - (void)setBadgeNumWithBtnTag:(int)btnTag andBadgeNum:(NSString*)badgeNum {
@@ -260,7 +248,8 @@
     for (id obj in btn.subviews) {
         if ([obj isKindOfClass:[JSBadgeView class]]) {
             badgeView = (JSBadgeView*)obj;
-            preBadgeNum = $str(@"%d", _dialogNum + _noticeNum);// badgeView.badgeText;//保存原来的
+            preBadgeNum = $str(@"%d", _dialogNum);// badgeView.badgeText;//保存原来的
+//            preBadgeNum = $str(@"%d", _dialogNum + _noticeNum);// badgeView.badgeText;//保存原来的
             [badgeView removeFromSuperview];
             badgeView = nil;
             break;

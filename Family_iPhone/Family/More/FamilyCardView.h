@@ -34,6 +34,8 @@
 @property (nonatomic, copy) NSString *nameStr;
 @property (nonatomic, copy) NSString *noteNameStr;
 
+@property (nonatomic, strong) IBOutlet UIImageView *arrorImgView;
+
 - (void)initCardDataWithIsMyFamily:(BOOL)_isMyFamily
                         headUrlStr:(NSString*)_headStr
                            nameStr:(NSString*)_namStr
