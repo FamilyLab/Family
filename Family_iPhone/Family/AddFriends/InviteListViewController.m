@@ -11,6 +11,7 @@
 #import "MyHttpClient.h"
 //#import "UIButton+WebCache.h"
 #import "FamilyCardViewController.h"
+#import "MPNotificationView.h"
 
 @interface InviteListViewController ()
 
@@ -250,36 +251,64 @@
         return;
     }
     
-    MyYIPopupTextView *popTextView = [[MyYIPopupTextView alloc] initWithMaxCount:0 placeHolger:@"输入备注名称"];
-    
-    DDAlertPrompt *alertPrompt = [[DDAlertPrompt alloc] initWithTitle:@"备注名称" delegate:self cancelButtonTitle:@"取消" otherButtonTitle:nil];
-//    alertPrompt.DDAlertDelegate = self;
-    __block DDAlertPrompt *blockAlert = alertPrompt;
-    [alertPrompt addButtonWithTitle:@"确认" handler:^{
-        [SVProgressHUD showWithStatus:@"发送申请中..."];
+    MyYIPopupTextView *popTextView = [[MyYIPopupTextView alloc] initWithMaxCount:0 placeHolger:@"输入备注名称" textViewSize:CGSizeMake(DEVICE_SIZE.width - 10 * 2, 200) textViewInsets:UIEdgeInsetsMake(50, 10, 50, -10)];
+    popTextView.delegate = self;
+    [popTextView showInView:self.view];
+    [popTextView.acceptButton whenTapped:^{
+        [MPNotificationView notifyWithText:@"发送申请中..." detail:nil andDuration:0.5f];
         NSString *url = $str(@"%@friend&op=add", POST_CP_API);
-        NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:[aDcit objectForKey:UID], APPLY_UID, ONE, G_ID, blockAlert.theTextView.text, NOTE, ONE, ADD_SUBMIT, MY_M_AUTH, M_AUTH, nil];
+        NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:[aDcit objectForKey:UID], APPLY_UID, ONE, G_ID, popTextView.text, NOTE, ONE, ADD_SUBMIT, MY_M_AUTH, M_AUTH, nil];
         [[MyHttpClient sharedInstance] commandWithPathAndParams:url params:para addData:^(id<AFMultipartFormData> formData) {
         } onCompletion:^(NSDictionary *dict) {
             if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
                 [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
                 return ;
             }
-            [SVProgressHUD showSuccessWithStatus:@"申请已发送"];
+            [MPNotificationView notifyWithText:@"申请已发送" detail:nil andDuration:0.5f];
             _cell.simpleInfoView.operatorBtn.selected = YES;
         } failure:^(NSError *error) {
             NSLog(@"error:%@", [error description]);
-            [SVProgressHUD showErrorWithStatus:@"网络不好T_T"];
+            [MPNotificationView notifyWithText:@"网络不好T_T" detail:nil andDuration:0.5f];
             _cell.simpleInfoView.operatorBtn.selected = NO;
         }];
+        [popTextView dismiss];
     }];
-    [alertPrompt show];
+    
+//    DDAlertPrompt *alertPrompt = [[DDAlertPrompt alloc] initWithTitle:@"备注名称" delegate:self cancelButtonTitle:@"取消" otherButtonTitle:nil];
+////    alertPrompt.DDAlertDelegate = self;
+//    __block DDAlertPrompt *blockAlert = alertPrompt;
+//    [alertPrompt addButtonWithTitle:@"确认" handler:^{
+//        [SVProgressHUD showWithStatus:@"发送申请中..."];
+//        NSString *url = $str(@"%@friend&op=add", POST_CP_API);
+//        NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:[aDcit objectForKey:UID], APPLY_UID, ONE, G_ID, blockAlert.theTextView.text, NOTE, ONE, ADD_SUBMIT, MY_M_AUTH, M_AUTH, nil];
+//        [[MyHttpClient sharedInstance] commandWithPathAndParams:url params:para addData:^(id<AFMultipartFormData> formData) {
+//        } onCompletion:^(NSDictionary *dict) {
+//            if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
+//                [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
+//                return ;
+//            }
+//            [SVProgressHUD showSuccessWithStatus:@"申请已发送"];
+//            _cell.simpleInfoView.operatorBtn.selected = YES;
+//        } failure:^(NSError *error) {
+//            NSLog(@"error:%@", [error description]);
+//            [SVProgressHUD showErrorWithStatus:@"网络不好T_T"];
+//            _cell.simpleInfoView.operatorBtn.selected = NO;
+//        }];
+//    }];
+//    [alertPrompt show];
 }
 
 //- (void)userPressedTheCancelBtn:(DDAlertPrompt *)alert {
 //    _commonCell.simpleInfoView.operatorBtn.selected = !_commonCell.simpleInfoView.operatorBtn.selected;
 //    
 //}
+
+#pragma mark - scrollview delegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.mySearchBar && [self.mySearchBar isFirstResponder]) {
+        [self.mySearchBar resignFirstResponder];
+    }
+}
 
 #pragma mark - request
 - (void)sendRequestWithSearch:(id)sender {

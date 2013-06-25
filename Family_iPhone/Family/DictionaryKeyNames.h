@@ -30,6 +30,9 @@
 #define kTagBgBtnOfPostPhot 235//发表照片页面，当有键盘时加上去的背景按钮
 #define kTagAlbumImgBtn     250//相机页面下面的相册里的图片
 
+//Family iPhone版下载地址
+#define APP_URL             @"https://itunes.apple.com/us/app/family/id538285014?ls=1&mt=8"
+
 //又拍云
 #define ypUrlStr            @"upaiyun.com"//属于又拍的url
 #define ypFeedSomeImgs      @"!190X190"//用于动态列表的多图样式
@@ -125,6 +128,7 @@
 #define PRESENT_POST_VIEWCONTROLLER     @"presendtPostViewController"
 #define DISMISS_CUSTOM_CAMERA           @"dismissCustomCamera"
 #define SHOW_CUSTOM_CAMERA              @"showCustomCamera"
+#define NEW_FEED_NUM                    @"newfeednum"
 
 #define REFRESH_COUNT_NUM   @"wo zhi shi yao shua xin tong ji jie kou a a a a a"//刷新统计接口
 //#define ADD_MSG_NUM         @"addMsgNum"

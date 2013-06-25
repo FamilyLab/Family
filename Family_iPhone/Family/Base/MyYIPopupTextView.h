@@ -12,5 +12,6 @@
 
 - (id)initWithMaxCount:(NSUInteger)maxCount;
 - (id)initWithMaxCount:(NSUInteger)maxCount placeHolger:(NSString*)placeHolderStr;
+- (id)initWithMaxCount:(NSUInteger)maxCount placeHolger:(NSString*)placeHolderStr textViewSize:(CGSize)textViewSize textViewInsets:(UIEdgeInsets)textViewInsets;
 
 @end

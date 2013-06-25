@@ -276,7 +276,7 @@
     NSString *name = [emptystr(_nameTextField.text) isEqualToString:@""] ? @"xxx" : _nameTextField.text;
     NSString *phone = [emptystr(_phoneTextField.text) isEqualToString:@""] ? @"xxx" : _phoneTextField.text;
     NSString *pw = [emptystr(_passwordStr) isEqualToString:@""] ? @"***" : _passwordStr;
-    _smsLbl.text = $str(@"%@，我在familyday.com.cn帮你注册了，账号:%@，密码:%@ 下载：www.familyday.com/app(%@)", name, phone, pw, MY_NAME);
+    _smsLbl.text = $str(@"%@，我在familyday.com.cn帮你注册了，账号:%@，密码:%@ 下载：www.familyday.com/app（%@）", name, phone, pw, MY_NAME);
 //    _smsLbl.text = $str(@"%@，我在www.familyday.com.cn帮你注册了，账号是%@，密码是%@，我们在这儿团聚吧！(%@)",name, phone, pw, MY_NAME);
     
 }

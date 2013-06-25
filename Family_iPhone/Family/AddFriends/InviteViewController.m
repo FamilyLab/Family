@@ -11,6 +11,8 @@
 #import "SVProgressHUD.h"
 #import "InviteListViewController.h"
 #import "InviteOtherCell.h"
+#import "FamilyCardViewController.h"
+#import "MPNotificationView.h"
 
 @interface InviteViewController ()
 
@@ -184,7 +186,7 @@
     NSString *name = [emptystr(_nameTextField.text) isEqualToString:@""] ? @"xxx" : _nameTextField.text;
     NSString *phone = [emptystr(_phoneTextField.text) isEqualToString:@""] ? @"xxx" : _phoneTextField.text;
     NSString *pw = [emptystr(_passwordStr) isEqualToString:@""] ? @"***" : _passwordStr;
-    _smsLbl.text = $str(@"%@，我在familyday.com.cn帮你注册了，账号:%@，密码:%@ 下载：www.familyday.com/app(%@)", name, phone, pw, MY_NAME);
+    _smsLbl.text = $str(@"%@，我在familyday.com.cn帮你注册了，账号:%@，密码:%@ 下载：www.familyday.com/app（%@）", name, phone, pw, MY_NAME);
     
     self.nameStr = emptystr(_nameTextField.text);
     self.phoneStr = emptystr(_phoneTextField.text);
@@ -262,11 +264,14 @@
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-//    int section = [dataArray count] > 0 ? 1 : 0;
-//    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:section] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    if (textField == _phoneTextField) {
+        int section = [dataArray count] > 0 ? 1 : 0;
+        [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:section] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    } else if (textField == _nameTextField) {
+        CGFloat theY = [dataArray count] > 0 ? 90 : 77;
+        [_tableView setContentOffset:CGPointMake(0, [dataArray count] * 70 + theY) animated:YES];
+    }
     
-    CGFloat theY = textField == _phoneTextField ? 97 : 113;
-    [_tableView setContentOffset:CGPointMake(0, [dataArray count] * 7 + 40 + theY) animated:YES];
     
 //    CGFloat theY = textField == _nameTextField ? -60 : 0;
 //    if (textField == _phoneTextField && self.topViewType == notLoginOrSignIn) {
@@ -299,6 +304,13 @@
     //                             scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     //                         }];
     //    }
+}
+
+#pragma mark - scrollview delegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.mySearchBar && [self.mySearchBar isFirstResponder]) {
+        [self.mySearchBar resignFirstResponder];
+    }
 }
 
 #pragma mark - 通讯录
@@ -394,7 +406,7 @@
     for (int i = 1; i < [_addressBookArray count]; i++) {
         unames = [NSString stringWithFormat:@"%@|%@", unames, [_addressBookArray objectAtIndex:i]];
     }
-    NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:unames, @"unames[]", MY_M_AUTH, M_AUTH, nil];
+    NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:unames, @"unames", MY_M_AUTH, M_AUTH, nil];
     [[MyHttpClient sharedInstance] commandWithPathAndParams:url params:para addData:^(id<AFMultipartFormData> formData) {
     } onCompletion:^(NSDictionary *dict) {
         if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
@@ -510,10 +522,41 @@
 #pragma mark Table view delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-//    FamilyCardViewController *con = [[FamilyCardViewController alloc] initWithNibName:@"FamilyCardViewController" bundle:nil];
-//    con.isMyFamily = YES;
-//    con.userId = [[dataArray objectAtIndex:indexPath.row] objectForKey:UID];
-//    [self.navigationController pushViewController:con animated:YES];
+    if ([dataArray count] > 0 && indexPath.section == 0) {
+        NSString *userId = emptystr([[dataArray objectAtIndex:indexPath.row] objectForKey:UID]);
+        if (![userId isEqualToString:@""]) {
+            FamilyCardViewController *con = [[FamilyCardViewController alloc] initWithNibName:@"FamilyCardViewController" bundle:nil];
+            con.isMyFamily = NO;
+            con.userId = userId;
+            [self.navigationController pushViewController:con animated:YES];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"对方未注册，是否邀请并为其注册?"];
+            [alert setCancelButtonWithTitle:@"取消" handler:^{
+                return ;
+            }];
+            [alert addButtonWithTitle:@"邀请" handler:^{
+                NSDictionary *_dataDict = [dataArray objectAtIndex:indexPath.row];
+                [MPNotificationView notifyWithText:[NSString stringWithFormat:@"邀请 %@ 中...", emptystr([_dataDict objectForKey:NAME])] detail:nil andDuration:0.5f];
+                NSString *url = $str(@"%@invite", POST_CP_API);
+                NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:emptystr([_dataDict objectForKey:USER_NAME]), USER_NAME, emptystr([_dataDict objectForKey:NAME]), NAME, ONE, SMS_INVITE, MY_M_AUTH, M_AUTH, nil];
+                [[MyHttpClient sharedInstance] commandWithPathAndParams:url params:para addData:^(id<AFMultipartFormData> formData) {
+                } onCompletion:^(NSDictionary *dict) {
+                    if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
+                        [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
+                        [SVProgressHUD changeDistance:-60];
+                        return ;
+                    }
+                    [MPNotificationView notifyWithText:[NSString stringWithFormat:@"已发送短信通知%@", emptystr([_dataDict objectForKey:NAME])] detail:nil andDuration:0.5f];
+                    //        [self showSendSmsView];
+                } failure:^(NSError *error) {
+                    NSLog(@"error:%@", [error description]);
+                    [MPNotificationView notifyWithText:@"网络不好T_T" detail:nil andDuration:0.5f];
+                    [SVProgressHUD changeDistance:-60];
+                }];
+            }];
+            [alert show];
+        }
+    }
 }
 
 @end

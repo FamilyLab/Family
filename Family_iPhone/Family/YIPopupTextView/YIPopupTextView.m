@@ -193,7 +193,7 @@ typedef enum {
         _backgroundView.alpha = 0;
         _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
-        textViewSize = (CGSizeEqualToSize(textViewSize, CGSizeZero)) ? CGSizeMake(screedFrame.width, 240) : textViewSize;//By Aevit
+        textViewSize = (CGSizeEqualToSize(textViewSize, CGSizeZero)) ? CGSizeMake(screedFrame.width, 230) : textViewSize;//By Aevit
         UIView *aView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, textViewSize.width, textViewSize.height)];
         self.popupView = aView;//By Aevit
         _popupView.autoresizingMask = UIViewAutoresizingFlexibleWidth; // height will be set at KeyboardWillShow

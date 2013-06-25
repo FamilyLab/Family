@@ -40,6 +40,7 @@
 - (void)initData:(NSDictionary *)aDict {
     self.dataDict = aDict;
     [_headBtn setImageForMyHeadButtonWithUrlStr:[aDict objectForKey:AVATAR] plcaholderImageStr:@"head_70.png"];
+    [_headBtn setVipStatusWithStr:[aDict objectForKey:VIP_STATUS] isSmallHead:YES];
     _nameLbl.text = [aDict objectForKey:NAME];
     if ([emptystr([aDict objectForKey:NOTE]) isEqualToString:@""]) {
         _noteLbl.hidden = YES;

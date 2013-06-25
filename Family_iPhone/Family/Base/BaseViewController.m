@@ -249,6 +249,30 @@
     return delegate.sinaweibo;
 }
 
+#pragma mark - 检测新版本
+//-(void)onCheckVersion:(NSString *)currentVersion {
+//    NSString *URL = APP_URL;
+//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+//    [request setURL:[NSURL URLWithString:URL]];
+//    [request setHTTPMethod:@"POST"];
+//    NSHTTPURLResponse *urlResponse = nil;
+//    NSError *error = nil;
+//    NSData *recervedData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&error];
+//    
+//    NSString *results = [[NSString alloc] initWithBytes:[recervedData bytes] length:[recervedData length] encoding:NSUTF8StringEncoding];
+//    NSDictionary *dic = [results JSONValue];
+//    NSArray *infoArray = [dic objectForKey:@"results"];
+//    if ([infoArray count]) {
+//        NSDictionary *releaseInfo = [infoArray objectAtIndex:0];
+//        NSString *lastVersion = [releaseInfo objectForKey:@"version"];
+//        
+//        if (![lastVersion isEqualToString:currentVersion]) {
+//            trackViewURL = [releaseInfo objectForKey:@"trackVireUrl"];
+//            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"更新" message:@"有新的版本更新，是否前往更新？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"更新", nil] autorelease];
+//            [alert show];
+//        }
+//    }
+//}
 
 #pragma mark - touch event 事件
 - (MLNavigationController *)firstAvailableNavigationController
@@ -289,6 +313,7 @@
     [self.firstAvailableNavigationController touchesCancelled:touches withEvent:event];
     tableView.scrollEnabled = YES;
 }
+
 
 
 @end

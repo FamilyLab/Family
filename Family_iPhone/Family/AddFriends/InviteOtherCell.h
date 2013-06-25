@@ -22,7 +22,7 @@
 @property (nonatomic, strong) IBOutlet UITextField *phoneTextField;
 @property (nonatomic, strong) IBOutlet UILabel *smsLbl;
 
-//@property (nonatomic, strong) NSDictionary *dataDict;
+@property (nonatomic, strong) NSDictionary *dataDict;
 
 - (void)initData:(NSDictionary *)aDict;
 

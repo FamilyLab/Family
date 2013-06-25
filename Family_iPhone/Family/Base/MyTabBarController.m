@@ -242,14 +242,17 @@
 }
 
 - (void)setBadgeNumWithBtnTag:(int)btnTag andBadgeNum:(NSString*)badgeNum {
+    NSString *originBadgeNum = badgeNum;
+    
     NSString *preBadgeNum = @"0";
     UIButton *btn = (UIButton*)[self.tabBarView viewWithTag:kTagBottomButton + btnTag];
     JSBadgeView *badgeView = nil;
+    
     for (id obj in btn.subviews) {
         if ([obj isKindOfClass:[JSBadgeView class]]) {
             badgeView = (JSBadgeView*)obj;
             preBadgeNum = $str(@"%d", _dialogNum);// badgeView.badgeText;//保存原来的
-//            preBadgeNum = $str(@"%d", _dialogNum + _noticeNum);// badgeView.badgeText;//保存原来的
+            //            preBadgeNum = $str(@"%d", _dialogNum + _noticeNum);// badgeView.badgeText;//保存原来的
             [badgeView removeFromSuperview];
             badgeView = nil;
             break;
@@ -260,6 +263,9 @@
     }
     badgeNum = [badgeNum intValue] > 9 ? @"n" : badgeNum;
     
+    if (btnTag == 0) {//非动态tab的
+        badgeNum = originBadgeNum;
+    }
     if ([badgeNum intValue] > 0 || [badgeNum isEqualToString:@"n"]) {//真正的badgeNum
         badgeView = [[JSBadgeView alloc] initWithParentView:btn alignment:JSBadgeViewAlignmentTopRight];
         [badgeView setBadgeText:badgeNum];

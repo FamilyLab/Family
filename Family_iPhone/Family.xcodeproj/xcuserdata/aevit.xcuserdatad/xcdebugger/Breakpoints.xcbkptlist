@@ -59,13 +59,13 @@
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Family/SinaWeibo/SinaWeibo.m"
-         timestampString = "393742655.289772"
+         filePath = "Family/AddFriends/InviteOtherCell.m"
+         timestampString = "393760026.208212"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "272"
-         endingLineNumber = "272"
-         landmarkName = "-isAuthValid"
+         startingLineNumber = "59"
+         endingLineNumber = "59"
+         landmarkName = "-operateBtnPressed:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

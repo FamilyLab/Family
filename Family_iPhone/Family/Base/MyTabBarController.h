@@ -49,4 +49,6 @@
 //- (void)hidePostMenu;
 - (void)hideCameraBottomBar;
 
+- (void)setBadgeNumWithBtnTag:(int)btnTag andBadgeNum:(NSString*)badgeNum;
+
 @end

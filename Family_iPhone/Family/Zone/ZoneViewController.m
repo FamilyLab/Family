@@ -137,7 +137,9 @@
             self.kenView.alpha = 0;
         } completion:^(BOOL finished) {
             [self stopShowingTheThemeImage];
-            [self startCountTimeWhenDoNothingInTimes:5.0f];
+            [self performBlock:^(id sender) {
+                [self startCountTimeWhenDoNothingInTimes:5.0f];
+            } afterDelay:0.1f];
         }];
     }];
     

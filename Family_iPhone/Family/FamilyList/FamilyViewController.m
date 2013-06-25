@@ -102,6 +102,7 @@
 //    } afterDelay:1.0f];
 //    return;
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:REFRESH_MESSAGE_NUM object:REFRESH_COUNT_NUM];
     NSString *url = @"";
     if (_userId) {
         url = [NSString stringWithFormat:@"%@space.php?do=fmembers&perpage=100&m_auth=%@&uid=%@", BASE_URL, [MY_M_AUTH urlencode], self.userId];

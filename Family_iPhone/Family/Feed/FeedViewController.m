@@ -141,7 +141,18 @@
     }
 }
 
+- (void)uploadREquestToGetNewFeedNum {
+    NSString *url = $str(@"%@space.php?do=feednew&m_auth=%@", BASE_URL, [MY_M_AUTH urlencode]);
+    [[MyHttpClient sharedInstance] commandWithPath:url onCompletion:^(NSDictionary *dict) {
+        MyTabBarController *myTab = (MyTabBarController*)myTabBarController;
+        [myTab setBadgeNumWithBtnTag:0 andBadgeNum:emptystr([[dict objectForKey:DATA] objectForKey:NEW_FEED_NUM])];
+    } failure:^(NSError *error) {
+        NSLog(@"error:%@", [error description]);
+    }];
+}
+
 - (void)sendRequest:(id)sender {
+    [self uploadREquestToGetNewFeedNum];
     if (canRefreshCountNum && !_isForMyLoveFeed) {
         [self performBlock:^(id sender) {
             [[NSNotificationCenter defaultCenter] postNotificationName:REFRESH_MESSAGE_NUM object:REFRESH_COUNT_NUM];//调用统计接口

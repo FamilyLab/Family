@@ -40,9 +40,9 @@
         //        popupTextView.editable = NO;                  // set editable=NO to show without keyboard _popupView
         UIImageView *lineImgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pop_line.png"]];
         if (CGSizeEqualToSize(textViewSize, CGSizeZero)) {
-            [popupTextView setAcceptBtnFrame:CGRectMake(10, 190, 150, 40) andNormalImageWithStr:@"pop_left.png" andHighlightImageWithStr:nil];
-            [popupTextView setCloseBtnFrame:CGRectMake(160, 190, 150, 40) andNormalImageWithStr:@"pop_right.png" andHighlightImageWithStr:nil];
-            lineImgView.frame = CGRectMake(160, 190, 1, 40);
+            [popupTextView setAcceptBtnFrame:CGRectMake(10, 180, 150, 40) andNormalImageWithStr:@"pop_left.png" andHighlightImageWithStr:nil];
+            [popupTextView setCloseBtnFrame:CGRectMake(160, 180, 150, 40) andNormalImageWithStr:@"pop_right.png" andHighlightImageWithStr:nil];
+            lineImgView.frame = CGRectMake(160, 180, 1, 40);
         } else {
             [popupTextView setAcceptBtnFrame:CGRectMake(textViewInsets.left, textViewSize.height - 50 - 1, 150, 40) andNormalImageWithStr:@"pop_left.png" andHighlightImageWithStr:nil];
             [popupTextView setCloseBtnFrame:CGRectMake(textViewInsets.left + 150, popupTextView.acceptButton.frame.origin.y, 150, 40) andNormalImageWithStr:@"pop_right.png" andHighlightImageWithStr:nil];
