@@ -31,33 +31,16 @@
     // Drawing code
 }
 */
-- (void)setTapAction:(UIImageView *)sender
-                 url:(NSURL *)url
-               index:(NSUInteger)index
-{
-    sender.userInteractionEnabled = YES;
-    [self.picArray addObject:[MWPhoto photoWithURL:url]];
-    [sender whenTapped:^{
-        MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
-        browser.displayActionButton = NO;
-        browser.tapToClose = YES;
 
-        [browser setInitialPageIndex:index];
-        UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:browser];
-        nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        
-        [[AppDelegate instance].rootViewController presentModalViewController:nc animated:YES];
-        
-    }];
-
-}
 - (void)initData:(NSDictionary *)aDict {
+    [self.picArray removeAllObjects];
+    
     imgsNumLbl.hidden = NO;
     if (![[aDict objectForKey:FEED_IMAGE_1] isEqualToString:@""]) {
 
         firstImgView.hidden = NO;
         [firstImgView setImageWithURL:[self genreateImgURL:[aDict objectForKey:FEED_IMAGE_1] size:PIC_SIZE]placeholderImage:[UIImage imageNamed:@"pic_default.png"]];
-        [self setTapAction:firstImgView url:[NSURL URLWithString:[aDict objectForKey:FEED_IMAGE_1]] index:0];
+        [self setTapAction:firstImgView url:[NSURL URLWithString:[[aDict objectForKey:FEED_IMAGE_1] delLastStrForYouPai]] index:0];
     } else
         firstImgView.hidden = YES;
     
@@ -65,7 +48,7 @@
         secondImgView.hidden = NO;
         
         [secondImgView setImageWithURL:[self genreateImgURL:[aDict objectForKey:FEED_IMAGE_2] size:PIC_SIZE]placeholderImage:[UIImage imageNamed:@"pic_default.png"]];
-        [self setTapAction:secondImgView url:[NSURL URLWithString:[aDict objectForKey:FEED_IMAGE_2]] index:1];
+        [self setTapAction:secondImgView url:[NSURL URLWithString:[[aDict objectForKey:FEED_IMAGE_2] delLastStrForYouPai]] index:1];
 
     } else
         secondImgView.hidden = YES;
@@ -75,7 +58,7 @@
         imgsNumLbl.frame = (CGRect){.origin.x = 400, .origin.y = imgsNumLbl.frame.origin.y, .size = imgsNumLbl.frame.size};
 
         [thirdImgView setImageWithURL:[self genreateImgURL:[aDict objectForKey:FEED_IMAGE_3] size:PIC_SIZE]placeholderImage:[UIImage imageNamed:@"pic_default.png"]];
-        [self setTapAction:thirdImgView url:[NSURL URLWithString:[aDict objectForKey:FEED_IMAGE_3]] index:2];
+        [self setTapAction:thirdImgView url:[NSURL URLWithString:[[aDict objectForKey:FEED_IMAGE_3] delLastStrForYouPai]] index:2];
 
     } else {
         thirdImgView.hidden = YES;

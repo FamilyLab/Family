@@ -104,7 +104,7 @@
                 else secondLbl.text = @"已关闭";
             }
             else if (indexRow == 2){
-                if ([[PDKeychainBindings sharedKeychainBindings] objectForKey:SINA_UID]&&![[_aDict objectForKey:SINA_UID] isEqualToString:@""]){
+                if ([[PDKeychainBindings sharedKeychainBindings] objectForKey:SINA_UID]){
                     secondLbl.text = STATE;
                     rightImgView.hidden = YES;
                 }

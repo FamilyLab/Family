@@ -25,7 +25,26 @@
 @synthesize lineImgView;
 //@synthesize firstImgView, secondImgView, thirdImgView, imgsNumLbl, describeLbl;
 
-
+- (void)setTapAction:(UIImageView *)sender
+                 url:(NSURL *)url
+               index:(NSUInteger)index
+{
+    sender.userInteractionEnabled = YES;
+    [self.picArray addObject:[MWPhoto photoWithURL:url]];
+    [sender whenTapped:^{
+        MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+        //browser.displayActionButton = NO;
+        browser.tapToClose = YES;
+        
+        [browser setInitialPageIndex:index];
+        UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:browser];
+        nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        
+        [[AppDelegate instance].rootViewController presentModalViewController:nc animated:YES];
+        
+    }];
+    
+}
 - (NSString*)buildAllText:(NSDictionary *)feedDict  {
     //    NSDictionary *aDict = [dataArray objectAtIndex:index];
     //    NSMutableDictionary *feedDict = [[NSMutableDictionary alloc] initWithDictionary:aDict];
@@ -124,21 +143,27 @@
 }
 
 - (void)layoutSubviews {
+    headView.frame = CGRectMake(0, 20, headView.frame.size.width, headView.frame.size.height);
+
     [super layoutSubviews];
     //headView.frame = CGRectMake(0, 5, 320, 39);
-
-    firstComment.frame = (CGRect){.origin.x = 0, .origin.y = albumView.frame.origin.y + albumView.frame.size.height+5, .size = firstComment.frame.size};
-    secondComment.frame = (CGRect){.origin.x = 0, .origin.y = albumView.frame.origin.y + albumView.frame.size.height + firstComment.frame.size.height+5, .size = firstComment.frame.size};
-    thirdComment.frame = (CGRect){.origin.x = 0, .origin.y = secondComment.frame.origin.y+secondComment.frame.size.height, .size = secondComment.frame.size};
-    commentNumView.frame = (CGRect){.origin.x = 0, .origin.y = thirdComment.frame.origin.y+thirdComment.frame.size.height, .size.height =15,.size.width = 480 };
-
-    self.lineImgView.frame = (CGRect){.origin.x = 0, .origin.y = self.frame.size.height - 1, .size = lineImgView.frame.size};
-    self.lineImgView.hidden= YES;
     [firstComment layoutSubviews];
     [secondComment layoutSubviews];
     [thirdComment layoutSubviews];
     [commentNumView layoutSubviews];
-    
+    firstComment.frame = (CGRect){.origin.x = 0, .origin.y = albumView.frame.origin.y + albumView.frame.size.height+5, .size = firstComment.frame.size};
+    secondComment.frame = (CGRect){.origin.x = 0, .origin.y = firstComment.frame.origin.y + firstComment.frame.size.height, .size = secondComment.frame.size};
+    thirdComment.frame = (CGRect){.origin.x = 0, .origin.y = secondComment.frame.origin.y+secondComment.frame.size.height-1, .size = thirdComment.frame.size};
+    if (thirdComment.hidden) {
+        commentNumView.frame = (CGRect){.origin.x = 0,  .origin.y = secondComment.frame.origin.y+secondComment.frame.size.height, .size.height =15,.size.width = 480 };
+    }else{
+        commentNumView.frame = (CGRect){.origin.x = 0,  .origin.y = thirdComment.frame.origin.y+thirdComment.frame.size.height, .size.height =15,.size.width = 480 };
+
+    }
+
+    self.lineImgView.frame = (CGRect){.origin.x = 0, .origin.y = self.frame.size.height - 1, .size = lineImgView.frame.size};
+    self.lineImgView.hidden= YES;
+  
 }
 
 - (void)initData:(NSDictionary*)_aDict {
@@ -185,11 +210,11 @@
     if (cellType == otherNoImgType || cellType == otherHasImgType) {
         return;
     }
-   
+    self.firstComment.isfirstComment = YES;
+
     //头部
     headView.headBtn.type = HEAD_BTN;
     headView.headBtn.identify = [aDict objectForKey:UID];
-    
     [headView.headBtn setVipStatusWithStr:[aDict objectForKey:VIPSTATUS] isSmallHead:YES];
     //[headView.headBtn setImageWithURL:[headView.headBtn headImgURLWith:MIDDLE url:[aDict objectForKey:AVATER]] placeholderImage:[UIImage imageNamed:@"head_70.png"]];
     [headView.headBtn setImageForMyHeadButtonWithUrlStr:[aDict objectForKey:AVATER] plcaholderImageStr:@"head_220.png" size:MIDDLE];
@@ -197,6 +222,8 @@
     //
     //[headView.headBtn addTarget:self action:@selector(headBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
     headView.nameLbl.text = [aDict objectForKey:FEED_NAME];
+    headView.nameLbl.frame  = CGRectMake(headView.nameLbl.frame.origin.x, headView.nameLbl.frame.origin.y, 1000, headView.nameLbl.frame.size.height);
+
     headView.nameLbl.frame = [headView.nameLbl textRectForBounds:headView.nameLbl.frame limitedToNumberOfLines:1];
 
     NSUInteger type = [self whichDetailType:[aDict objectForKey:AD_ID_TYPE]];
@@ -226,12 +253,10 @@
 
     }
     //[headView.timeView fillWithPointInImgAndLblView:CGPointMake(380, 26) withLeftImgStr:@"time.png" withRightText:[Common dateSinceNow:[aDict objectForKey:DATELINE]] withFont:[UIFont systemFontOfSize:TIME_FONT_SIZE] withTextColor:[UIColor lightGrayColor]];
-    [self.timeLabel setText:[Common dateSinceNow:[aDict objectForKey:DATELINE]]];
-    _timeLabel.frame = CGRectMake(_timeLabel.frame.origin.x, _timeLabel.frame.origin.y,101,1000);
-    _comeFromeLabel.text = $str(@"来自: %@",[aDict objectForKey:COME]);
-    
-    self.timeLabel.frame = [self.timeLabel textRectForBounds:self.timeLabel.frame limitedToNumberOfLines:0];
-    self.comeFromeLabel.frame = (CGRect){.origin.x = self.timeLabel.frame.origin.x+self.timeLabel.frame.size.width+2, .origin.y = self.timeLabel.frame.origin.y, .size = self.comeFromeLabel.frame.size};
+    [self.timeLabel setText: $str(@"%@  来自: %@",[Common dateSinceNow:[aDict objectForKey:DATELINE]],[aDict objectForKey:COME])];
+
+   // self.timeLabel.frame = [self.timeLabel textRectForBounds:self.timeLabel.frame limitedToNumberOfLines:0];
+   // self.comeFromeLabel.frame = (CGRect){.origin.x = self.timeLabel.frame.origin.x+self.timeLabel.frame.size.width+2, .origin.y = self.timeLabel.frame.origin.y, .size = self.comeFromeLabel.frame.size};
 
     albumView.albumBtn.type = ZONE_BTN;
     //album那一行
@@ -239,8 +264,15 @@
     albumView.albumBtn.identify = [[aDict objectForKey:TAG] isKindOfClass:[NSDictionary class]] ? [[aDict objectForKey:TAG] objectForKey:TAG_ID] : @"";
     albumView.albumBtn.extraInfo = [aDict objectForKey:UID];
     NSString *tagName = [[aDict objectForKey:TAG] isKindOfClass:[NSDictionary class]] ? [[aDict objectForKey:TAG] objectForKey:TAG_NAME] : @"";
+    albumView.tagNameLabel.text = tagName;
+    if (![tagName isEqualToString:@""]) {
+        albumView.tagNameLabel.frame  = CGRectMake(albumView.tagNameLabel.frame.origin.x, albumView.tagNameLabel.frame.origin.y, 1000, 20);
+        albumView.tagNameLabel.frame = [albumView.tagNameLabel textRectForBounds:albumView.tagNameLabel.frame limitedToNumberOfLines:0];
+        albumView.arrowImgView.frame = CGRectMake(albumView.tagNameLabel.frame.origin.x+albumView.tagNameLabel.frame.size.width+5, albumView.arrowImgView.frame.origin.y, albumView.arrowImgView.frame.size.width,albumView.arrowImgView.frame.size.height);
+    }
+    
 
-    [albumView.albumBtn setTitle:$str(@"%@",tagName) forState:UIControlStateNormal];
+    //[albumView.albumBtn setTitle:$str(@"%@",tagName) forState:UIControlStateNormal];
    // [albumView.repostBtn setTitle:$str(@"   %@",[aDict objectForKey:FEED_REBLOG_NUM]) forState:UIControlStateNormal];
   //  [albumView.likeitBtn setTitle:$str(@"%@",[aDict objectForKey:FEED_LOVE_NUM]) forState:UIControlStateNormal];
     albumView.hasLoved = [[aDict objectForKey:MY_LOVE] boolValue];
@@ -250,7 +282,7 @@
 
     
     //评论
-    int theCommentNum = [[aDict objectForKey:COMMENT] count];
+    int theCommentNum = fmaxf([[aDict objectForKey:FEED_REPLY_NUM] intValue],[[aDict objectForKey:COMMENT] count]);
     //收藏
     int loveNum = [[aDict objectForKey:@"loveuser"]count];
     self.thirdComment.hidden = YES;
@@ -267,7 +299,7 @@
         }else if (theCommentNum >2){
             [self setTheFirstComment:[[aDict objectForKey:COMMENT] objectAtIndex:0]];
             [self setTheSecondComment:[[aDict objectForKey:COMMENT] objectAtIndex:1]];
-            [self setTheThirdComment:[[aDict objectForKey:COMMENT] objectAtIndex:2]];
+            [self setFourthComment:$str(@"共%d条",theCommentNum)];
 
         }
     }else{
@@ -295,6 +327,7 @@
 {
     [self.firstComment setWhichType:hasHeadType];
     [firstComment fillLoveData:loveDict];
+    self.firstComment.hidden = NO;
     //self.secondComment.hidden = YES;
 
 }

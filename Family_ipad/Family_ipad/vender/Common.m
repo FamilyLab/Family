@@ -230,6 +230,29 @@
     //    [dateFormatter release];
     return textDate;
 }
+//判断是否为整型
++ (BOOL)isPureInt:(NSString*)string{
+    NSScanner *scan = [NSScanner scannerWithString:string];
+    int val;
+    return [scan scanInt:&val] && [scan isAtEnd];
+}
+@end
+@implementation NSString (excute)
+
+//遍历字符串，清除非数字的
+- (NSString*)clearNotNumberInString {
+    //    NSString *stringCopy = [self copy];
+    NSString *finalStr = [self copy];
+    for (size_t i = 0; i < self.length; i++) {
+        unichar ch = [self characterAtIndex:i];
+        NSString *chStr = [NSString stringWithFormat:@"%c", ch];
+        if (![Common isPureInt:chStr]) {
+            finalStr = [finalStr stringByReplacingOccurrencesOfString:chStr withString:@""];
+        }
+    }
+    return finalStr;
+}
+
 @end
 @implementation NSString (NSString_Extended)
 

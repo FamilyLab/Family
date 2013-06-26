@@ -11,9 +11,9 @@
 #import "YIPopupTextView.h"
 #import "DetailFeedCell.h"
 #import "MWPhotoBrowser.h"
-
+#import "SinaWeibo.h"
 @class CellHeader;
-@interface DetailViewController : TableController< UIWebViewDelegate,UIScrollViewDelegate,YIPopupTextViewDelegate,MWPhotoBrowserDelegate> {
+@interface DetailViewController : TableController< UIWebViewDelegate,UIScrollViewDelegate,YIPopupTextViewDelegate,MWPhotoBrowserDelegate,SinaWeiboRequestDelegate,SinaWeiboDelegate> {
     CGFloat offsetYOfJoin;
     CGFloat offsetYOfComment;
     BOOL isOperatViewBtnPressed;

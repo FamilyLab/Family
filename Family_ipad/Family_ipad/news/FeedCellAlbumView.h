@@ -18,9 +18,10 @@
 @property (nonatomic, strong) IBOutlet UIButton *likeitBtn;
 @property (nonatomic, strong) IBOutlet UIButton *commentBtn;
 @property (nonatomic, assign)BOOL hasLoved;
-
+@property (nonatomic, strong) IBOutlet UILabel *tagNameLabel;
 @property (nonatomic, strong) IBOutlet UIButton *showMoreBtn;
 @property (nonatomic, assign) BOOL isShowing;
+@property (nonatomic, strong) IBOutlet UIImageView *arrowImgView;
 
 //- (void)initAlbumViewData:(NSDictionary *)_aDict;
 

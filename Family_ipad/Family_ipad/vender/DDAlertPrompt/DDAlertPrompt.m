@@ -69,7 +69,7 @@
 		tableView_.scrollEnabled = NO;
 		tableView_.opaque = NO;
 		tableView_.layer.cornerRadius = 3.0f;
-		tableView_.editing = YES;
+		//tableView_.editing = YES;
 		tableView_.rowHeight = 28.0f;
         tableView_.separatorStyle = UITableViewCellSeparatorStyleNone;
 		[self addSubview:tableView_];

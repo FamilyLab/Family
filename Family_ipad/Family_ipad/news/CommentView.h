@@ -25,7 +25,8 @@ typedef enum {
 @property (nonatomic, strong) IBOutlet UILabel *contentLbl;
 @property (nonatomic, strong) IBOutlet ImageAndLabelView *timeView;
 @property (nonatomic, assign) CommentType commentType;
-
+@property (nonatomic, strong) IBOutlet UIImageView *bgImage;
+@property (nonatomic, assign) BOOL isfirstComment;
 - (void)setWhichType:(CommentType)_type;
 - (void)fillCommentData:(NSDictionary*)aDict;
 - (void)fillLoveData:(NSArray  *)arr;

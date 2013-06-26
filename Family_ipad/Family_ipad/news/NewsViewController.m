@@ -56,7 +56,13 @@
 }
 - (void)sendRequest:(id)sender
 {
-    NSString *url = $str(@"%@space.php?do=home&m_auth=%@&page=%d&perpage=%d", BASE_URL, GET_M_AUTH, currentPage, 10);
+    NSString *url = nil;
+    if (_isLove) {
+       url = $str(@"%@space.php?do=lovefeed&m_auth=%@&page=%d&perpage=%d", BASE_URL, GET_M_AUTH, currentPage, 10);
+    }else{
+        url = $str(@"%@space.php?do=home&m_auth=%@&page=%d&perpage=%d", BASE_URL, GET_M_AUTH, currentPage, 10);
+
+    }
     [[MyHttpClient sharedInstance] commandWithPath:url onCompletion:^(NSDictionary *dict) {
         [self stopLoading:sender];
         if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
@@ -142,35 +148,73 @@
     if (type == otherHasImgType || type == otherNoImgType) {
         return 121;
     }
+    NSDictionary *currentDict = [dataArray objectAtIndex:indexPath.row];
     CGFloat noCommentHeight = 0;
     switch (type) {
         case bigImgType:
-            noCommentHeight = 480;
+            noCommentHeight = 500;//186
             break;
         case someImgsType:
-            noCommentHeight = 246*1.5;
+            noCommentHeight = 246*1.5-5;
             break;
         case imgAndTextType:
             noCommentHeight = 238*1.5+10;
             break;
         case onlyTextType:
-            noCommentHeight = 160*1.5;
+            noCommentHeight = 160*1.5+2;
             break;
         case locationType:
-            noCommentHeight = 238*1.5+10;
+            noCommentHeight = 238*1.5;
             break;
         default:
             break;
     }
-    int theCommentNum = [[[dataArray objectAtIndex:indexPath.row] objectForKey:COMMENT] count];//取两者中最小值
-    
-   // theCommentNum = theCommentNum == 0 ? 1 : theCommentNum;//没有评论时加”给你的家人评论一下吧～“这一句
-    if ([[[dataArray objectAtIndex:indexPath.row] objectForKey:@"loveuser"]count]!=0) {
-        theCommentNum++;
-    }
-    return noCommentHeight + 45 * theCommentNum;//55为一条评论的高度
-}
+   // int theCommentNum = [[ currentDict objectForKey:COMMENT] count];//取两者中最小值
+    int theCommentNum = fmaxf([[currentDict objectForKey:FEED_REPLY_NUM] intValue],[[currentDict objectForKey:COMMENT] count]);
+    CGFloat commentHeight=0;
 
+   // theCommentNum = theCommentNum == 0 ? 1 : theCommentNum;//没有评论时加”给你的家人评论一下吧～“这一句
+   
+    if (theCommentNum>0) {
+        commentHeight+=[self heightForCellWithIndexRow:indexPath.row index:0];
+        if (theCommentNum>=2) {
+            commentHeight+=[self heightForCellWithIndexRow:indexPath.row index:1];
+
+        }
+    }
+    if ([[currentDict objectForKey:@"loveuser"]count]!=0) {
+        theCommentNum++;
+        commentHeight=commentHeight+40;
+    }
+    if (theCommentNum>2) {
+        commentHeight=commentHeight+20;
+    }
+    else if (theCommentNum==0) {
+        commentHeight=commentHeight+15;
+    }
+    // NSLog(@"%f",[self heightForCellWithIndexRow:indexPath.row index:0]) ;
+    return noCommentHeight + commentHeight;//55为一条评论的高度
+}
+//评论的
++ (CGFloat)heightForCellWithText:(NSString *)text andOtherHeight:(CGFloat)_miniHeight withNameX:(CGFloat)nameX withNameWidth:(CGFloat)nameWidth {
+    CGFloat height = _miniHeight + ceilf([text sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:CGSizeMake(250, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap].height);
+    return height;
+}
+- (CGFloat)heightForCellWithIndexRow:(int)indexRow
+                               index:(int)index{
+    NSDictionary *dict = [dataArray objectAtIndex:indexRow];
+    
+    NSString *name = [dict objectForKey:NAME];
+    CGSize nameSize = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:CGSizeMake(470, 320) lineBreakMode:UILineBreakModeWordWrap];
+    NSString *text = [[[dict objectForKey:COMMENT]objectAtIndex:index]  objectForKey:MESSAGE];
+    CGFloat theHeight= 0;
+    if (index==0&&[[[dataArray objectAtIndex:indexRow] objectForKey:@"loveuser"]count]==0) {
+           theHeight = [NewsViewController heightForCellWithText:text andOtherHeight:40 withNameX:82 withNameWidth:nameSize.width];
+    }else{
+    theHeight = [NewsViewController heightForCellWithText:text andOtherHeight:10 withNameX:82 withNameWidth:nameSize.width];
+    }
+    return fmaxf(theHeight, 40);// theHeight;
+}
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FeedCell *cell;
@@ -286,9 +330,18 @@
 
                 [currDict setObject:[NSNumber numberWithBool:cell.albumView.hasLoved] forKey:MY_LOVE];
                 NSMutableArray *loveuserArr = [NSMutableArray arrayWithArray:[currDict objectForKey:LOVEUSER]];
-                NSDictionary *lovedict = [NSDictionary dictionaryWithObject:[ConciseKit userDefaultsObjectForKey:NAME
-                                                                             ] forKey:NAME];
-                [loveuserArr addObject:lovedict];
+                if (cell.albumView.hasLoved) {
+                    NSDictionary *lovedict = [NSDictionary dictionaryWithObject:[ConciseKit userDefaultsObjectForKey:NAME] forKey:NAME];
+                    [loveuserArr addObject:lovedict];
+                }else{
+                    for (NSDictionary *loveDict in loveuserArr) {
+                        if ([[loveDict objectForKey:NAME]isEqualToString:[ConciseKit userDefaultsObjectForKey:NAME]]) {
+                            [loveuserArr removeObject:loveDict];
+                            break;
+                        }
+                    }
+                }
+               
                 [currDict setObject:loveuserArr forKey:LOVEUSER];
                 
                 
@@ -367,15 +420,26 @@
     int indexRow = [[aDict objectForKey:@"indexRow"] intValue];
     NSMutableDictionary *currDict = [[NSMutableDictionary alloc] initWithDictionary:[dataArray objectAtIndex:indexRow]];
     NSMutableArray *loveuserArr = [NSMutableArray arrayWithArray:[currDict objectForKey:LOVEUSER]];
-    NSDictionary *lovedict = [NSDictionary dictionaryWithObject:[ConciseKit userDefaultsObjectForKey:NAME
-                                                                 ] forKey:NAME];
-    [loveuserArr addObject:lovedict];
+    
     [currDict setObject:loveuserArr forKey:LOVEUSER];
     [currDict setObject:[aDict objectForKey:MY_LOVE] forKey:MY_LOVE];
-    if ([[aDict objectForKey:MY_LOVE] intValue])
+    if ([[aDict objectForKey:MY_LOVE] intValue]){
         [currDict setObject:$int([[aDict objectForKey:FEED_LOVE_NUM]intValue]+1) forKey:FEED_LOVE_NUM];
-    else
+        NSDictionary *lovedict = [NSDictionary dictionaryWithObject:[ConciseKit userDefaultsObjectForKey:NAME
+                                                                     ] forKey:NAME];
+        [loveuserArr addObject:lovedict];
+    }
+    else{
         [currDict setObject:$int([[aDict objectForKey:FEED_LOVE_NUM]intValue]) forKey:FEED_LOVE_NUM];
+        for (NSDictionary *loveDict in loveuserArr) {
+            if ([[loveDict objectForKey:NAME]isEqualToString:[ConciseKit userDefaultsObjectForKey:NAME]]) {
+                [loveuserArr removeObject:loveDict];
+                break;
+            }
+        }
+
+    }
+
 
     [dataArray replaceObjectAtIndex:indexRow withObject:currDict];
     [_tableView reloadData];
@@ -419,6 +483,15 @@
                 con.isMyFamily = YES;
                 con.userId = [dict objectForKey:UID];
                 [con sendRequestWith:[dict objectForKey:UID]];
+                [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:con invokeByController:self isStackStartView:FALSE];
+            }];
+        }
+        if (!isEmptyStr([dict objectForKey:CNAME])) {
+            [as addButtonWithTitle:[dict objectForKey:CNAME] handler:^{
+                FamilyCardViewController *con = [[FamilyCardViewController alloc] initWithNibName:@"FamilyCardViewController" bundle:nil];
+                con.isMyFamily = YES;
+                con.userId = [dict objectForKey:CUID];
+                [con sendRequestWith:[dict objectForKey:CUID]];
                 [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:con invokeByController:self isStackStartView:FALSE];
             }];
         }

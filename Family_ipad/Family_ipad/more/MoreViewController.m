@@ -32,6 +32,10 @@
 #import "ChangePwViewController.h"
 #import "KGModal.h"
 #import "ZoneWaterFallView.h"
+#import "NewsViewController.h"
+#import "BlockAlertView.h"
+#import "BlockTextPromptAlertView.h"
+
 #define childNum  3//假数据
 #define color(r, g, b, a) [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
 
@@ -136,7 +140,7 @@
         _contentArray = [[NSArray alloc] initWithObjects:
                           [NSArray arrayWithObjects:@"家人", @"家人申请", @"邀请家人", nil],
                           [NSArray arrayWithObjects:@"我还有一个孩子", nil],
-                         [NSArray arrayWithObjects:@"今日话题", nil],
+                         [NSArray arrayWithObjects:@"今日话题", @"收藏",nil],
                           [NSArray arrayWithObjects:@"今日话题", @"消息推送",@"新浪微博绑定", @"修改密码",@"给我们打个分吧",@"关于我们",nil],nil];
                   
         tempBirthStr = nil;
@@ -181,7 +185,7 @@
     else if(section ==0 )
             return 3;
     else if(section ==2)
-        return 1;
+        return 2;
         else
         return 0;
 }
@@ -262,6 +266,7 @@
     {
         if (indexPath.row !=[[_dataDict objectForKey:BABY_LIST] count]) {
             AddChildViewController  *detailViewController = [[AddChildViewController alloc] initWithNibName:@"AddChildViewController" bundle:nil];
+            detailViewController.editMode = YES;
             [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:detailViewController invokeByController:self isStackStartView:FALSE];
             [detailViewController setBabyDataWith:[[_dataDict objectForKey:BABY_LIST]  objectAtIndex:indexPath.row]];
         }
@@ -292,6 +297,13 @@
             [view loadDataSource:[NSNumber numberWithInt:TODAY_TOPIC]];
             [[KGModal sharedInstance] showWithContentView:view andAnimated:YES];
         }
+        if (indexPath.row == 1) {
+            NewsViewController  *con = [[NewsViewController alloc] initWithNibName:@"NewsViewController" bundle:nil];
+            con.isLove = YES;
+            con.view.frame = CGRectMake(0, 0, 480, 768);
+            [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:con invokeByController:self isStackStartView:FALSE];
+            
+        }
     }
     else if (indexPath.section == 3)
     {
@@ -305,10 +317,10 @@
         }
         else if(indexPath.row == 2){
             //sina weibo
-//            if (isEmptyStr([_dataDict objectForKey:SINA_UID])||![self sinaWiebo].isAuthValid || [self sinaWiebo].isAuthorizeExpired){
-//                [AppDelegate instance].sinaweibo.delegate = self;
-//                [[AppDelegate instance].sinaweibo logIn];
-//            }
+            if (isEmptyStr([_dataDict objectForKey:SINA_UID])||![self sinaWiebo].isAuthValid || [self sinaWiebo].isAuthorizeExpired){
+                [AppDelegate instance].sinaweibo.delegate = self;
+                [[AppDelegate instance].sinaweibo logIn];
+            }
         }
         else if(indexPath.row == 3){
             ChangePwViewController *con = [[ChangePwViewController alloc] initWithNibName:@"ChangePwViewController" bundle:nil];
@@ -377,6 +389,18 @@
 
 //名字
 - (IBAction)nameBtnPressed:(id)sender {
+//    UITextField *textField;
+//    BlockTextPromptAlertView *alert = [BlockTextPromptAlertView promptWithTitle:@"修改昵称" message:@"" textField:&textField block:^(BlockTextPromptAlertView *alert){
+//        [alert.textField resignFirstResponder];
+//        return YES;
+//    }];
+//    
+//    
+//    [alert setCancelButtonWithTitle:@"Cancel" block:nil];
+//    [alert addButtonWithTitle:@"Okay" block:^{
+//        NSLog(@"Text: %@", textField.text);
+//    }];
+//    [alert show];
     DDAlertPrompt *alertPrompt = [[DDAlertPrompt alloc] initWithTitle:@"修改昵称" delegate:self cancelButtonTitle:@"取消" otherButtonTitle:nil];
 
     [alertPrompt addButtonWithTitle:@"确认" handler:^{
@@ -530,8 +554,9 @@
         [SVProgressHUD showSuccessWithStatus:@"绑定成功"];
 //        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HAS_BIND_SINA_WEIBO];
 //        [[NSUserDefaults standardUserDefaults] synchronize];
-        [_tableView reloadData];
         [self storeAuthData];
+        [_tableView reloadData];
+
         
     } failure:^(NSError *error) {
         NSLog(@"error:%@", [error description]);

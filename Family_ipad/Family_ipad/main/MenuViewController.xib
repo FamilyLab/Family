@@ -169,11 +169,11 @@
 						<reference key="IBUINormalTitleShadowColor" ref="627099545"/>
 						<object class="NSCustomResource" key="IBUISelectedBackgroundImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">newsbtn2.png</string>
+							<string key="NSResourceName">tab_home_h.png</string>
 						</object>
 						<object class="NSCustomResource" key="IBUINormalBackgroundImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">newsbtn.png</string>
+							<string key="NSResourceName">tab_home.png</string>
 						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription" id="77997432">
 							<int key="type">2</int>
@@ -188,7 +188,7 @@
 					<object class="IBUIButton" id="1018342413">
 						<reference key="NSNextResponder" ref="831834923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{22, 250}, {54, 56}}</string>
+						<string key="NSFrame">{{22, 335}, {54, 56}}</string>
 						<reference key="NSSuperview" ref="831834923"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="664541125"/>
@@ -217,7 +217,7 @@
 					<object class="IBUIButton" id="664541125">
 						<reference key="NSNextResponder" ref="831834923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{22, 335}, {54, 56}}</string>
+						<string key="NSFrame">{{22, 250}, {54, 56}}</string>
 						<reference key="NSSuperview" ref="831834923"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="688576841"/>
@@ -234,11 +234,11 @@
 						<reference key="IBUINormalTitleShadowColor" ref="627099545"/>
 						<object class="NSCustomResource" key="IBUISelectedBackgroundImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">messagebtn2.png</string>
+							<string key="NSResourceName">tab_dialogue_h.png</string>
 						</object>
 						<object class="NSCustomResource" key="IBUINormalBackgroundImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">messagebtn.png</string>
+							<string key="NSResourceName">tab_dialogue.png</string>
 						</object>
 						<reference key="IBUIFontDescription" ref="77997432"/>
 						<reference key="IBUIFont" ref="654781781"/>
@@ -524,7 +524,7 @@
 				<string key="103.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="103.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="112.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<real value="0.0" key="112.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
+				<real value="2" key="112.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="122.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="122.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="168.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -549,17 +549,20 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">MenuViewController</string>
 					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">menuButtonAction:</string>
-						<string key="NS.object.0">UIButton</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">menuButtonAction:</string>
-						<object class="IBActionInfo" key="NS.object.0">
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="menuButtonAction:">UIButton</string>
+						<string key="postAction:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="menuButtonAction:">
 							<string key="name">menuButtonAction:</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
-					</object>
+						<object class="IBActionInfo" key="postAction:">
+							<string key="name">postAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="UserInfo">TileItemButton</string>
 						<string key="lineLabel">UILabel</string>
@@ -645,12 +648,12 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="messagebtn.png">{112, 108}</string>
-			<string key="messagebtn2.png">{112, 108}</string>
 			<string key="morebtn.png">{112, 108}</string>
 			<string key="morebtn2.png">{112, 108}</string>
-			<string key="newsbtn.png">{112, 108}</string>
-			<string key="newsbtn2.png">{112, 108}</string>
+			<string key="tab_dialogue.png">{112, 108}</string>
+			<string key="tab_dialogue_h.png">{112, 108}</string>
+			<string key="tab_home.png">{112, 108}</string>
+			<string key="tab_home_h.png">{112, 108}</string>
 			<string key="zonebtn.png">{112, 108}</string>
 			<string key="zonebtn2.png">{112, 108}</string>
 		</dictionary>

@@ -26,3 +26,8 @@
 @interface NSString (NSString_Extended)
 - (NSString *)urlencode;
 @end
+@interface NSString (excute)
+
+- (NSString*)clearNotNumberInString;
+
+@end

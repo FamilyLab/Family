@@ -102,7 +102,7 @@
     [self.multiTextTypeView.headBtn addTarget:self action:@selector(headBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     //时间
-    [self.multiTextTypeView.timeView fillWithPointInImgAndLblView:CGPointMake(380, 83) withLeftImgStr:@"time.png" withRightText:[Common dateSinceNow:[_aDict objectForKey:DATELINE]] withFont:[UIFont boldSystemFontOfSize:TIME_FONT_SIZE] withTextColor:[UIColor lightGrayColor]];
+    [self.multiTextTypeView.timeView fillWithPointInImgAndLblView:CGPointMake(390, 83) withLeftImgStr:@"time.png" withRightText:[Common dateSinceNow:[_aDict objectForKey:DATELINE]] withFont:[UIFont boldSystemFontOfSize:TIME_FONT_SIZE] withTextColor:[UIColor lightGrayColor]];
     
     //富文本，名字
     //    self.multiTextTypeView.contentLbl.extendBottomToFit = YES;//自适应高度

@@ -50,10 +50,12 @@
 }
 
 //评论的
+//评论的
 + (CGFloat)heightForCellWithText:(NSString *)text andOtherHeight:(CGFloat)_miniHeight withNameX:(CGFloat)nameX withNameWidth:(CGFloat)nameWidth {
     CGFloat height = _miniHeight + ceilf([text sizeWithFont:[UIFont systemFontOfSize:17.0f] constrainedToSize:CGSizeMake(380 - 15 - nameX - nameWidth, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap].height);
     return height;
 }
+
 
 - (void)layoutSubviews {
     [super layoutSubviews];
@@ -61,6 +63,8 @@
 
 //    operateView.albumBtn.btnLbl.textAlignment = UITextAlignmentCenter;
 //    operateView.albumBtn.btnLbl.frame = (CGRect){.origin.x = 22, .origin.y = 7, .size = CGSizeMake(78, 20)};
+    self.bgImage.image = [self.bgImage.image stretchableImageWithLeftCapWidth:20 topCapHeight:20];
+
     if (_bgImage) {
         CGRect frame = self.bgImage.frame;
         frame.size = self.frame.size;
@@ -158,8 +162,8 @@
                     }
                 }
                 self.operateView.infoLabel.text = [aDict objectForKey:MESSAGE];
-                self.operateView.timeLabel.text =[Common dateSinceNow:[aDict objectForKey:DATELINE]];
-                self.operateView.comeLabel.text = $str(@"来自: %@",[aDict objectForKey:COME]);
+                self.operateView.timeLabel.text =$str(@"%@   来自: %@",[Common dateSinceNow:[aDict objectForKey:DATELINE]],[aDict objectForKey:COME]);
+
                 break;
             }
             case blogDetailType:
@@ -182,8 +186,7 @@
                 
                 _webView.backgroundColor = [UIColor lightGrayColor];
                 self.operateView.infoLabel.text = [aDict objectForKey:MESSAGE];
-                self.operateView.timeLabel.text =[Common dateSinceNow:[aDict objectForKey:DATELINE]];
-                self.operateView.comeLabel.text = $str(@"来自: %@",[aDict objectForKey:COME]);
+                self.operateView.timeLabel.text =$str(@"%@   来自: %@",[Common dateSinceNow:[aDict objectForKey:DATELINE]],[aDict objectForKey:COME]);
                 break;
             }
             case eventDetailType:
@@ -198,6 +201,8 @@
                 _dateLbl.text = [NSString stringWithFormat:@"时间：%@", $emptystr([Common dateConvert:[aDict objectForKey:START_TIME]])];
                 _locationLbl.text = [NSString stringWithFormat:@"地点：%@", $emptystr([aDict objectForKey:FEED_EVENT_LOCATION])];
                 _describeLbl.text = [NSString stringWithFormat:@"介绍：%@", $emptystr([aDict objectForKey:FEED_EVENT_DETAIL])];
+                self.operateView.timeLabel.text =$str(@"%@   来自: %@",[Common dateSinceNow:[aDict objectForKey:DATELINE]],[aDict objectForKey:COME]);
+
                 _coordinate.latitude = [[aDict objectForKey:LAT] doubleValue];
                 _coordinate.longitude = [[aDict objectForKey:LNG] doubleValue];
                 _mapImageView.userInteractionEnabled = YES;
@@ -217,7 +222,6 @@
                     _mapView.frame = [UIScreen mainScreen].bounds;
                     [[KGModal sharedInstance] showWithContentViewInMiddle:_mapView andAnimated:YES];
                     
-                    
                 }];
                 
                 break;
@@ -227,7 +231,7 @@
         }
 
     }
-    }
+}
 - (IBAction)showBigMap:(id)sender
 {
    

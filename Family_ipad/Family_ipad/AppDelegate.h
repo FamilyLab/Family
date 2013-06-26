@@ -9,9 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CKMacros.h"
 #import "SinaWeibo.h"
-#define kAppKey             @"3005439488"
-#define kAppSecret          @"5de4cc0d5fda710c482989ac7250750c"
-#define kAppRedirectURI     @"http://www.familyday.com.cn"
+
 #define REMOVEDETAIL   [[AppDelegate instance].rootViewController.stackScrollViewController removeThirdView]
 
 @class RootViewController;

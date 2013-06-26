@@ -14,6 +14,9 @@
 #define DEBUGMOD 0
 
 #define COME_VERSION @"iPad"
+#define kAppKey             @"3005439488"
+#define kAppSecret          @"5de4cc0d5fda710c482989ac7250750c"
+#define kAppRedirectURI     @"http://www.familyday.com.cn"
 #define BASE_URL    @"http://www.familyday.com.cn/dapi/"
 #define SPACE_API   @"http://www.familyday.com.cn/dapi/space.php"
 #define INFO_API    @"http://www.familyday.com.cn/dapi/info.php"
@@ -89,12 +92,14 @@
 #define FONT_SIZE 17.0f
 #define TIME_FONT_SIZE 14.0f
 #define UID @"uid"
+#define CUID @"cuid"
 #define LNG @"lng"
 #define LAT @"lat"
 #define PAGE @"page"
 #define PER_PAGE @"perpage"
 #define AVATER  @"avatar"
 #define NAME @"name"
+#define CNAME @"cname"
 #define AC          @"ac"
 #define BIRTHDAY @"birthday"
 #define ACTION @"do"
@@ -115,6 +120,7 @@
 #define TASK_NUM    @"tasknum"
 #define TAG @"tag"
 #define BABY_NAME   @"babyname"
+#define BABY_ID     @"babyid"
 #define USER_NAME       @"username"
 #define PASSWORD        @"password"
 #define SECCODE         @"seccode"
@@ -124,6 +130,7 @@
 #define NAME_SUBMIT     @"namesubmit"
 #define AVATAR_SUBMIT   @"avatarsubmit"
 #define BABY_SUBMIT        @"babysubmit"
+#define BABY_EDIT_SUBMIT    @"babyeditsubmit"
 #define ID_                 @"id"
 #define IS_FAMILY   @"isfamily"
 #define MAKE_WEIBO  @"makeweibo"

@@ -185,7 +185,7 @@
            onCompletion:(SuccessBlock)completionBlock 
                 failure:(void (^)(NSError *error))failure
 {
-    [SVProgressHUD showWithStatus:@"加载中" maskType:SVProgressHUDMaskTypeGradient];
+    [SVProgressHUD showWithStatus:@"加载中" maskType:SVProgressHUDMaskTypeNone];
 
     NSMutableURLRequest *apiRequest = [self requestWithMethod:@"GET" path:path parameters:nil];
     AFJSONRequestOperation* operation = [[AFJSONRequestOperation alloc] initWithRequest: apiRequest];

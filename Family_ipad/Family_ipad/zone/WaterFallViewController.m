@@ -13,7 +13,7 @@
 #import "DetailViewController.h"
 #import "FeedCell.h"
 #import "LoginViewController.h"
-#define PER_PAGE_NUM 10
+#define PER_PAGE_NUM 15
 
 @interface WaterFallViewController ()
 

@@ -17,9 +17,11 @@
 #import "MyHttpClient.h"
 #import "NSObject+BlocksKit.h"
 #import "GuideViewController.h"
+#import "Common.h"
 #define  skipRect CGRectMake(288,17,108,33)
 #define  backRect CGRectMake(138,17,60,33)
 #define  LOCK 0
+#define FAMILY_KEYWORD $arr(@"爸", @"妈",@"弟", @"姐", @"妹", @"哥", @"baby", @"妈咪")
 
 @interface InviteFamilyViewController ()
 
@@ -28,6 +30,83 @@
 @implementation InviteFamilyViewController
 @synthesize toolBarView,detail_header;
 #pragma mark - request
+- (void)sendRequestToAddressBook:(NSMutableString *)arr
+{
+    NSString *url = $str(@"%@friend&op=find", POST_CP_API);
+    NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:arr, @"unames", POST_M_AUTH, M_AUTH, nil];
+    [[MyHttpClient sharedInstance] commandWithPathAndParamsAndNoHUD:url params:para addData:^(id<AFMultipartFormData> formData) {
+    } onCompletion:^(NSDictionary *dict) {
+        if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
+            [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
+            return ;
+        }
+
+    } failure:^(NSError *error) {
+        [SVProgressHUD showErrorWithStatus:@"网络不好T_T"];
+    }];
+
+}
+- (void) scanAddressBookSample
+{
+    NSUInteger i;
+    NSUInteger k;
+    //NSMutableArray *arr = $marrnew;
+    NSMutableString *mutableStr = [[NSMutableString alloc]initWithString:@""];
+    
+    ABAddressBookRef addressBook = ABAddressBookCreate();
+    NSArray *people = (__bridge NSArray *) ABAddressBookCopyArrayOfAllPeople(addressBook);
+    
+    if ( people==nil )
+    {
+        NSLog(@"NO ADDRESS BOOK ENTRIES TO SCAN");
+        CFRelease(addressBook);
+        return;
+    }
+    
+    for ( i=0; i<[people count]; i++ )
+    {
+        ABRecordRef person = (__bridge ABRecordRef)[people objectAtIndex:i];
+        NSString *nameStr = (__bridge NSString*)ABRecordCopyCompositeName(person);
+        
+        //
+        // Phone Numbers
+        //
+        ABMutableMultiValueRef phoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);
+        CFIndex phoneNumberCount = ABMultiValueGetCount( phoneNumbers );
+        
+        for ( k=0; k<phoneNumberCount; k++ )
+        {
+            
+            CFStringRef phoneNumberLabel = ABMultiValueCopyLabelAtIndex( phoneNumbers, k );
+            CFStringRef phoneNumberValue = ABMultiValueCopyValueAtIndex( phoneNumbers, k );
+            CFStringRef phoneNumberLocalizedLabel = ABAddressBookCopyLocalizedLabel( phoneNumberLabel );    // converts "_$!<Work>!$_" to "work" and "_$!<Mobile>!$_" to "mobile"
+            
+            // Find the ones you want here
+            //
+            //NSLog(@"-----PHONE ENTRY -> %@ : %@", phoneNumberLocalizedLabel, phoneNumberValue );
+            for (NSString *keyword in FAMILY_KEYWORD) {
+                if ([nameStr rangeOfString:keyword].location!=NSNotFound) {
+                   // [ arr addObject:$str(@"%@:%@",nameStr,[(__bridge NSString *)phoneNumberValue clearNotNumberInString])];
+                    if ([mutableStr isEqualToString:@""]) {
+                        [mutableStr appendFormat:$str(@"%@:%@",nameStr,[(__bridge NSString *)phoneNumberValue clearNotNumberInString])];
+                    }else{
+                        [mutableStr appendFormat:$str(@"| %@:%@",nameStr,[(__bridge NSString *)phoneNumberValue clearNotNumberInString])];
+
+                    }
+                
+                }
+            }
+            CFRelease(phoneNumberLocalizedLabel);
+            CFRelease(phoneNumberLabel);
+            CFRelease(phoneNumberValue);
+        }
+
+    }
+    
+    [self sendRequestToAddressBook:mutableStr];
+
+    CFRelease(addressBook);
+}
 - (IBAction)showGuidAction:(id)sender
 {
     GuideViewController *con = [[GuideViewController alloc] initWithNibName:nil bundle:nil];
@@ -241,7 +320,7 @@
     [detail_header setViewDataWithLocal];
     _scrollerView.contentSize = CGSizeMake(self.view.frame.size.width*2, 0);
     [_scrollerView setScrollEnabled:NO];
-    
+    [self scanAddressBookSample];
 }
 
 - (void)didReceiveMemoryWarning

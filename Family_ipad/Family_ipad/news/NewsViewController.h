@@ -10,5 +10,5 @@
 #import "YIPopupTextView.h"
 
 @interface NewsViewController : BaseTableViewController<YIPopupTextViewDelegate>
-
+@property (nonatomic,assign)IBOutlet BOOL isLove;
 @end

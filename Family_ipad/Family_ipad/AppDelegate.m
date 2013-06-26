@@ -111,6 +111,14 @@
     _navigationController.navigationBarHidden = YES;
     [[UIApplication sharedApplication]setStatusBarHidden:YES];
     _sinaweibo = [[SinaWeibo alloc] initWithAppKey:kAppKey appSecret:kAppSecret appRedirectURI:kAppRedirectURI andDelegate:self];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *sinaweiboInfo = [defaults objectForKey:SINA_AUTH_DATA];
+    if ([sinaweiboInfo objectForKey:@"AccessTokenKey"] && [sinaweiboInfo objectForKey:@"ExpirationDateKey"] && [sinaweiboInfo objectForKey:@"UserIDKey"])
+    {
+        _sinaweibo.accessToken = [sinaweiboInfo objectForKey:@"AccessTokenKey"];
+        _sinaweibo.expirationDate = [sinaweiboInfo objectForKey:@"ExpirationDateKey"];
+        _sinaweibo.userID = [sinaweiboInfo objectForKey:@"UserIDKey"];
+    }
     [MobClick startWithAppkey:umengAppKey reportPolicy:SENDWIFIONLY channelId:nil];
     [MobClick checkUpdate:@"有新版本啦" cancelButtonTitle:@"跳过" otherButtonTitles:@"去更新"];
     self.window.rootViewController = _navigationController;
@@ -281,12 +289,42 @@
     return [self.sinaweibo handleOpenURL:url];
 }
 #pragma mark - SinaWeibo Delegate
-
-- (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
+- (void)storeAuthData
 {
-    NSLog(@"sinaweiboDidLogIn userID = %@ accesstoken = %@ expirationDate = %@ refresh_token = %@", sinaweibo.userID, sinaweibo.accessToken, sinaweibo.expirationDate,sinaweibo.refreshToken);
+    SinaWeibo *sinaweibo = [self sinaweibo];
+    
+    NSDictionary *authData = [NSDictionary dictionaryWithObjectsAndKeys:
+                              sinaweibo.accessToken, @"AccessTokenKey",
+                              sinaweibo.expirationDate, @"ExpirationDateKey",
+                              sinaweibo.userID, @"UserIDKey",
+                              sinaweibo.refreshToken, @"refresh_token", nil];
+    [ConciseKit setUserDefaultsWithObject:authData forKey:SINA_AUTH_DATA];
     [[PDKeychainBindings sharedKeychainBindings] setObject:sinaweibo.userID forKey:SINA_UID];
     [[PDKeychainBindings sharedKeychainBindings] setObject:sinaweibo.accessToken forKey:SINA_TOKEN];
+}
+- (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
+{
+    [SVProgressHUD showWithStatus:@"绑定中..."];
+    NSString *url = $str(@"%@bindweibo", POST_API);
+    NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"sina", TYPE, sinaweibo.userID, ID_, sinaweibo.accessToken, @"token", POST_M_AUTH, M_AUTH, nil];
+    [[MyHttpClient sharedInstance] commandWithPathAndParamsAndNoHUD:url params:para addData:^(id<AFMultipartFormData> formData) {
+        ;
+    } onCompletion:^(NSDictionary *dict) {
+        if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
+            [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
+            return ;
+        }
+        [SVProgressHUD showSuccessWithStatus:@"绑定成功"];
+        //        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HAS_BIND_SINA_WEIBO];
+        //        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self storeAuthData];
+        
+        
+    } failure:^(NSError *error) {
+        NSLog(@"error:%@", [error description]);
+        [SVProgressHUD showErrorWithStatus:@"网络不好T_T"];
+    }];
+
    
 }
 

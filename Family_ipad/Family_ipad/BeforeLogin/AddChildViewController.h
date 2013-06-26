@@ -19,6 +19,9 @@
 @property (nonatomic,strong)IBOutlet UITextField *nikenameField;
 @property (nonatomic,strong)IBOutlet UITextField *birthdayField;
 @property (nonatomic,strong)UIPopoverController *datePickerContainer;
+@property (nonatomic,assign)BOOL editMode;
+@property (nonatomic,strong)NSString *badyId;
+@property (nonatomic,strong)NSString *tagId;
 
 - (IBAction)birthdayBtnPressed:(id)sender;
 - (IBAction)sexyBtnPressed:(id)sender;

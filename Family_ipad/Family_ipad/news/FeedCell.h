@@ -57,4 +57,7 @@ typedef enum {
                      size:(NSString*)size;
 - (NSString*)buildAllText:(NSDictionary *)feedDict;
 - (NSString*)buildSubjectText:(NSDictionary *)feedDict;
+- (void)setTapAction:(UIImageView *)sender
+                 url:(NSURL *)url
+               index:(NSUInteger)index;
 @end

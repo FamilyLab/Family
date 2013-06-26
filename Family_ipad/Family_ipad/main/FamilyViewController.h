@@ -29,6 +29,7 @@
 @property (nonatomic,strong) IBOutlet UIButton *post_actBtn;
 @property (nonatomic,strong) IBOutlet UIButton *post_pmBtn;
 @property (nonatomic,strong) IBOutlet UIButton *post_hiBtn;
+@property (nonatomic,strong)IBOutlet UILabel *applLbl;
 - (IBAction)setInfo:(id)sender;
 - (IBAction)addAction:(id)sender;
 - (IBAction )addFamilyMember:(id)sender;

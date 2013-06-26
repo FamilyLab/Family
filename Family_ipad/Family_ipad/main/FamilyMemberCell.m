@@ -51,6 +51,7 @@
                 [btn.tileImage setImage:[UIImage imageNamed:@"addbtn2.png"] forState:UIControlStateNormal];
                 [btn.tileImage removeTarget:self action:@selector(memberBtnAction:) forControlEvents:UIControlEventTouchUpInside];
                 [btn.tileImage addTarget:self action:@selector(addFamilyMember:) forControlEvents:UIControlEventTouchUpInside];
+                btn.tagLabel.text = @"邀请家人";
                 btn.hidden = NO;
             }
             else{

@@ -37,6 +37,8 @@
     _nikenameField.text = $safe([dict objectForKey:@"babyname"]);
     _birthdayField.text =$safe([dict objectForKey:@"babybirthday"]);
     isBoy = [$safe([dict objectForKey:@"babysex"]) isEqual:BOY]?YES:NO;
+    _badyId = [dict objectForKey:BABY_ID];
+    _tagId = [dict objectForKey:TAG_ID];
     UIImage *sexImg = isBoy ? [UIImage imageNamed:@"child_gender_a.png"] : [UIImage imageNamed:@"child_gender_b.png"];
     [sexBtn setImage:sexImg forState:UIControlStateNormal];
 }
@@ -78,10 +80,17 @@
         [SVProgressHUD showErrorWithStatus:@"孩子昵称或生日为空T_T"];
         return;
     }
-    [SVProgressHUD showWithStatus:@"添加孩子资料..."];
+    NSString *tip = _editMode?@"修改孩子资料..":@"添加孩子资料...";
+    [SVProgressHUD showWithStatus:tip];
     NSString *url = $str(@"%@baby", POST_CP_API);
     NSString *babysex = isBoy?BOY:GIRL;
-    NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys: POST_M_AUTH, M_AUTH,_nikenameField.text,@"babyname",babysex,@"babysex",@"1",BABY_SUBMIT,_birthdayField.text,@"babybirthday",nil];
+    NSMutableDictionary *para  = nil;
+    if (!_editMode) {
+       para = [NSMutableDictionary dictionaryWithObjectsAndKeys: POST_M_AUTH, M_AUTH,_nikenameField.text,@"babyname",babysex,@"babysex",@"1",BABY_SUBMIT,_birthdayField.text,@"babybirthday",nil];
+    }else{
+        para = [NSMutableDictionary dictionaryWithObjectsAndKeys: POST_M_AUTH, M_AUTH,_nikenameField.text,@"babyname",babysex,@"babysex",@"1",BABY_EDIT_SUBMIT,_birthdayField.text,@"babybirthday",_badyId,BABY_ID,_tagId,TAG_ID, nil];
+
+    }
     [[MyHttpClient sharedInstance] commandWithPathAndParamsAndNoHUD:url params:para addData:^(id<AFMultipartFormData> formData) {
         [formData appendPartWithFileData:UIImageJPEGRepresentation(headBtn.imageView.image, 1.0f) name:@"babyavatar" fileName:@"avatar.jpg" mimeType:@"image/jpeg"];
     } onCompletion:^(NSDictionary *dict) {
@@ -89,7 +98,7 @@
             [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
             return ;
         }
-        [SVProgressHUD showSuccessWithStatus:@"添加孩子资料成功"];
+        [SVProgressHUD showSuccessWithStatus:@"操作成功"];
         //保存头像
         NSData *headImgData = UIImageJPEGRepresentation(headBtn.imageView.image, 0.8);
         NSData *encodeHeadImgData = [NSKeyedArchiver archivedDataWithRootObject:headImgData];

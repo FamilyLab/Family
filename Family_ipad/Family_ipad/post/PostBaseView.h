@@ -61,7 +61,7 @@ typedef enum {
 @property (nonatomic,strong)IBOutlet UIView *shareView;
 @property (nonatomic,strong)IBOutlet UILabel *myLocationLbl;
 @property (nonatomic,strong)IBOutlet UIImageView *backgroundImage;
-
+@property (nonatomic,strong)IBOutlet UIButton *expandBtn;
 //data
 @property (nonatomic,strong)NSMutableArray *withFamilyArray;
 @property (nonatomic,strong)NSDictionary *wantToSayDict;

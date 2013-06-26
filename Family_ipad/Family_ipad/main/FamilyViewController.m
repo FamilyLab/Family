@@ -19,6 +19,7 @@
 #import "PostBaseViewController.h"
 #import "PostBaseView.h"
 #import "MenuViewController.h"
+#import "ApplyFamilyViewController.h"
 #define WEEKDAY $arr(@"零", @"日",@"一", @"二", @"三", @"四", @"五", @"六")
 #define WEATHER_DIC $dict(@"sun.png",SUN,@"cloud.png",CLOUD,@"rain.png",RAIN,@"thound.png",THUND,@"cloudy.png",CLOUDY)
 #define SUN @"晴"
@@ -92,7 +93,7 @@
 }
 - (IBAction )addFamilyMember:(id)sender
 {
-    InviteFamilyViewController *con = [[InviteFamilyViewController alloc] initWithNibName:@"InviteFamilyViewController" bundle:nil];
+    ApplyFamilyViewController *con = [[ApplyFamilyViewController alloc] initWithNibName:@"ApplyFamilyViewController" bundle:nil];
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:con invokeByController:[AppDelegate instance].rootViewController isStackStartView:FALSE];
 }
 - (void)getPhoneAddress
@@ -212,6 +213,13 @@
     if (!_userId) {
         [self getPhoneAddress];
     }
+    [[MyHttpClient sharedInstance]commandWithPathAndNoHUD:$str(@"%@?do=elder&m_auth=%@",SPACE_API,GET_M_AUTH) onCompletion:^(NSDictionary *dict) {
+        NSString *moreNews = $str(@"%d",[[[dict objectForKey: WEB_DATA] objectForKey:APPLY_CONT] intValue]);
+        _applLbl.text = $str(@"家人申请（%@）",moreNews);
+        
+    } failure:^(NSError *error) {
+        ;
+    }];
 }
 
 - (void)didReceiveMemoryWarning

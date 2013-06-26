@@ -26,6 +26,7 @@
 #import "UIActionSheet+BlocksKit.h"
 #import "NSObject+BlocksKit.h"
 #import "MPNotificationView.h"
+#import "UIAlertView+BlocksKit.h"
 #define kFirstPhotoY    30
 #define kPhotoSnap      15
 #define kPhotoX         15
@@ -61,12 +62,47 @@
 #define CLICK_VIDEO_SMILE       @"19"//微笑
 #define CLICK_VIDEO_SUR         @"20"//惊讶
 #define kTagBtnOfFace   220//动态详情的表态按钮
-
+#define SinaUploadPicURL    @"http://api.weibo.com/2/statuses/update.json"
 @interface DetailViewController ()
 
 @end
 
 @implementation DetailViewController
+- (SinaWeibo *)sinaWiebo
+{
+    return [AppDelegate instance].sinaweibo;
+}
+- (void)sendToSinaWeiboWithPic:(NSString*)text {
+    SinaWeibo *sinaweibo = [self sinaWiebo];
+    
+    [sinaweibo requestWithURL:@"statuses/upload.json"
+                       params:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                               text, @"status",
+                               [UIImage imageNamed:@"logo_bright.png"], @"pic", nil]
+                   httpMethod:@"POST"
+                     delegate:self];
+}
+- (void)sendToSinaWeiboWithText:(NSString*)text {
+    SinaWeibo *sinaweibo = [AppDelegate instance].sinaweibo;
+    [sinaweibo requestWithURL:@"statuses/update.json"
+                       params:[NSMutableDictionary dictionaryWithObjectsAndKeys:text, @"status", nil]
+                   httpMethod:@"POST"
+                     delegate:self];
+}
+- (void)request:(SinaWeiboRequest *)request didFailWithError:(NSError *)error {
+    NSLog(@"sinaweibo didFailWithError:%@", error);
+    if ([request.url hasSuffix:@"statuses/update.json"]) {
+        [MPNotificationView notifyWithText:@"分享失败T_T" detail:nil andDuration:0.5f];
+    }
+}
+
+- (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)result {
+    if ([request.url hasSuffix:@"statuses/update.json"]) {
+        [MPNotificationView notifyWithText:@"分享成功" detail:nil andDuration:0.5f];
+    }
+    
+}
+
 - (IBAction)showActionSheet:(id)sender
 {
     UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:@"菜单"];
@@ -80,11 +116,36 @@
         [as setCancelButtonWithTitle:@"编辑" handler:^{
             ;
         }];
-        
+            
         
     }
+    NSLog(@"%@",[AppDelegate instance].sinaweibo.accessToken);
+
     [as setCancelButtonWithTitle:@"分享到新浪微博" handler:^{
-        ;
+        //sina weibo
+        NSLog(@"%@ %i %i ",[[PDKeychainBindings sharedKeychainBindings] objectForKey:SINA_TOKEN],[self sinaWiebo].isAuthorizeExpired,[self sinaWiebo].isAuthValid);
+        if (![[PDKeychainBindings sharedKeychainBindings] objectForKey:SINA_TOKEN]||[self sinaWiebo].isAuthorizeExpired||![self sinaWiebo].isAuthValid ){
+            [AppDelegate instance].sinaweibo.delegate = self;
+            [[AppDelegate instance].sinaweibo logIn];
+
+        }else{
+            FeedDetailType type = [DetailViewController whichDetailType:_idType];
+            NSString *titleText =nil;
+            if (type == eventDetailType) {
+                titleText = _dataDict ? [_dataDict objectForKey:TITLE] : @"      ";
+                
+            } else {
+                titleText = _dataDict ? [_dataDict objectForKey:SUBJECT] : @"      ";
+            }
+            if ([titleText isEqualToString:@""]) {
+                titleText = @"无标题";
+            }
+            if (type == photoDetailType) {
+                [self sendToSinaWeiboWithPic:$str(@"%@  %@",titleText,[_dataDict objectForKey:MESSAGE]]);
+
+            }
+            [self sendToSinaWeiboWithText:$str(@"%@  %@",titleText,[_dataDict objectForKey:MESSAGE]]);
+        }
     }];
     [as setCancelButtonWithTitle:@"取消" handler:^{
         ;
@@ -220,15 +281,15 @@
 }
 - (IBAction)commentAction:(UIView *)sender
 {
-//    NSString *holder;
-//    if (sender.tag !=0) {
-//        NSLog(@"sender.tag:%d",sender.tag);
-//        NSDictionary *dict = [dataArray objectAtIndex:sender.tag];
-//        holder = $str(@"回复%@：",[dict objectForKey:NOTICE_AUTHOR_NAME]);
-//    }else{
-//        holder = COMMENT_HOLDER;
-//    }
-    YIPopupTextView* popupTextView = [[YIPopupTextView alloc] initWithPlaceHolder:COMMENT_HOLDER
+    NSString *holder;
+    if (sender.tag !=0) {
+        NSLog(@"sender.tag:%d",sender.tag);
+        NSDictionary *dict = [dataArray objectAtIndex:sender.tag-1];
+        holder = $str(@"回复%@：",[dict objectForKey:NOTICE_AUTHOR_NAME]);
+    }else{
+        holder = COMMENT_HOLDER;
+    }
+    YIPopupTextView* popupTextView = [[YIPopupTextView alloc] initWithPlaceHolder:holder
                                                                          maxCount:1000
                                                                       buttonStyle:YIPopupTextViewButtonStyleRightCancelAndDone
                                                                   tintsDoneButton:YES];
@@ -358,6 +419,8 @@
         _loveButton.selected = _hasLoved;//1为我已收藏，0为我未收藏
         
         [_topView.avatarButton setImageForMyHeadButtonWithUrlStr:[_dataDict objectForKey:AVATER] plcaholderImageStr:nil size:MIDDLE];
+        _topView.avatarButton.type = HEAD_BTN;
+        _topView.avatarButton.identify = [_dataDict objectForKey:UID];
         NSString *tagName = [[_dataDict objectForKey:TAG] isKindOfClass:[NSDictionary class]] ? [[_dataDict objectForKey:TAG] objectForKey:TAG_NAME] : @"";
 
         [_topView.avatarButton setVipStatusWithStr:[_dataDict objectForKey:VIPSTATUS] isSmallHead:YES];
@@ -531,35 +594,35 @@
     }
     _cellHeader.frame = (CGRect){.origin = CGPointZero, .size.width = DEVICE_SIZE.width, .size.height =  [CellHeader getHeaderHeightWithText:titleText].height};
     [_cellHeader initHeaderDataWithMiddleLblText:titleText];
-    if ([$str(self.userId) isEqualToString:MY_UID]) {
-        UIButton *delBtn = nil;
-        for (id obj in self.cellHeader.subviews) {
-            if ([obj isKindOfClass:[UIButton class]]) {
-                delBtn = (UIButton*)obj;
-                break;
-            }
-        }
-        if (!delBtn) {
-            UIButton *delBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            delBtn.frame = CGRectZero;
-            [delBtn setImage:[UIImage imageNamed:@"down_arrow.png"] forState:UIControlStateNormal];
-        [delBtn whenTapped:^{
-            UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:@"是否删除?"];
-            [as setDestructiveButtonWithTitle:@"删除" handler:^{
-                NSString *deleteTypeStr = [self.idType stringByReplacingOccurrencesOfString:@"re" withString:@""];
-                NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"delete", OP, self.feedId, deleteTypeStr, ONE, DELETE_SUBMIT, POST_M_AUTH, M_AUTH, nil];
-                [self uploadRequestToDeleteWithPara:para];
-                [self backAction:nil];
-            }];
-            [as setCancelButtonWithTitle:@"取消" handler:^{
-                ;
-            }];
-            [as showInView:self.view];
-        }];
-            [self.cellHeader addSubview:delBtn];
-
-        }
-    }
+//    if ([$str(self.userId) isEqualToString:MY_UID]) {
+//        UIButton *delBtn = nil;
+//        for (id obj in self.cellHeader.subviews) {
+//            if ([obj isKindOfClass:[UIButton class]]) {
+//                delBtn = (UIButton*)obj;
+//                break;
+//            }
+//        }
+//        if (!delBtn) {
+//            UIButton *delBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//            delBtn.frame = CGRectZero;
+//            [delBtn setImage:[UIImage imageNamed:@"down_arrow.png"] forState:UIControlStateNormal];
+//        [delBtn whenTapped:^{
+//            UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:@"是否删除?"];
+//            [as setDestructiveButtonWithTitle:@"删除" handler:^{
+//                NSString *deleteTypeStr = [self.idType stringByReplacingOccurrencesOfString:@"re" withString:@""];
+//                NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"delete", OP, self.feedId, deleteTypeStr, ONE, DELETE_SUBMIT, POST_M_AUTH, M_AUTH, nil];
+//                [self uploadRequestToDeleteWithPara:para];
+//                [self backAction:nil];
+//            }];
+//            [as setCancelButtonWithTitle:@"取消" handler:^{
+//                ;
+//            }];
+//            [as showInView:self.view];
+//        }];
+//            [self.cellHeader addSubview:delBtn];
+//
+//        }
+//    }
     return _cellHeader.frame.size.height; //+10;
 }
 #pragma mark - 删除帖子的接口
@@ -638,7 +701,7 @@
 
 - (CGFloat)heightForCellWithIndexRow:(int)indexRow andType:(FeedDetailType)type {
     NSDictionary *dict = [dataArray objectAtIndex:indexRow - 1];
-
+    
     NSString *name = [dict objectForKey:NAME];
     CGSize nameSize = [name sizeWithFont:[UIFont boldSystemFontOfSize:17.0f] constrainedToSize:CGSizeMake(470, 320) lineBreakMode:UILineBreakModeWordWrap];
     NSString *text = [dict objectForKey:MESSAGE];
@@ -828,12 +891,95 @@
 
 - (void)popupTextView:(YIPopupTextView *)textView didDismissWithText:(NSString *)text cancelled:(BOOL)cancelled
 {
+   /// NSLog(@"holder:%@",textView.placeholder);
+
     //NSLog(@"did dismiss: cancelled=%d",cancelled);
     if (!cancelled) {
-        NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:_feedCommentId, ID_,_idType, FEED_ID_TYPE, text, MESSAGE, POST_M_AUTH, M_AUTH, nil];
-            [self uploadRequestToCommentOrJoinEvent:para withCommentText:text];
+        NSString *str = $str(@"%@%@",textView.placeholder,text);
+        NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:_feedCommentId, ID_,_idType, FEED_ID_TYPE, str, MESSAGE, POST_M_AUTH, M_AUTH, nil];
+            [self uploadRequestToCommentOrJoinEvent:para withCommentText:str];
     }
 }
+            - (void)storeAuthData
+                {
+                    SinaWeibo *sinaweibo = [self sinaWiebo];
+                    
+                    NSDictionary *authData = [NSDictionary dictionaryWithObjectsAndKeys:
+                                              sinaweibo.accessToken, @"AccessTokenKey",
+                                              sinaweibo.expirationDate, @"ExpirationDateKey",
+                                              sinaweibo.userID, @"UserIDKey",
+                                              sinaweibo.refreshToken, @"refresh_token", nil];
+                    [ConciseKit setUserDefaultsWithObject:authData forKey:SINA_AUTH_DATA];
+                    [[PDKeychainBindings sharedKeychainBindings] setObject:sinaweibo.userID forKey:SINA_UID];
+                    [[PDKeychainBindings sharedKeychainBindings] setObject:sinaweibo.accessToken forKey:SINA_TOKEN];
+                }
+                 
+                 - (void)removeAuthData
+                {
+                    [[PDKeychainBindings sharedKeychainBindings] removeObjectForKey:SINA_UID];
+                    [[PDKeychainBindings sharedKeychainBindings] removeObjectForKey:SINA_TOKEN];
+                    [ConciseKit removeUserDafualtForKey:SINA_AUTH_DATA];
+                }
+
+#pragma mark - SinaWeibo Delegate
+                 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
+                {
+                    [SVProgressHUD showWithStatus:@"绑定中..."];
+                    NSString *url = $str(@"%@bindweibo", POST_API);
+                    NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"sina", TYPE, sinaweibo.userID, ID_, sinaweibo.accessToken, @"token", POST_M_AUTH, M_AUTH, nil];
+                    [[MyHttpClient sharedInstance] commandWithPathAndParamsAndNoHUD:url params:para addData:^(id<AFMultipartFormData> formData) {
+                        ;
+                    } onCompletion:^(NSDictionary *dict) {
+                        if ([[dict objectForKey:WEB_ERROR] intValue] != 0) {
+                            [SVProgressHUD showErrorWithStatus:[dict objectForKey:WEB_MSG]];
+                            return ;
+                        }
+                        [SVProgressHUD showSuccessWithStatus:@"绑定成功"];
+                        //        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HAS_BIND_SINA_WEIBO];
+                        //        [[NSUserDefaults standardUserDefaults] synchronize];
+                        [self storeAuthData];
+                        [_tableView reloadData];
+                        
+                        
+                    } failure:^(NSError *error) {
+                        NSLog(@"error:%@", [error description]);
+                        [SVProgressHUD showErrorWithStatus:@"网络不好T_T"];
+                    }];
+                }
+                 
+                 - (void)sinaweiboDidLogOut:(SinaWeibo *)sinaweibo
+                {
+                    
+                    if (MY_HAS_LOGIN) {
+                        [sinaweibo logIn];
+                    }
+                }
+                 
+                 - (void)sinaweiboLogInDidCancel:(SinaWeibo *)sinaweibo
+                {
+                    NSLog(@"sinaweiboLogInDidCancel");
+                }
+                 
+                 - (void)sinaweibo:(SinaWeibo *)sinaweibo logInDidFailWithError:(NSError *)error
+                {
+                    NSLog(@"sinaweibo logInDidFailWithError %@", error);
+                }
+                 
+                 - (void)sinaweibo:(SinaWeibo *)sinaweibo accessTokenInvalidOrExpired:(NSError *)error
+                {
+                    NSLog(@"sinaweiboAccessTokenInvalidOrExpired %@", error);
+                    //    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:HAS_BIND_SINA_WEIBO];
+                    //    [[NSUserDefaults standardUserDefaults] synchronize];
+                    //    [self removeAuthData];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"新浪微博授权已过期，是否重新授权?"];
+                    [alert addButtonWithTitle:@"重新授权" handler:^{
+                        [sinaweibo logOut];
+                    }];
+                    [alert setCancelButtonWithTitle:@"取消" handler:^{
+                        return ;
+                    }];
+                    [alert show];
+                }
 
 #pragma mark - MWPhotoBrowserDelegate
 

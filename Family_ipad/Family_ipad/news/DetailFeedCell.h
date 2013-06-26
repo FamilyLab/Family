@@ -34,6 +34,7 @@ typedef enum {
 @property (nonatomic, strong) IBOutlet SimpleInfoView *simpleInfoView;
 @property (nonatomic, strong) IBOutlet UIImageView *eventImgView;
 @property (nonatomic, strong) IBOutlet UIImageView *mapBoxImgView;
+@property (nonatomic, strong) IBOutlet UIImageView *arrowImgView;
 
 @property (nonatomic, strong) IBOutlet UIWebView *webView;
 @property (nonatomic, strong) IBOutlet UIButton *replyBtn;

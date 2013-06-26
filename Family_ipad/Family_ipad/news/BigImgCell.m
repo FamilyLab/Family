@@ -25,13 +25,13 @@
     return self;
 }
 - (void)initData:(NSDictionary *)aDict {
-    
+    [self.picArray removeAllObjects];
     [bigImgView setImageWithURL:[self genreateImgURL:[aDict objectForKey:FEED_IMAGE_1] size:PIC_SIZE] placeholderImage:[UIImage imageNamed:@"pic_default.png"]];
-    [self.picArray addObject:[MWPhoto photoWithURL:[NSURL URLWithString:[aDict objectForKey:FEED_IMAGE_1]]]];
+    [self.picArray addObject:[MWPhoto photoWithURL:[NSURL URLWithString:[[aDict objectForKey:FEED_IMAGE_1] delLastStrForYouPai]]]];
     bigImgView.userInteractionEnabled = YES;
     [bigImgView whenTapped:^{
         MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
-        browser.displayActionButton = NO;
+        //browser.displayActionButton = NO;
         browser.tapToClose = YES;
         UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:browser];
         nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;

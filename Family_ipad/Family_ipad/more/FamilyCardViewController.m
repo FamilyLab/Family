@@ -50,6 +50,7 @@
 }
 - (IBAction)sendPM:(id)sender
 {
+    REMOVEDETAIL;
     PostBaseViewController *con = [[PostBaseViewController alloc]initWithNibName:@"PostBaseViewController" bundle:nil];
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:con invokeByController:self isStackStartView:FALSE];
     con.postView.currentAction =  @"发私信";

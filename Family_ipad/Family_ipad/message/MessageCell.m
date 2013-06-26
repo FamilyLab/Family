@@ -87,7 +87,7 @@
     // Configure the view for the selected state
 }
 + (CGFloat)heightForCellWithText:(NSString *)text andOtherHeight:(CGFloat)_miniHeight {
-    CGFloat height = _miniHeight + ceilf([text sizeWithFont:[UIFont systemFontOfSize:17.0f] constrainedToSize:CGSizeMake(310.0f, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap].height);
+    CGFloat height = _miniHeight + ceilf([text sizeWithFont:[UIFont systemFontOfSize:17.0f] constrainedToSize:CGSizeMake(280.0f, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap].height);
     return height;
 }
 @end

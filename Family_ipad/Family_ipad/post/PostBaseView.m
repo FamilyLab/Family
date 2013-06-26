@@ -96,7 +96,14 @@
 }
 - (IBAction)markWeibo:(UIButton *)sender
 {
-    sender.selected = !sender.selected;
+    if ([[[PDKeychainBindings sharedKeychainBindings] objectForKey:SINA_UID]boolValue]) {
+        sender.selected = !sender.selected;
+    }else{
+        if (isEmptyStr([_dataDict objectForKey:SINA_UID])||! [AppDelegate instance].sinaweibo.isAuthValid ||  [AppDelegate instance].sinaweibo.isAuthorizeExpired){
+            [AppDelegate instance].sinaweibo.delegate = [AppDelegate instance];
+            [[AppDelegate instance].sinaweibo logIn];
+        }
+    }
 }
 - (void)uploadImage:(NSString *)op
              _image:(UIImage *)_image
@@ -214,7 +221,8 @@
     NSString *cpStr = _dataDict ? @"rephoto" : @"photo";
     
     NSString *url = $str(@"%@%@", POST_CP_API,cpStr);
-    NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:_contentTextView.text, MESSAGE, ONE, PHOTO_SUBMIT, POST_M_AUTH,M_AUTH ,MY_LATITUDE,LAT,MY_LONGITUDE,LNG,COME_VERSION,COME,reWeibo,MAKE_WEIBO,reTcWeibo,MAKE_QQ_WEIBO,_postion,ADDRESS,[self compoentStrWithArray:_withFamilyArray],FRIENDS,$str(@"%@",_zoneBtn.titleLabel.text),TAGS,ONE,FRIEND,_postImgString,PICIDS,MAKEFEEDCON,MAKE_FEED,nil];
+    
+    NSMutableDictionary *para = [NSMutableDictionary dictionaryWithObjectsAndKeys:_contentTextView.text, MESSAGE, ONE, PHOTO_SUBMIT, POST_M_AUTH,M_AUTH ,MY_LATITUDE,LAT,MY_LONGITUDE,LNG,COME_VERSION,COME,reWeibo,MAKE_WEIBO,reTcWeibo,MAKE_QQ_WEIBO,_postion,ADDRESS,[self compoentStrWithArray:_withFamilyArray],FRIENDS,$str(@"%@",_zoneBtn.titleLabel.text),TAGS,ONE,FRIEND,MAKEFEEDCON,MAKE_FEED,_postImgString,PICIDS,nil];
     if (_dataDict) {
         [para removeObjectForKey:PICIDS];
         if ([_dataDict objectForKey:PHOTO_ID]) {
@@ -763,8 +771,10 @@
 - (IBAction)initPostView:(id)sender
 {
     
+    _titleButton.userInteractionEnabled = NO;
+    _expandBtn.hidden = YES;
    // _draftArray = [ConciseKit userDefaultsObjectForKey:DRAFT];
-    _weiboBtn.enabled = [[[PDKeychainBindings sharedKeychainBindings] objectForKey:SINA_UID]boolValue];
+    //_weiboBtn.enabled = [[[PDKeychainBindings sharedKeychainBindings] objectForKey:SINA_UID]boolValue];
     //_tencentBtn.enabled =[[[PDKeychainBindings sharedKeychainBindings] objectForKey:QQ_UID]boolValue];
     if (self.dataDict == nil) {
         [self onlyContentView];

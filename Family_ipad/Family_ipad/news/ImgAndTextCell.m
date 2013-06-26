@@ -29,6 +29,8 @@
 */
 - (void)initData:(NSDictionary *)aDict {
     [_leftImgView setImageWithURL:[self genreateImgURL:[aDict objectForKey:FEED_IMAGE_1] size:PIC_SIZE]  placeholderImage:[UIImage imageNamed:@"pic_default.png"]];
+    [self setTapAction:_leftImgView url:[NSURL URLWithString:[[aDict objectForKey:FEED_IMAGE_1] delLastStrForYouPai]] index:0];
+
     _titleLbl.text = [aDict objectForKey:TOPIC_SUBJECT];
     if (![[aDict objectForKey:COME]isEqualToString:@""])
         _describeLbl.text = $str(@"%@  来自%@",[aDict objectForKey:MESSAGE],[aDict objectForKey:COME]);

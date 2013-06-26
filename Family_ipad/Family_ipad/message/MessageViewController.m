@@ -92,7 +92,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    header.headerTitle.text = @"消息";
+    header.headerTitle.text = @"对话";
     //[self switchTableView:_messageButton];
     JSBadgeView *messagebadgeView = [[JSBadgeView alloc] initWithParentView:_messageButton alignment:JSBadgeViewAlignmentTopRight];
 
@@ -155,7 +155,7 @@
             
             NSString *contentStr = [NSString stringWithFormat:@"%@ %@", [dataDict objectForKey:LAST_SUMMARY], [dataDict objectForKey:ADDRESS]];
             
-            return [MessageCell heightForCellWithText:contentStr andOtherHeight:85.0f];
+            return [MessageCell heightForCellWithText:contentStr andOtherHeight:70.0f];
         }
        
     }
